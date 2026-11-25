@@ -1114,7 +1114,6 @@ function vPiano(){
   <div class="stack home">${syncChip()}${info}
   <section class="hero glass">
     ${cd}
-    <p class="lead">6 domande a scelta multipla, 4 risposte e una sola giusta. Le sezioni sono a tempo e non si torna indietro.</p>
     <div class="secs">${secs}</div>
     <div class="score3"><span class="s ok"><b>+4</b>giusta</span><span class="s ko"><b>−1</b>sbagliata</span><span class="s bl"><b>0</b>vuota</span></div>
     <div class="row">${nextBtn}<button class="btn glassbtn" data-go="formule">Formulario</button></div>
@@ -1123,10 +1122,8 @@ function vPiano(){
     <div class="ch"><h2>Avanzamento</h2><span class="num muted">${ps.d}/${ps.t} attività</span></div>
     <div class="bar big"><i style="width:${Math.round(ps.d/ps.t*100)}%"></i></div>
     <div class="prs">${prog}</div>
-    <p class="small muted">Barra: domande già viste per argomento. Percentuale: risposte giuste all’ultimo tentativo.</p>
   </section>
   <h2 class="sh">Il piano: 5 sessioni</h2>
-  <p class="muted sub">Non serve studiare ogni giorno: fai le sessioni quando puoi, nell’ordine. Spunta le attività man mano.</p>
   <div class="days">${days}</div>
   <section class="glass card strat">
     <span class="eyebrow">Strategia</span><h2>Rispondi sempre</h2>
@@ -1153,7 +1150,7 @@ function vStudio(){
       return `<details class="sheet glass" id="sheet-${t.id}" ${openSheet===t.id?"open":""}><summary>${dot(t.id)}<span class="nm">${esc(t.name)}<small>${t.name!==SECMAP[t.sec].name?esc(SECMAP[t.sec].name)+" · ":""}${topQs(t.id).length} domande</small></span><svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></summary>
       <div class="sb">${blocks}<div class="chips"><button class="chip" data-fc="${t.id}">Flashcard</button><button class="chip" data-corso="${t.id}">Esercizi del corso</button><button class="chip on" data-topic="${t.id}">Quiz su questo argomento</button></div></div></details>`}).join("");
   }else{
-    body=`<p class="muted sub">Dove le domande ingannano: concetti che si somigliano, formule che si scambiano, numeri dati in forma diversa. Rileggile la sera prima.</p>`+TRAPS.map((t,i)=>`<article class="trap glass"><span class="eyebrow">${dot(t.top)}${esc(TOPMAP[t.top].short)}</span><h3>${esc(t.t)}</h3><p>${md(t.b)}</p><button class="chip" data-trap="${i}">Esercitati · ${t.q.length} domande</button></article>`).join("");
+    body=TRAPS.map((t,i)=>`<article class="trap glass"><span class="eyebrow">${dot(t.top)}${esc(TOPMAP[t.top].short)}</span><h3>${esc(t.t)}</h3><p>${md(t.b)}</p><button class="chip" data-trap="${i}">Esercitati · ${t.q.length} domande</button></article>`).join("");
   }
   return `<header class="top"><div><h1>Studio</h1></div></header><div class="stack studio">${seg}${body}</div>`;
 }
@@ -1216,14 +1213,12 @@ function vQuiz(){
   return `<header class="top"><div><h1>Quiz</h1></div></header><div class="stack quizhome">
   <section class="sim">
     <span class="eyebrow">Come alla prova</span><h2>Simulazione</h2>
-    <p>6 domande in 3 sezioni: 1 di Probabilità, 3 di Campionamento, 2 di Intervalli. Quando chiudi una sezione non puoi più tornarci. Correzione solo alla fine.</p>
     <div class="flow"><span>1</span><i></i><span>3</span><i></i><span>2</span></div>
     <div class="seg dark" role="group" aria-label="Da dove pescare le domande"><button data-pool="corso" aria-pressed="${SETT.pool!=="tutte"}">Prove ed esercizi del corso</button><button data-pool="tutte" aria-pressed="${SETT.pool==="tutte"}">Tutte le ${QS.filter(q=>!q.vf).length}</button></div>
     <button class="btn white" data-act="start-sim">Inizia la simulazione</button>
   </section>
   ${hist}
   <h2 class="sh">Prove ed esercizi del corso</h2>
-  <p class="muted sub">Domande delle prove degli anni passati e degli esercizi delle lezioni, con le risposte ufficiali dove c’erano.</p>
   <div class="srcs">${SRCS.map(s=>{const qs=srcQs(s),seen=qs.filter(q=>q.id in LAST),ok=seen.filter(q=>LAST[q.id]).length;const isP=/prova|intermedia|esame/i.test(s);return `<button class="srcb glass ${isP?"p":""}" data-src="${esc(s)}"><span class="nm">${esc(s)}</span><span class="meta num">${qs.length} domande${seen.length?` · ${Math.round(ok/seen.length*100)}%`:""}</span></button>`}).join("")}</div>
   <h2 class="sh">Allenamento per argomento</h2>
   <div class="topics">${topics}</div>
@@ -1330,7 +1325,6 @@ function vFormule(){
   const pt=`<table class="tt phi"><tr><th>z</th>${[0,1,2,3,4,5,6,7,8,9].map(k=>`<th>,0${k}</th>`).join("")}</tr>${PHITAB.map(r=>`<tr><th>${r[0]}</th>${r.slice(1).map(x=>`<td>${x}</td>`).join("")}</tr>`).join("")}</table>`;
   return `<header class="top"><div><h1>Formule</h1></div></header>
   <div class="stack formule">
-  <p class="muted sub noprint">Alla prova si può consultare solo materiale su carta: porta stampati il formulario ufficiale del corso e le tavole della Normale e della t. Qui trovi le formule della prima parte con la stessa notazione.</p>
   ${groups}
   <section class="glass card"><h2>Valori critici della Normale</h2><div class="tw">${zt}</div></section>
   <section class="glass card"><h2>t di Student, due code</h2><p class="small muted">Riga = gradi di libertà (n − 1). Colonna = livello di confidenza.</p><div class="tw">${tt}</div></section>
