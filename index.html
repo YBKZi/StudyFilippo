@@ -503,6 +503,116 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 [data-theme=dark] .opt.ok .lt{background:#1E9E73}
 [data-theme=dark] .opt.ko .lt{background:#D4513A}
 
+
+/* ===== adattamento schermi ===== */
+.qa,.qb{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-content:start}
+.qa>*,.qb>*{min-width:0}
+.cols2{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.cols2>.stack{align-content:start}
+.stack.narrow{max-width:760px;margin-left:auto;margin-right:auto;width:100%}
+
+/* telefoni stretti (Galaxy S22 ~360px, Xiaomi 15T ~393px) */
+@media (max-width:430px){
+ .wrap{padding-left:16px;padding-right:16px}
+ .top{gap:8px}
+ .top h1{font-size:34px}
+ .top .eyebrow{font-size:10.5px;letter-spacing:.06em}
+ .hero{padding:20px 16px 18px;border-radius:28px}
+ .secs{gap:6px}
+ .secp{padding:10px 9px 9px}
+ .secp em{font-size:12px;overflow-wrap:break-word;-webkit-hyphens:auto;hyphens:auto}
+ .card{padding:18px 16px}
+ .sbar{margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}
+ .actions{padding-left:16px;padding-right:16px}
+}
+@media (max-width:380px){
+ .top h1{font-size:30px}
+ .top .date{padding:5px 10px;font-size:12px}
+ .secp em{font-size:11.5px}
+ .stem{font-size:18.5px}
+ .opt{padding:12px;gap:10px;font-size:15.5px}
+ .btn{padding:0 16px}
+}
+
+/* tablet in orizzontale: barra laterale e due colonne */
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+ body{font-size:17px}
+ .wrap{max-width:1280px;padding:calc(env(safe-area-inset-top,0px) + 28px) 36px 40px 140px}
+ body.insession .wrap{padding:calc(env(safe-area-inset-top,0px) + 22px) 40px calc(116px + var(--safe-b)) 40px}
+ .top{margin-bottom:22px}
+ .top h1{font-size:50px}
+ .sbar{margin-left:-40px;margin-right:-40px;padding-left:40px;padding-right:40px}
+ .actions .in{max-width:1180px;padding:0 24px}
+ .actions .btn{min-height:56px;font-size:17px}
+ .btn{min-height:54px;font-size:16.5px}
+
+ /* piano: due colonne */
+ .stack.home,.stack.studio,.stack.quizhome,.stack.formule{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+ .home>#syncchip,.home>.stack-s,.home>.sh,.home>.sub,.home>.days,
+ .studio>.seg,.studio>.sub,.quizhome>.sh,.quizhome>.sub,.quizhome>.srcs,.quizhome>.topics,.quizhome>.row,.formule>.sub{grid-column:1/-1}
+ .days{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;gap:16px}
+ .count .big{font-size:132px}
+ .hero{padding:28px 26px 24px}
+ /* quiz iniziale */
+ .quizhome>.sim{grid-column:1/-1}
+ .quizhome>.sim:has(+.card){grid-column:1}
+ .quizhome>.sim+.card{grid-column:2;align-self:stretch}
+ .srcs{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .topics{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .quizhome>.card:last-child{grid-column:1/-1}
+ /* formule */
+ .formule>.card:last-child{grid-column:1/-1}
+ /* domanda: testo a sinistra, risposte a destra */
+ .q{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:36px;align-items:start}
+ .qa{position:sticky;top:96px}
+ .stem{font-size:25px;line-height:1.38}
+ .opt{min-height:70px;font-size:18px;padding:15px 16px}
+ .opt .lt{width:40px;height:40px}
+ .opt{grid-template-columns:40px minmax(0,1fr) 20px}
+ .why{font-size:16.5px}
+ /* risultato */
+ .cols2{grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:24px;align-items:start}
+ .cols2>.stack:first-child{position:sticky;top:20px}
+ /* flashcard */
+ .flip,.flip .inner{min-height:340px}
+ .face .txt{font-size:27px}
+ .face.backf .txt{font-size:23px}
+ .stack.narrow{max-width:820px}
+ /* schede studio */
+ .sheet .nm{font-size:19px}
+ .blk li,.trap p{font-size:16.5px}
+}
+
+/* ===== barra di navigazione (nuova) ===== */
+.tabbar{left:0;right:0;bottom:0;padding:0}
+.tb-in{max-width:none;margin:0;border-radius:0;border:0;border-top:1px solid rgba(184,23,79,.1);padding:6px 10px calc(6px + var(--safe-b));background:rgba(255,248,251,.88);-webkit-backdrop-filter:blur(24px) saturate(1.7);backdrop-filter:blur(24px) saturate(1.7);box-shadow:0 -10px 28px -16px rgba(150,25,75,.28)}
+.tab{min-height:62px;align-items:center}
+.tab .ic,[data-theme=dark] .tab .ic{width:auto;height:auto;border-radius:0;background:none;border:0;box-shadow:none;gap:4px;padding:0;color:var(--muted)}
+.tab .pl{display:grid;place-items:center;width:64px;height:32px;border-radius:16px;font-style:normal;transition:background .2s,transform .2s}
+.tab .ic span{font-size:11.5px;font-weight:700;line-height:1;letter-spacing:.01em}
+.tab svg{width:24px;height:24px}
+.tab:active .pl{transform:scale(.94)}
+.tab[aria-current=page] .ic,[data-theme=dark] .tab[aria-current=page] .ic{background:none;border:0;box-shadow:none;color:var(--acc2)}
+.tab[aria-current=page] .pl{background:rgba(224,69,123,.17)}
+.tab[aria-current=page] svg{stroke-width:2.3}
+[data-theme=dark] .tb-in{background:rgba(30,13,24,.9);border-top-color:var(--line);box-shadow:0 -10px 28px -16px rgba(0,0,0,.7)}
+[data-theme=dark] .tab[aria-current=page] .pl{background:rgba(240,98,156,.24)}
+.wrap{padding-bottom:calc(104px + var(--safe-b))}
+@media (min-width:700px) and (max-width:899px){.tb-in{padding-left:calc(50% - 300px);padding-right:calc(50% - 300px)}}
+@media (max-width:370px){.tab .pl{width:56px}.tab .ic span{font-size:10.5px}}
+/* tablet orizzontale: barra laterale */
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+ .tabbar{right:auto;top:0;bottom:0;width:104px}
+ .tabbar.hide{transform:translateX(-105%)}
+ .tb-in{height:100%;display:flex!important;flex-direction:column;justify-content:center;gap:16px;padding:24px 8px;border-top:0;border-right:1px solid rgba(184,23,79,.1);box-shadow:10px 0 28px -16px rgba(150,25,75,.28)}
+ [data-theme=dark] .tb-in{border-right-color:var(--line);box-shadow:10px 0 28px -16px rgba(0,0,0,.7)}
+ .tab{min-height:0}
+ .tab .pl{width:68px;height:38px;border-radius:19px}
+ .tab svg{width:26px;height:26px}
+ .tab .ic span{font-size:12px}
+ .wrap{padding-bottom:40px}
+ body.insession .wrap{padding-bottom:calc(116px + var(--safe-b))}
+}
 </style>
 </head>
 <body>
@@ -933,7 +1043,7 @@ function renderTabs(){
   const hide=view==="quiz"&&SES&&!SES.done;
   const t=$("#tabs");t.classList.toggle("hide",!!hide);
   const vs=allViews();
-  t.innerHTML=`<div class="tb-in" style="grid-template-columns:repeat(${vs.length},1fr)">${vs.map(v=>`<button class="tab" data-go="${v}" ${view===v?'aria-current="page"':""}><i class="ic">${ICON[v]}<span>${TABN[v]}</span></i></button>`).join("")}</div>`;
+  t.innerHTML=`<div class="tb-in" style="grid-template-columns:repeat(${vs.length},1fr)">${vs.map(v=>`<button class="tab" data-go="${v}" ${view===v?'aria-current="page"':""}><i class="ic"><i class="pl">${ICON[v]}</i><span>${TABN[v]}</span></i></button>`).join("")}</div>`;
 }
 function render(){
   if(DEAD)return;
@@ -976,7 +1086,7 @@ function vPiano(){
   const prog=TOPICS.map(t=>{const s=topStat(t.id);return `<div class="pr"><span>${dot(t.id)}${esc(t.short)}</span><div class="bar"><i style="width:${s.n?s.seen/s.n*100:0}%;background:${COL[t.id]}"></i></div><em class="num">${s.pct===null?"—":s.pct+"%"}</em></div>`}).join("");
   const info=impPanel();
   return `<header class="top"><div><span class="eyebrow">Statistica · Psicologia Unifi</span><h1>Prima prova</h1></div><div class="hr"><span class="date">ven 27 nov</span><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
-  <div class="stack">${syncChip()}${info}
+  <div class="stack home">${syncChip()}${info}
   <section class="hero glass">
     ${cd}
     <p class="lead">6 domande a scelta multipla, 4 risposte e una sola giusta. Le sezioni sono a tempo e non si torna indietro.</p>
@@ -1020,7 +1130,7 @@ function vStudio(){
   }else{
     body=`<p class="muted sub">Dove le domande ingannano: concetti che si somigliano, formule che si scambiano, numeri dati in forma diversa. Rileggile la sera prima.</p>`+TRAPS.map((t,i)=>`<article class="trap glass"><span class="eyebrow">${dot(t.top)}${esc(TOPMAP[t.top].short)}</span><h3>${esc(t.t)}</h3><p>${md(t.b)}</p><button class="chip" data-trap="${i}">Esercitati · ${t.q.length} domande</button></article>`).join("");
   }
-  return `<header class="top"><div><span class="eyebrow">Probabilità · Campionamento · Intervalli</span><h1>Studio</h1></div></header><div class="stack">${seg}${body}</div>`;
+  return `<header class="top"><div><span class="eyebrow">Probabilità · Campionamento · Intervalli</span><h1>Studio</h1></div></header><div class="stack studio">${seg}${body}</div>`;
 }
 
 /* ---------- SESSIONI ---------- */
@@ -1078,7 +1188,7 @@ function vQuiz(){
   const nerr=Object.keys(ERR).filter(id=>BYID[id]).length;
   const topics=TOPICS.map(t=>{const s=topStat(t.id);return `<button class="topic glass" data-topic="${t.id}" style="--sc:${COL[t.id]}"><span class="tn"><i class="sw"></i><span class="nm">${esc(t.name)}</span></span><span class="meta num">${s.n} domande · ${corsoTop(t.id).length} del corso${s.seen?` · ${s.seen} viste`:""}</span><span class="pc num">${s.pct===null?"":s.pct+"%"}</span></button>`}).join("");
   const hist=HIST.length?`<section class="glass card"><div class="ch"><h2>Ultime simulazioni</h2></div><div class="hist">${HIST.slice(0,5).map(h=>{const d=new Date(h.t);return `<div class="h"><span class="small muted">${d.toLocaleDateString("it-IT",{day:"numeric",month:"short"})} · ${h.r} ✓ · ${h.w} ✕ · ${h.b} vuote</span><b class="num">${voto(h.pts)}<small> /30</small></b></div>`}).join("")}</div></section>`:"";
-  return `<header class="top"><div><span class="eyebrow">${QS.length} domande</span><h1>Quiz</h1></div></header><div class="stack">
+  return `<header class="top"><div><span class="eyebrow">${QS.length} domande</span><h1>Quiz</h1></div></header><div class="stack quizhome">
   <section class="sim">
     <span class="eyebrow">Come alla prova</span><h2>Simulazione</h2>
     <p>6 domande in 3 sezioni: 1 di Probabilità, 3 di Campionamento, 2 di Intervalli. Quando chiudi una sezione non puoi più tornarci. Correzione solo alla fine.</p>
@@ -1127,14 +1237,14 @@ function vSession(){
     if(SES.ask==="sec"){const blank=rng.filter(k=>SES.ans[SES.ids[k]]===undefined).length,lastSec=s===SECS.length-1;
       modal=`<div class="modal"><div class="mbox glass"><b>${lastSec?"Consegnare la prova?":"Chiudere «"+esc(SECS[s].name)+"»?"}</b><p>${blank?`Hai ${blank} domand${blank===1?"a":"e"} senza risposta: valg${blank===1?"e":"ono"} 0. Ricorda che rispondere a caso conviene.`:"Hai risposto a tutte le domande della sezione."} ${lastSec?"Dopo la consegna vedi la correzione.":"Poi non potrai più tornare a questa sezione."}</p><div class="row"><button class="btn line" data-act="cancel-ask">Non ancora</button><button class="btn" data-act="confirm-sec">${lastSec?"Consegna":"Chiudi sezione"}</button></div></div></div>`}
     return `<div class="sbar"><div class="tbar"><button class="link" data-act="ask-exit">Esci</button>${head}<span class="clk num" id="clk">${clock(Date.now()-SES.secT0)}</span></div><div class="segs">${segs}</div></div>
-    <div class="q">${q.real?tagsHTML(q,true):""}${qBody(q)}<div class="opts">${opts}</div><p class="small muted hint">Tocca di nuovo la risposta scelta per toglierla.</p>${map}</div>
+    <div class="q"><div class="qa">${q.real?tagsHTML(q,true):""}${qBody(q)}</div><div class="qb"><div class="opts">${opts}</div><p class="small muted hint">Tocca di nuovo la risposta scelta per toglierla.</p>${map}</div></div>
     <div class="actions"><div class="in">${act}</div></div>${modal}${exitModal()}`;
   }
   head=`<span class="ttl"><small>${esc(SES.title)}</small>Domanda ${SES.i+1} di ${total}</span>`;
   if(SES.fb)act=a===undefined?`<button class="btn line narrow" data-act="skip">Salta</button><button class="btn" disabled>Scegli una risposta</button>`:`<button class="btn" data-act="${isLast?"finish":"next"}">${isLast?"Vedi il risultato":"Avanti"}</button>`;
   else act=`<button class="btn line narrow" data-act="prev" ${SES.i===0?"disabled":""}>Indietro</button><button class="btn" data-act="${isLast?"finish":"next"}">${isLast?"Consegna":"Avanti"}</button>`;
   return `<div class="sbar"><div class="tbar"><button class="link" data-act="ask-exit">Esci</button>${head}<span class="clk"></span></div><div class="bar"><i style="width:${(SES.i+(reveal?1:0))/total*100}%"></i></div></div>
-  <div class="q">${tagsHTML(q)}${qBody(q)}<div class="opts">${opts}</div>${why}</div>
+  <div class="q"><div class="qa">${tagsHTML(q)}${qBody(q)}</div><div class="qb"><div class="opts">${opts}</div>${why}</div></div>
   <div class="actions"><div class="in">${act}</div></div>${exitModal()}`;
 }
 function exitModal(){return SES.exit?`<div class="modal"><div class="mbox glass"><b>Uscire?</b><p>${SES.kind==="sim"?"La simulazione non verrà salvata.":"Le risposte già date restano salvate negli errori e nelle statistiche."}</p><div class="row"><button class="btn line" data-act="cancel-exit">Resta</button><button class="btn" data-act="confirm-exit">Esci</button></div></div></div>`:""}
@@ -1154,7 +1264,7 @@ function vResult(){
     <div class="rs">${md(q.stem)}</div>${q.tab?qBody(q).replace(/^<h2[\s\S]*?<\/h2>/,""):""}
     ${st==="ko"?`<div class="ya">Hai risposto: ${md(q.opts[a])}</div>`:""}<div class="ca">Corretta: ${md(q.opts[q.ans])}</div>
     <div class="why"><b>Perché</b><span>${md(q.note)}</span></div></article>`}).join("")||`<p class="muted">Nessuna domanda qui.</p>`;
-  return `<header class="top"><div><span class="eyebrow">${esc(SES.title)} · ${clock(r.time)}</span><h1>Risultato</h1></div></header><div class="stack">
+  return `<header class="top"><div><span class="eyebrow">${esc(SES.title)} · ${clock(r.time)}</span><h1>Risultato</h1></div></header><div class="cols2"><div class="stack">
   <section class="glass card res">
     <div class="ring"><svg viewBox="0 0 160 160"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8DB3"/><stop offset="1" stop-color="#C2185B"/></linearGradient></defs><circle cx="80" cy="80" r="70" fill="none" stroke="rgba(224,69,123,.14)" stroke-width="12"/><circle cx="80" cy="80" r="70" fill="none" stroke="url(#rg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-frac)}" transform="rotate(-90 80 80)"/></svg><div class="tx">${centre}</div></div>
     <p class="msg">${msg}</p>
@@ -1163,9 +1273,9 @@ function vResult(){
     ${r.blank&&sim?`<p class="small center">Avevi ${r.blank} vuot${r.blank===1?"a":"e"}: rispondendo a caso avresti guadagnato in media +${fmt(r.blank*.25)} punti.</p>`:""}
     <div class="row center"><button class="btn" data-act="${sim?"start-sim":"again"}">${sim?"Nuova simulazione":"Rifai"}</button>${Object.keys(ERR).length?`<button class="btn glassbtn" data-act="start-err">Solo errori (${Object.keys(ERR).length})</button>`:""}<button class="btn line" data-act="leave">Chiudi</button></div>
   </section>
-  ${bys?`<section class="glass card"><h2>Per sezione</h2><div class="prs">${bys}</div></section>`:""}
+  ${bys?`<section class="glass card"><h2>Per sezione</h2><div class="prs">${bys}</div></section>`:""}</div><div class="stack">
   <div class="seg" role="group"><button data-rev="all" aria-pressed="${revFilter==="all"}">Tutte ${total}</button><button data-rev="ko" aria-pressed="${revFilter==="ko"}">Sbagliate ${r.wrong}</button><button data-rev="bl" aria-pressed="${revFilter==="bl"}">Vuote ${r.blank}</button></div>
-  <div class="rev">${items}</div></div>`;
+  <div class="rev">${items}</div></div></div>`;
 }
 
 /* ---------- FLASHCARD ---------- */
@@ -1178,7 +1288,7 @@ function vFlash(){
   const c=d[FCS.idx];
   const card=!d.length?`<div class="flip glass"><div class="face"><span class="txt">Nessuna carta qui.</span><span class="hint">${FCS.only?"Nessuna carta «Da rivedere» in questo argomento.":""}</span></div></div>`
    :`<button class="flip ${FCS.flip?"back":""}" data-act="flip" aria-label="Gira la carta"><span class="inner"><span class="face front glass"><span class="lab">${dot(c[0])}${esc(TOPMAP[c[0]].short)}</span><span class="txt">${esc(c[1])}</span><span class="hint">Tocca per girare</span></span><span class="face backf"><span class="lab">Risposta</span><span class="txt">${esc(c[2])}</span><span class="hint"></span></span></span></button>`;
-  return `<header class="top"><div><span class="eyebrow">${CARDS.length} carte</span><h1>Flashcard</h1></div></header><div class="stack">
+  return `<header class="top"><div><span class="eyebrow">${CARDS.length} carte</span><h1>Flashcard</h1></div></header><div class="stack narrow">
   <div class="fchips" role="group">${chips}</div>
   <div class="fbar"><button class="chip ${FCS.only?"on":""}" data-act="fonly">Solo da rivedere · ${rev}</button><button class="chip" data-act="fshuf">Mescola</button></div>
   <div class="fcount num"><span>${d.length?FCS.idx+1:0} / ${d.length}</span><span>Le so ${known} · Da rivedere ${rev}</span></div>
@@ -1194,7 +1304,7 @@ function vFormule(){
   const tt=`<table class="tt"><tr><th>gdl</th><th>90%</th><th>95%</th><th>98%</th><th>99%</th></tr>${TTAB.map(r=>`<tr><th>${r[0]}</th>${r.slice(1).map(x=>`<td>${x}</td>`).join("")}</tr>`).join("")}</table>`;
   const pt=`<table class="tt phi"><tr><th>z</th>${[0,1,2,3,4,5,6,7,8,9].map(k=>`<th>,0${k}</th>`).join("")}</tr>${PHITAB.map(r=>`<tr><th>${r[0]}</th>${r.slice(1).map(x=>`<td>${x}</td>`).join("")}</tr>`).join("")}</table>`;
   return `<header class="top"><div><span class="eyebrow">Si può portare su carta</span><h1>Formule</h1></div></header>
-  <div class="stack">
+  <div class="stack formule">
   <p class="muted sub noprint">Alla prova si può consultare solo materiale su carta: porta stampati il formulario ufficiale del corso e le tavole della Normale e della t. Qui trovi le formule della prima parte con la stessa notazione.</p>
   ${groups}
   <section class="glass card"><h2>Valori critici della Normale</h2><div class="tw">${zt}</div></section>

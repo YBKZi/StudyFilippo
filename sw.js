@@ -1,7 +1,7 @@
 /* Statistica (Filippo): service worker.
    Pagina: prima la rete (così gli aggiornamenti arrivano subito), se manca la connessione la copia salvata.
    Icone e manifest: prima la copia salvata. Cambiando V si rifà tutta la cache. */
-const V='sf-v5';
+const V='sf-v6';
 const FILES=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','maskable-512.png','apple-touch-icon.png'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(V).then(c=>Promise.all(FILES.map(u=>c.add(new Request(u,{cache:'reload'}))))).then(()=>self.skipWaiting()));
