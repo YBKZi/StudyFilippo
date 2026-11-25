@@ -583,33 +583,32 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .blk li,.trap p{font-size:16.5px}
 }
 
-/* ===== barra di navigazione (nuova) ===== */
-.tabbar{left:0;right:0;bottom:0;padding:0}
-.tb-in{max-width:none;margin:0;border-radius:0;border:0;border-top:1px solid rgba(184,23,79,.1);padding:6px 10px calc(6px + var(--safe-b));background:rgba(255,248,251,.88);-webkit-backdrop-filter:blur(24px) saturate(1.7);backdrop-filter:blur(24px) saturate(1.7);box-shadow:0 -10px 28px -16px rgba(150,25,75,.28)}
-.tab{min-height:62px;align-items:center}
-.tab .ic,[data-theme=dark] .tab .ic{width:auto;height:auto;border-radius:0;background:none;border:0;box-shadow:none;gap:4px;padding:0;color:var(--muted)}
-.tab .pl{display:grid;place-items:center;width:64px;height:32px;border-radius:16px;font-style:normal;transition:background .2s,transform .2s}
-.tab .ic span{font-size:11.5px;font-weight:700;line-height:1;letter-spacing:.01em}
+/* ===== barra fluttuante ===== */
+.tabbar{left:0;right:0;bottom:0;padding:0 12px calc(12px + var(--safe-b));pointer-events:none}
+.tb-in{pointer-events:auto;display:flex!important;justify-content:center;align-items:center;gap:4px;width:max-content;max-width:100%;margin:0 auto;padding:7px;border-radius:999px;background:rgba(255,248,251,.76);border:1px solid rgba(255,255,255,.92);-webkit-backdrop-filter:blur(26px) saturate(1.8);backdrop-filter:blur(26px) saturate(1.8);box-shadow:0 1px 0 #fff inset,0 18px 38px -12px rgba(150,25,75,.42)}
+.tab{min-height:0;padding:0}
+.tab .ic,[data-theme=dark] .tab .ic{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;width:auto;height:48px;min-width:48px;padding:0;border-radius:999px;color:var(--muted);background:none;border:0;box-shadow:none;transition:background .25s,color .25s,padding .25s}
+.tab .pl{display:grid;place-items:center;width:48px;height:48px;font-style:normal}
+.tab .ic span{display:none;font-size:13.5px;font-weight:700;line-height:1;white-space:nowrap}
 .tab svg{width:24px;height:24px}
-.tab:active .pl{transform:scale(.94)}
-.tab[aria-current=page] .ic,[data-theme=dark] .tab[aria-current=page] .ic{background:none;border:0;box-shadow:none;color:var(--acc2)}
-.tab[aria-current=page] .pl{background:rgba(224,69,123,.17)}
-.tab[aria-current=page] svg{stroke-width:2.3}
-[data-theme=dark] .tb-in{background:rgba(30,13,24,.9);border-top-color:var(--line);box-shadow:0 -10px 28px -16px rgba(0,0,0,.7)}
-[data-theme=dark] .tab[aria-current=page] .pl{background:rgba(240,98,156,.24)}
+.tab:active .ic{transform:scale(.94)}
+.tab[aria-current=page] .ic,[data-theme=dark] .tab[aria-current=page] .ic{background:var(--grad);color:#fff;padding-right:18px;box-shadow:0 8px 18px -8px rgba(194,24,91,.75)}
+.tab[aria-current=page] .pl{width:44px}
+.tab[aria-current=page] .ic span{display:block;margin-left:2px}
+[data-theme=dark] .tb-in{background:rgba(40,18,32,.74);border-color:var(--line);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 18px 40px -10px rgba(0,0,0,.65)}
 .wrap{padding-bottom:calc(104px + var(--safe-b))}
-@media (min-width:700px) and (max-width:899px){.tb-in{padding-left:calc(50% - 300px);padding-right:calc(50% - 300px)}}
-@media (max-width:370px){.tab .pl{width:56px}.tab .ic span{font-size:10.5px}}
-/* tablet orizzontale: barra laterale */
+@media (max-width:370px){.tab .ic,[data-theme=dark] .tab .ic{height:44px;min-width:44px}.tab .pl{width:44px;height:44px}.tab[aria-current=page] .pl{width:40px}.tab[aria-current=page] .ic{padding-right:14px}.tab[aria-current=page] .ic span{font-size:12.5px}}
+/* tablet orizzontale: pillola verticale a sinistra */
 @media (min-width:900px) and (min-aspect-ratio:1/1){
- .tabbar{right:auto;top:0;bottom:0;width:104px}
- .tabbar.hide{transform:translateX(-105%)}
- .tb-in{height:100%;display:flex!important;flex-direction:column;justify-content:center;gap:16px;padding:24px 8px;border-top:0;border-right:1px solid rgba(184,23,79,.1);box-shadow:10px 0 28px -16px rgba(150,25,75,.28)}
- [data-theme=dark] .tb-in{border-right-color:var(--line);box-shadow:10px 0 28px -16px rgba(0,0,0,.7)}
- .tab{min-height:0}
- .tab .pl{width:68px;height:38px;border-radius:19px}
+ .tabbar{right:auto;top:0;bottom:0;padding:0 0 0 18px;display:flex;align-items:center}
+ .tabbar.hide{transform:translateX(-140%)}
+ .tb-in{flex-direction:column;gap:8px;padding:10px;border-radius:44px}
+ .tab .ic,[data-theme=dark] .tab .ic{flex-direction:column;height:auto;width:74px;min-width:0;padding:8px 0 7px;border-radius:32px;gap:4px}
+ .tab .pl{width:auto;height:30px}
  .tab svg{width:26px;height:26px}
- .tab .ic span{font-size:12px}
+ .tab .ic span,.tab[aria-current=page] .ic span{display:block;margin:0;font-size:11.5px}
+ .tab[aria-current=page] .ic,[data-theme=dark] .tab[aria-current=page] .ic{padding:8px 0 7px}
+ .tab[aria-current=page] .pl{width:auto}
  .wrap{padding-bottom:40px}
  body.insession .wrap{padding-bottom:calc(116px + var(--safe-b))}
 }
@@ -1043,7 +1042,7 @@ function renderTabs(){
   const hide=view==="quiz"&&SES&&!SES.done;
   const t=$("#tabs");t.classList.toggle("hide",!!hide);
   const vs=allViews();
-  t.innerHTML=`<div class="tb-in" style="grid-template-columns:repeat(${vs.length},1fr)">${vs.map(v=>`<button class="tab" data-go="${v}" ${view===v?'aria-current="page"':""}><i class="ic"><i class="pl">${ICON[v]}</i><span>${TABN[v]}</span></i></button>`).join("")}</div>`;
+  t.innerHTML=`<div class="tb-in" style="grid-template-columns:repeat(${vs.length},1fr)">${vs.map(v=>`<button class="tab" data-go="${v}" aria-label="${TABN[v]}" ${view===v?'aria-current="page"':""}><i class="ic"><i class="pl">${ICON[v]}</i><span>${TABN[v]}</span></i></button>`).join("")}</div>`;
 }
 function render(){
   if(DEAD)return;
