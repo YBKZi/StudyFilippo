@@ -225,9 +225,9 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .hist b{font-size:19px}.hist small{font-size:12px;color:var(--muted);font-weight:600}
 .switch{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:6px 0}
 .switch small{display:block;font-size:13px;color:var(--muted)}
-.switch button{flex:none;width:52px;height:32px;border-radius:99px;background:rgba(184,23,79,.18);position:relative;transition:background .2s}
+.switch button{flex:none;width:52px;height:32px;border-radius:99px;background-color:rgba(110,85,98,.3);position:relative;transition:background-color .25s,box-shadow .25s}
 .switch button::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:transform .2s}
-.switch button[aria-pressed=true]{background:var(--grad)}
+.switch button[aria-pressed=true]{background-color:#E0457F;box-shadow:0 6px 14px -6px rgba(194,24,91,.7)}
 .switch button[aria-pressed=true]::after{transform:translateX(20px)}
 
 /* sessione */
@@ -492,7 +492,8 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 [data-theme=dark] .bar{background:rgba(255,255,255,.12)}
 [data-theme=dark] .task input{background:rgba(255,255,255,.1);border-color:rgba(255,160,200,.5)}
 [data-theme=dark] .day.next{border-color:rgba(240,98,156,.7);box-shadow:0 0 0 5px rgba(240,98,156,.14),var(--sh)}
-[data-theme=dark] .switch button{background:rgba(255,255,255,.2)}
+[data-theme=dark] .switch button{background-color:rgba(255,255,255,.22)}
+[data-theme=dark] .switch button[aria-pressed=true]{background-color:#F0629C}
 [data-theme=dark] .ri .st{color:#fff}
 [data-theme=dark] .dot{box-shadow:0 0 0 3px rgba(255,255,255,.12)}
 [data-theme=dark] .face.backf .txt,[data-theme=dark] .sim h2{color:#fff}
@@ -1076,7 +1077,7 @@ function render(){
   if(!allViews().includes(view))view="piano";
   const fn={piano:vPiano,studio:vStudio,quiz:vQuiz,flash:vFlash,formule:vFormule}[view];
   const el=$("#view");el.innerHTML=fn();
-  el.classList.remove("in");void el.offsetWidth;el.classList.add("in");
+  const vk=view+(SES?(SES.done?"r":"s"):"");if(el.dataset.vk!==vk){el.dataset.vk=vk;el.classList.remove("in");void el.offsetWidth;el.classList.add("in")}
   document.body.classList.toggle("insession",!!(view==="quiz"&&SES&&!SES.done));
 }
 
@@ -1502,13 +1503,13 @@ document.addEventListener("click",e=>{
   if(D.go){go(D.go);return}
   if(D.src){startSession(srcQs(D.src).map(q=>q.id),D.src);return}
   if(D.corso){startSession(corsoTop(D.corso).map(q=>q.id),"Esercizi del corso · "+TOPMAP[D.corso].short);return}
-  if(D.pool){SETT.pool=D.pool;store.set("sett",SETT);render();return}
+  if(D.pool){SETT.pool=D.pool;store.set("sett",SETT);const g=t.parentElement;if(g)g.querySelectorAll("[data-pool]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.pool===D.pool||(D.pool!=="tutte"&&b.dataset.pool==="corso"))));return}
   if(D.topic){startSession(shuffle(topQs(D.topic)).map(q=>q.id),TOPMAP[D.topic].name);return}
   if(D.sheet){openSheet=D.sheet;studioTab="schede";go("studio");const el=document.getElementById("sheet-"+D.sheet);if(el)el.scrollIntoView({block:"start"});return}
   if(D.fc){FCS={top:D.fc,only:false,idx:0,flip:false,deck:null};go("flash");return}
   if(D.studio){studioTab=D.studio;if(view!=="studio")go("studio");else render();return}
   if(D.trapt){studioTab="trappole";go("studio");return}
-  if(D.set){SETT[D.set]=!SETT[D.set];store.set("sett",SETT);render();return}
+  if(D.set){SETT[D.set]=!SETT[D.set];store.set("sett",SETT);t.setAttribute("aria-pressed",String(!!SETT[D.set]));return}
   if(D.calc){const k=D.calc[0],up=D.calc[1]==="+";calc[k]=Math.max(0,Math.min(SIM_N,calc[k]+(up?1:-1)));if(calc.g+calc.w>SIM_N){if(k==="g")calc.w=SIM_N-calc.g;else calc.g=SIM_N-calc.w}const c=document.querySelector(".calc");if(c)c.outerHTML=calcHTML();return}
   if(D.rev){revFilter=D.rev;render();return}
   if(D.ftop){FCS={top:D.ftop,only:FCS.only,idx:0,flip:false,deck:null};render();return}
