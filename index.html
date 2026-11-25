@@ -617,6 +617,27 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 .top{align-items:center;margin:12px 2px 24px;min-height:44px}
 @media (max-width:430px){.top{margin:10px 2px 22px}}
 @media (min-width:900px) and (min-aspect-ratio:1/1){.top{margin:14px 2px 30px;min-height:56px}}
+
+/* ===== compattazione ===== */
+.top{margin:6px 2px 16px;min-height:40px}
+.top h1{font-size:34px}
+@media (max-width:430px){.top{margin:4px 2px 14px;min-height:38px}.top h1{font-size:32px}.stack{gap:12px}.hero{padding:16px 14px 14px}.count .big{font-size:84px}}
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+ .wrap{padding-top:calc(env(safe-area-inset-top,0px) + 20px)}
+ .top{margin:0 2px 16px;min-height:48px}
+ .top h1{font-size:42px}
+ .stack.home,.stack.studio,.stack.quizhome,.stack.formule{gap:16px}
+ .home>#syncchip,.home>.stack-s{order:-1}
+ .home>.hero{grid-column:1;grid-row:span 2;padding:22px 22px 20px;align-self:stretch}
+ .home>.hero+.card{grid-column:2/4}
+ .home>.card:last-child{grid-column:2/4;order:1}
+ .home>.sh,.home>.sub,.home>.days{order:2}
+ .home>.strat{grid-column:1/-1;order:3}
+ .count .big{font-size:112px}
+ .stack.home{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr)}
+ .days{gap:14px}
+ .sh{margin-top:6px}
+}
 </style>
 </head>
 <body>
