@@ -627,13 +627,13 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .top h1{font-size:42px}
  .stack.home,.stack.studio,.stack.quizhome,.stack.formule{gap:16px}
  .home>#syncchip,.home>.stack-s{order:-1}
- .home>.hero{grid-column:1;grid-row:span 2;padding:22px 22px 20px;align-self:stretch}
- .home>.hero+.card{grid-column:2/4}
- .home>.card:last-child{grid-column:2/4;order:1}
+ .home>.hero{grid-column:1;padding:22px 22px 20px;align-self:stretch}
+ .home>.hero+.card{grid-column:2;align-self:stretch}
+ .home>.card:last-child{grid-column:3;order:1;align-self:stretch}
  .home>.sh,.home>.sub,.home>.days{order:2}
  .home>.strat{grid-column:1/-1;order:3}
  .count .big{font-size:112px}
- .stack.home{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto 1fr}
+ .stack.home{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto}
  .days{gap:14px}
  .sh{margin-top:6px}
 }
@@ -1152,8 +1152,6 @@ function vPiano(){
   <div class="stack home">${syncChip()}${info}
   <section class="hero glass">
     ${cd}
-    <div class="secs">${secs}</div>
-    <div class="score3"><span class="s ok"><b>+4</b>giusta</span><span class="s ko"><b>−1</b>sbagliata</span><span class="s bl"><b>0</b>vuota</span></div>
     <div class="row">${nextBtn}<button class="btn glassbtn" data-go="formule">Formulario</button></div>
   </section>
   <section class="glass card">
@@ -1166,7 +1164,9 @@ function vPiano(){
   <section class="glass card strat">
     <span class="eyebrow">Strategia</span><h2>Rispondi sempre</h2>
     <p>Con +4 e −1, anche tirando a caso fra 4 opzioni guadagni in media <b>+0,25 punti</b>. Una giusta compensa quattro sbagliate. In media lasciare vuoto non conviene.</p>
+    <div class="score3"><span class="s ok"><b>+4</b>giusta</span><span class="s ko"><b>−1</b>sbagliata</span><span class="s bl"><b>0</b>vuota</span></div>
     <div class="ev"><div><b>4 opzioni</b><span>a caso</span><em class="num">+0,25</em></div><div><b>3 opzioni</b><span>ne escludi 1</span><em class="num">+0,67</em></div><div><b>2 opzioni</b><span>ne escludi 2</span><em class="num">+1,50</em></div></div>
+    <h3>Le domande della prova</h3><div class="secs">${secs}</div>
     <h3>Calcola il voto</h3>${calcHTML()}
     <p class="small muted">Il foglio delle regole spiega la conversione solo per l’esame completo da 12 domande, (punti + 12) / 2. Qui il voto è stimato con la stessa logica per 6 domande: punti + 6. Per il 18 servono almeno 12 punti.</p>
     <p class="small"><b>Un’eccezione.</b> Se sei sicuro di 4 risposte, rispondi a tutto: anche con 2 errori fai 20. Se ne hai solo 3 sicure e ti basta passare, ogni errore ti porta sotto il 18: rispondi solo dove riesci a escludere almeno un’opzione.</p>
