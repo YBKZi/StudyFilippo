@@ -113,7 +113,10 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .score3 .s{display:flex;flex-direction:column;align-items:center;gap:1px;border-radius:16px;padding:9px 6px;font-size:12.5px;font-weight:600;color:var(--muted);background:rgba(255,255,255,.6);border:1px solid var(--line);text-align:center}
 .score3 .s b{font-size:22px;font-weight:800}
 .score3 .ok b{color:var(--ok)}.score3 .ko b{color:var(--ko)}.score3 .bl b{color:var(--ink2)}
-.hero .row{margin-top:18px}
+.hero .row{margin-top:14px}
+.nx{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;padding:11px 14px;border-radius:16px;background:rgba(255,255,255,.62);border:1px solid var(--line);font-weight:600;font-size:15px}
+.nx i{display:block;font-style:normal;font-size:12.5px;color:var(--muted);font-weight:600;margin-top:2px}
+[data-theme=dark] .nx{background:rgba(255,255,255,.07)}
 .hero .row .btn{flex:1 1 180px}
 
 /* barre */
@@ -629,7 +632,7 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .home>#syncchip,.home>.stack-s{order:-1}
  .home>.hero{grid-column:1;padding:22px 22px 20px;align-self:stretch}
  .home>.hero+.card{grid-column:2/4;align-self:stretch;display:flex;flex-direction:column}
- .home>.hero+.card .prs{flex:1;display:flex;flex-direction:column;justify-content:space-evenly}
+ .home>.hero+.card .prs{flex:1;display:flex;flex-direction:column;justify-content:space-around;margin-top:6px}
  .home>.card:last-child{grid-column:1/-1;order:4}
  .home>.sh,.home>.sub,.home>.days{order:2}
  .home>.strat{grid-column:1/-1;order:3}
@@ -1147,12 +1150,14 @@ function vPiano(){
       <div class="tasks">${p.tasks.map((x,k)=>{const key=i+"."+k;return `<label class="task ${PLANCHK[key]?"done":""}"><input type="checkbox" data-plan="${key}" ${PLANCHK[key]?"checked":""}><span>${esc(x)}</span></label>`}).join("")}</div>
       <div class="chips">${btns}</div></article>`}).join("");
   const nextBtn=ni>=0&&PLAN[ni].tops.length?`<button class="btn" data-sheet="${PLAN[ni].tops[0]}">Inizia la ${esc(PLAN[ni].d.toLowerCase())}</button>`:`<button class="btn" data-act="start-sim">Fai una simulazione</button>`;
+  let nx="";if(ni>=0){const p=PLAN[ni],dn=p.tasks.filter((_,k)=>PLANCHK[ni+"."+k]).length,mins=p.tasks.reduce((a,x)=>a+(+((x.match(/\((\d+) min\)/)||[])[1]||0)),0);nx=`<div class="nx"><span>${esc(p.t)}<i>${p.tasks.length} attività · ${mins} min</i></span><span class="pill num">${dn}/${p.tasks.length}</span></div>`}
   const prog=TOPICS.map(t=>{const s=topStat(t.id);return `<div class="pr"><span>${dot(t.id)}${esc(t.short)}</span><div class="bar"><i style="width:${s.n?s.seen/s.n*100:0}%;background:${COL[t.id]}"></i></div><em class="num">${s.pct===null?"—":s.pct+"%"}</em></div>`}).join("");
   const info=impPanel();
   return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="impbtn" data-act="imp-toggle">Importa</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   <div class="stack home">${syncChip()}${info}
   <section class="hero glass">
     ${cd}
+    ${nx}
     <div class="row">${nextBtn}<button class="btn glassbtn" data-go="formule">Formulario</button></div>
   </section>
   <section class="glass card">
