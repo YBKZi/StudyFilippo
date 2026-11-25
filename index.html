@@ -643,6 +643,36 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 .impbtn{height:36px;padding:0 16px;border-radius:99px;background:var(--glass2);border:1px solid var(--line);color:var(--acc2);font-weight:700;font-size:13.5px;white-space:nowrap}
 .impbtn:active{transform:scale(.96)}
 [data-theme=dark] .impbtn{color:#FFC2D8}
+
+/* ===== animazioni (solo transform e opacity) ===== */
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.88)}55%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:none}22%{transform:translateX(-6px)}50%{transform:translateX(5px)}78%{transform:translateX(-3px)}}
+@keyframes sheetUp{from{opacity:0;transform:translateY(26px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:none}}
+@keyframes veil{from{opacity:0}to{opacity:1}}
+.wrap.in{animation:none}
+.wrap.in .top,.wrap.in .stack>*,.wrap.in .cols2>*,.wrap.in .q>*{animation:rise .34s cubic-bezier(.2,.7,.2,1) both}
+.wrap.in .stack>:nth-child(2),.wrap.in .q>.qb{animation-delay:.04s}
+.wrap.in .stack>:nth-child(3){animation-delay:.08s}
+.wrap.in .stack>:nth-child(4){animation-delay:.12s}
+.wrap.in .stack>:nth-child(5){animation-delay:.16s}
+.wrap.in .stack>:nth-child(6){animation-delay:.2s}
+.wrap.in .stack>:nth-child(n+7){animation:none}
+.wrap.in .bar i{transform-origin:left;animation:grow .7s cubic-bezier(.2,.7,.2,1) .15s both}
+body.vchg .tab[aria-current=page] .ic{animation:pop .34s cubic-bezier(.3,.8,.3,1)}
+.modal{animation:veil .2s ease-out}
+.mbox{animation:sheetUp .3s cubic-bezier(.2,.8,.2,1)}
+.sheet[open]>:not(summary){animation:rise .28s cubic-bezier(.2,.7,.2,1) both}
+.flip{animation:rise .28s cubic-bezier(.2,.7,.2,1) both}
+.opt.sel{animation:pop .22s cubic-bezier(.3,.8,.3,1)}
+.opt.ok{animation:pop .3s cubic-bezier(.3,.8,.3,1)}
+.opt.ko{animation:shake .34s ease-out}
+.task input.pop{animation:pop .3s cubic-bezier(.3,.8,.3,1)}
+.chip,.themebtn,.impbtn,.syncchip,.glassbtn,.qmap button{transition:transform .12s,background .15s}
+.chip:active,.themebtn:active,.syncchip:active,.glassbtn:active,.qmap button:active{transform:scale(.95)}
+.day:active,.sheet>summary:active{transform:scale(.99)}
+.sheet>summary{transition:transform .12s}
 </style>
 </head>
 <body>
@@ -1081,7 +1111,7 @@ function render(){
   if(!allViews().includes(view))view="piano";
   const fn={piano:vPiano,studio:vStudio,quiz:vQuiz,flash:vFlash,formule:vFormule}[view];
   const el=$("#view");el.innerHTML=fn();
-  const vk=view+(SES?(SES.done?"r":"s"):"");if(el.dataset.vk!==vk){el.dataset.vk=vk;el.classList.remove("in");void el.offsetWidth;el.classList.add("in")}
+  const vk=view+(SES?(SES.done?"r":"s"+SES.i):"");if(el.dataset.vk!==vk){el.dataset.vk=vk;el.classList.remove("in");void el.offsetWidth;el.classList.add("in");document.body.classList.add("vchg");clearTimeout(window._vt);window._vt=setTimeout(()=>{el.classList.remove("in");document.body.classList.remove("vchg")},720)}
   document.body.classList.toggle("insession",!!(view==="quiz"&&SES&&!SES.done));
 }
 
@@ -1555,7 +1585,8 @@ document.addEventListener("change",e=>{
   const p=e.target.closest("[data-plan]");
   if(!p)return;
   PLANCHK[p.dataset.plan]=p.checked;store.set("plan",PLANCHK);touch();
-  const y=window.scrollY;render();window.scrollTo(0,y);
+  const y=window.scrollY,key=p.dataset.plan,on=p.checked;render();window.scrollTo(0,y);
+  if(on){const n=document.querySelector('[data-plan="'+key+'"]');if(n)n.classList.add("pop")}
 });
 document.addEventListener("keydown",e=>{
   if(view==="quiz"&&SES&&!SES.done&&!SES.ask&&!SES.exit){const q=BYID[SES.ids[SES.i]],k=q.vf?"vf".indexOf(e.key.toLowerCase()):"abcd".indexOf(e.key.toLowerCase());if(k>=0&&k<q.opts.length){pick(k);e.preventDefault()}}
