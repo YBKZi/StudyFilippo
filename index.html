@@ -639,6 +639,10 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .days{gap:14px}
  .sh{margin-top:6px}
 }
+
+.impbtn{height:36px;padding:0 16px;border-radius:99px;background:var(--glass2);border:1px solid var(--line);color:var(--acc2);font-weight:700;font-size:13.5px;white-space:nowrap}
+.impbtn:active{transform:scale(.96)}
+[data-theme=dark] .impbtn{color:#FFC2D8}
 </style>
 </head>
 <body>
@@ -1111,7 +1115,7 @@ function vPiano(){
   const nextBtn=ni>=0&&PLAN[ni].tops.length?`<button class="btn" data-sheet="${PLAN[ni].tops[0]}">Inizia la ${esc(PLAN[ni].d.toLowerCase())}</button>`:`<button class="btn" data-act="start-sim">Fai una simulazione</button>`;
   const prog=TOPICS.map(t=>{const s=topStat(t.id);return `<div class="pr"><span>${dot(t.id)}${esc(t.short)}</span><div class="bar"><i style="width:${s.n?s.seen/s.n*100:0}%;background:${COL[t.id]}"></i></div><em class="num">${s.pct===null?"—":s.pct+"%"}</em></div>`}).join("");
   const info=impPanel();
-  return `<header class="top"><div><h1>Prima prova</h1></div><div class="hr"><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
+  return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="impbtn" data-act="imp-toggle">Importa</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   <div class="stack home">${syncChip()}${info}
   <section class="hero glass">
     ${cd}
@@ -1491,7 +1495,7 @@ function syncChip(){
 function impPanel(){
   const note="";
   const msg=SYNC.impMsg?`<p class="small">${esc(SYNC.impMsg)}</p>`:"";
-  if(!SYNC.showImp)return `<div class="stack-s">${note}${msg}<button class="syncchip" data-act="imp-toggle">Hai progressi su un'altra versione? Importali ›</button></div>`;
+  if(!SYNC.showImp)return msg?`<div class="stack-s">${msg}</div>`:"";
   return `<section class="glass card">${note}<span class="eyebrow">Importa progressi</span><h2>Incolla il codice</h2><p class="small">Nella vecchia app tocca «Copia i miei progressi» e incolla qui. I progressi si uniscono a quelli che hai già: non viene cancellato niente.</p><textarea id="impbox" rows="3" style="width:100%;margin:8px 0;font:inherit"></textarea>${msg}<div class="row"><button class="btn" data-act="imp-go">Importa</button><button class="btn glassbtn" data-act="imp-toggle">Chiudi</button></div></section>`;
 }
 
