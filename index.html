@@ -53,7 +53,7 @@ p{margin:0}
 .num{font-variant-numeric:tabular-nums}
 .muted{color:var(--muted)}.small{font-size:13.5px;line-height:1.5}.center{text-align:center;justify-content:center}
 .okc{color:var(--ok)}.koc{color:var(--ko)}
-.wrap{max-width:760px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 22px) 18px calc(118px + var(--safe-b))}
+.wrap{--pt:12px;max-width:760px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + var(--pt)) 18px calc(118px + var(--safe-b))}
 body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .wrap.in{animation:fade .35s cubic-bezier(.2,.7,.2,1)}
 @keyframes fade{from{opacity:0}to{opacity:1}}
@@ -229,7 +229,7 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .switch button[aria-pressed=true]::after{transform:translateX(20px)}
 
 /* sessione */
-.sbar{position:sticky;top:0;z-index:20;margin:calc(-22px - env(safe-area-inset-top,0px)) -18px 18px;padding:calc(env(safe-area-inset-top,0px) + 8px) 18px 12px;background:rgba(255,240,246,.82);-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);border-bottom:1px solid rgba(255,255,255,.8)}
+.sbar{position:sticky;top:0;z-index:20;margin:calc(-1*var(--pt) - env(safe-area-inset-top,0px)) -18px 18px;padding:calc(env(safe-area-inset-top,0px) + 8px) 18px 12px;background:rgba(255,240,246,.82);-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);border-bottom:1px solid rgba(255,255,255,.8)}
 .tbar{display:grid;grid-template-columns:4.2em minmax(0,1fr) 4.2em;align-items:center;gap:8px;margin-bottom:8px}
 .ttl{text-align:center;font-weight:700;font-size:15px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ttl small{display:block;font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.04em}
@@ -536,8 +536,8 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 /* tablet in orizzontale: barra laterale e due colonne */
 @media (min-width:900px) and (min-aspect-ratio:1/1){
  body{font-size:17px}
- .wrap{max-width:1280px;padding:calc(env(safe-area-inset-top,0px) + 28px) 36px 40px 140px}
- body.insession .wrap{padding:calc(env(safe-area-inset-top,0px) + 22px) 40px calc(116px + var(--safe-b)) 40px}
+ .wrap{max-width:1280px;padding:calc(env(safe-area-inset-top,0px) + var(--pt)) 36px 40px 140px}
+ body.insession .wrap{padding:calc(env(safe-area-inset-top,0px) + var(--pt)) 40px calc(116px + var(--safe-b)) 40px}
  .top{margin-bottom:22px}
  .top h1{font-size:50px}
  .sbar{margin-left:-40px;margin-right:-40px;padding-left:40px;padding-right:40px}
@@ -622,7 +622,7 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 .top h1{font-size:34px}
 @media (max-width:430px){.top{margin:4px 2px 14px;min-height:38px}.top h1{font-size:32px}.stack{gap:12px}.hero{padding:16px 14px 14px}.count .big{font-size:84px}}
 @media (min-width:900px) and (min-aspect-ratio:1/1){
- .wrap{padding-top:calc(env(safe-area-inset-top,0px) + 20px)}
+ .wrap{padding-top:calc(env(safe-area-inset-top,0px) + var(--pt))}
  .top{margin:0 2px 16px;min-height:48px}
  .top h1{font-size:42px}
  .stack.home,.stack.studio,.stack.quizhome,.stack.formule{gap:16px}
@@ -671,6 +671,11 @@ body.vchg .tab[aria-current=page] .ic{animation:pop .34s cubic-bezier(.3,.8,.3,1
 .chip:active,.themebtn:active,.syncchip:active,.glassbtn:active,.qmap button:active{transform:scale(.95)}
 .day:active,.sheet>summary:active{transform:scale(.99)}
 .sheet>summary{transition:transform .12s}
+
+/* meno spazio sopra i titoli */
+.top{margin-top:0;min-height:36px}
+@media (max-width:430px){.top{margin-top:0;min-height:36px}}
+@media (min-width:900px) and (min-aspect-ratio:1/1){.top{margin-top:0;min-height:48px}}
 </style>
 </head>
 <body>
