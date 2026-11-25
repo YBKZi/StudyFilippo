@@ -628,8 +628,9 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .stack.home,.stack.studio,.stack.quizhome,.stack.formule{gap:16px}
  .home>#syncchip,.home>.stack-s{order:-1}
  .home>.hero{grid-column:1;padding:22px 22px 20px;align-self:stretch}
- .home>.hero+.card{grid-column:2;align-self:stretch}
- .home>.card:last-child{grid-column:3;order:1;align-self:stretch}
+ .home>.hero+.card{grid-column:2/4;align-self:stretch;display:flex;flex-direction:column}
+ .home>.hero+.card .prs{flex:1;display:flex;flex-direction:column;justify-content:space-evenly}
+ .home>.card:last-child{grid-column:1/-1;order:4}
  .home>.sh,.home>.sub,.home>.days{order:2}
  .home>.strat{grid-column:1/-1;order:3}
  .count .big{font-size:112px}
