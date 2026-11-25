@@ -612,6 +612,11 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .wrap{padding-bottom:40px}
  body.insession .wrap{padding-bottom:calc(116px + var(--safe-b))}
 }
+
+/* intestazioni senza scritta rosa e senza data */
+.top{align-items:center;margin:12px 2px 24px;min-height:44px}
+@media (max-width:430px){.top{margin:10px 2px 22px}}
+@media (min-width:900px) and (min-aspect-ratio:1/1){.top{margin:14px 2px 30px;min-height:56px}}
 </style>
 </head>
 <body>
@@ -1084,7 +1089,7 @@ function vPiano(){
   const nextBtn=ni>=0&&PLAN[ni].tops.length?`<button class="btn" data-sheet="${PLAN[ni].tops[0]}">Inizia la ${esc(PLAN[ni].d.toLowerCase())}</button>`:`<button class="btn" data-act="start-sim">Fai una simulazione</button>`;
   const prog=TOPICS.map(t=>{const s=topStat(t.id);return `<div class="pr"><span>${dot(t.id)}${esc(t.short)}</span><div class="bar"><i style="width:${s.n?s.seen/s.n*100:0}%;background:${COL[t.id]}"></i></div><em class="num">${s.pct===null?"—":s.pct+"%"}</em></div>`}).join("");
   const info=impPanel();
-  return `<header class="top"><div><span class="eyebrow">Statistica · Psicologia Unifi</span><h1>Prima prova</h1></div><div class="hr"><span class="date">ven 27 nov</span><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
+  return `<header class="top"><div><h1>Prima prova</h1></div><div class="hr"><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   <div class="stack home">${syncChip()}${info}
   <section class="hero glass">
     ${cd}
@@ -1129,7 +1134,7 @@ function vStudio(){
   }else{
     body=`<p class="muted sub">Dove le domande ingannano: concetti che si somigliano, formule che si scambiano, numeri dati in forma diversa. Rileggile la sera prima.</p>`+TRAPS.map((t,i)=>`<article class="trap glass"><span class="eyebrow">${dot(t.top)}${esc(TOPMAP[t.top].short)}</span><h3>${esc(t.t)}</h3><p>${md(t.b)}</p><button class="chip" data-trap="${i}">Esercitati · ${t.q.length} domande</button></article>`).join("");
   }
-  return `<header class="top"><div><span class="eyebrow">Probabilità · Campionamento · Intervalli</span><h1>Studio</h1></div></header><div class="stack studio">${seg}${body}</div>`;
+  return `<header class="top"><div><h1>Studio</h1></div></header><div class="stack studio">${seg}${body}</div>`;
 }
 
 /* ---------- SESSIONI ---------- */
@@ -1187,7 +1192,7 @@ function vQuiz(){
   const nerr=Object.keys(ERR).filter(id=>BYID[id]).length;
   const topics=TOPICS.map(t=>{const s=topStat(t.id);return `<button class="topic glass" data-topic="${t.id}" style="--sc:${COL[t.id]}"><span class="tn"><i class="sw"></i><span class="nm">${esc(t.name)}</span></span><span class="meta num">${s.n} domande · ${corsoTop(t.id).length} del corso${s.seen?` · ${s.seen} viste`:""}</span><span class="pc num">${s.pct===null?"":s.pct+"%"}</span></button>`}).join("");
   const hist=HIST.length?`<section class="glass card"><div class="ch"><h2>Ultime simulazioni</h2></div><div class="hist">${HIST.slice(0,5).map(h=>{const d=new Date(h.t);return `<div class="h"><span class="small muted">${d.toLocaleDateString("it-IT",{day:"numeric",month:"short"})} · ${h.r} ✓ · ${h.w} ✕ · ${h.b} vuote</span><b class="num">${voto(h.pts)}<small> /30</small></b></div>`}).join("")}</div></section>`:"";
-  return `<header class="top"><div><span class="eyebrow">${QS.length} domande</span><h1>Quiz</h1></div></header><div class="stack quizhome">
+  return `<header class="top"><div><h1>Quiz</h1></div></header><div class="stack quizhome">
   <section class="sim">
     <span class="eyebrow">Come alla prova</span><h2>Simulazione</h2>
     <p>6 domande in 3 sezioni: 1 di Probabilità, 3 di Campionamento, 2 di Intervalli. Quando chiudi una sezione non puoi più tornarci. Correzione solo alla fine.</p>
@@ -1263,7 +1268,7 @@ function vResult(){
     <div class="rs">${md(q.stem)}</div>${q.tab?qBody(q).replace(/^<h2[\s\S]*?<\/h2>/,""):""}
     ${st==="ko"?`<div class="ya">Hai risposto: ${md(q.opts[a])}</div>`:""}<div class="ca">Corretta: ${md(q.opts[q.ans])}</div>
     <div class="why"><b>Perché</b><span>${md(q.note)}</span></div></article>`}).join("")||`<p class="muted">Nessuna domanda qui.</p>`;
-  return `<header class="top"><div><span class="eyebrow">${esc(SES.title)} · ${clock(r.time)}</span><h1>Risultato</h1></div></header><div class="cols2"><div class="stack">
+  return `<header class="top"><div><h1>Risultato</h1></div></header><div class="cols2"><div class="stack">
   <section class="glass card res">
     <div class="ring"><svg viewBox="0 0 160 160"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8DB3"/><stop offset="1" stop-color="#C2185B"/></linearGradient></defs><circle cx="80" cy="80" r="70" fill="none" stroke="rgba(224,69,123,.14)" stroke-width="12"/><circle cx="80" cy="80" r="70" fill="none" stroke="url(#rg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-frac)}" transform="rotate(-90 80 80)"/></svg><div class="tx">${centre}</div></div>
     <p class="msg">${msg}</p>
@@ -1287,7 +1292,7 @@ function vFlash(){
   const c=d[FCS.idx];
   const card=!d.length?`<div class="flip glass"><div class="face"><span class="txt">Nessuna carta qui.</span><span class="hint">${FCS.only?"Nessuna carta «Da rivedere» in questo argomento.":""}</span></div></div>`
    :`<button class="flip ${FCS.flip?"back":""}" data-act="flip" aria-label="Gira la carta"><span class="inner"><span class="face front glass"><span class="lab">${dot(c[0])}${esc(TOPMAP[c[0]].short)}</span><span class="txt">${esc(c[1])}</span><span class="hint">Tocca per girare</span></span><span class="face backf"><span class="lab">Risposta</span><span class="txt">${esc(c[2])}</span><span class="hint"></span></span></span></button>`;
-  return `<header class="top"><div><span class="eyebrow">${CARDS.length} carte</span><h1>Flashcard</h1></div></header><div class="stack narrow">
+  return `<header class="top"><div><h1>Flashcard</h1></div></header><div class="stack narrow">
   <div class="fchips" role="group">${chips}</div>
   <div class="fbar"><button class="chip ${FCS.only?"on":""}" data-act="fonly">Solo da rivedere · ${rev}</button><button class="chip" data-act="fshuf">Mescola</button></div>
   <div class="fcount num"><span>${d.length?FCS.idx+1:0} / ${d.length}</span><span>Le so ${known} · Da rivedere ${rev}</span></div>
@@ -1302,7 +1307,7 @@ function vFormule(){
   const zt=`<table class="tt"><tr><th>1 − α</th><th>0,80</th><th>0,90</th><th>0,95</th><th>0,98</th><th>0,99</th></tr><tr><th>z<sub>α/2</sub></th><td>1,282</td><td>1,645</td><td>1,960</td><td>2,326</td><td>2,576</td></tr></table>`;
   const tt=`<table class="tt"><tr><th>gdl</th><th>90%</th><th>95%</th><th>98%</th><th>99%</th></tr>${TTAB.map(r=>`<tr><th>${r[0]}</th>${r.slice(1).map(x=>`<td>${x}</td>`).join("")}</tr>`).join("")}</table>`;
   const pt=`<table class="tt phi"><tr><th>z</th>${[0,1,2,3,4,5,6,7,8,9].map(k=>`<th>,0${k}</th>`).join("")}</tr>${PHITAB.map(r=>`<tr><th>${r[0]}</th>${r.slice(1).map(x=>`<td>${x}</td>`).join("")}</tr>`).join("")}</table>`;
-  return `<header class="top"><div><span class="eyebrow">Si può portare su carta</span><h1>Formule</h1></div></header>
+  return `<header class="top"><div><h1>Formule</h1></div></header>
   <div class="stack formule">
   <p class="muted sub noprint">Alla prova si può consultare solo materiale su carta: porta stampati il formulario ufficiale del corso e le tavole della Normale e della t. Qui trovi le formule della prima parte con la stessa notazione.</p>
   ${groups}
