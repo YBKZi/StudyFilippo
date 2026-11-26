@@ -220,6 +220,7 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .topic .tn{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
 .topic .sw{width:12px;height:12px;border-radius:5px;background:var(--sc);flex:none}
 .topic .meta{grid-column:1;font-size:13px;color:var(--muted);padding-left:22px}
+.topic .wt{grid-column:1;justify-self:start;margin:4px 0 0 22px;font-size:12px;font-weight:700;color:var(--acc2);background:var(--accs);padding:2px 9px;border-radius:99px}
 .topic .pc{grid-row:1/3;grid-column:2;font-weight:800;color:var(--acc2);font-size:17px}
 .hist{display:grid;gap:6px}
 .hist .h{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.55)}
@@ -397,6 +398,11 @@ div.flip .face{position:static}
 }
 
 /* prove del corso */
+.shr{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:14px}.shr .sh{margin:0}
+.seg.sm{padding:3px;border-radius:14px}.seg.sm button{white-space:nowrap;min-height:34px;padding:0 12px;font-size:13px;border-radius:11px}
+.qsum{display:flex;flex-direction:column;gap:12px}.qsum .score3{margin-top:0}
+.topic .bar.sm{grid-column:1/-1;height:5px;margin-top:8px}
+.topic:disabled,.srcb:disabled{opacity:.45;pointer-events:none}
 .srcs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .srcb{border-radius:20px;padding:14px 14px 12px;text-align:left;display:flex;flex-direction:column;gap:3px;min-height:76px;transition:transform .15s}
 .srcb:active{transform:scale(.98)}
@@ -551,7 +557,7 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  /* piano: due colonne */
  .stack.home,.stack.studio,.stack.quizhome,.stack.formule{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
  .home>#syncchip,.home>.stack-s,.home>.sh,.home>.sub,.home>.days,
- .studio>.seg,.studio>.sub,.quizhome>.sh,.quizhome>.sub,.quizhome>.srcs,.quizhome>.topics,.quizhome>.row,.formule>.sub{grid-column:1/-1}
+ .studio>.seg,.studio>.sub,.quizhome>.sh,.quizhome>.shr,.quizhome>.sub,.quizhome>.srcs,.quizhome>.topics,.quizhome>.row,.formule>.sub{grid-column:1/-1}
  .days{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;gap:16px}
  .count .big{font-size:132px}
  .hero{padding:28px 26px 24px}
@@ -560,7 +566,7 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .quizhome>.sim:has(+.card){grid-column:1}
  .quizhome>.sim+.card{grid-column:2;align-self:stretch}
  .srcs{grid-template-columns:repeat(3,minmax(0,1fr))}
- .topics{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .topics{grid-template-columns:repeat(2,minmax(0,1fr))}
  .quizhome>.card:last-child{grid-column:1/-1}
  /* formule */
  .formule>.card:last-child{grid-column:1/-1}
@@ -1072,7 +1078,7 @@ applyTheme();
 try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if(THEME==="auto"){applyTheme();render()}})}catch(_){}
 const THEMEICO=()=>isDark()?'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></svg>':'<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
 
-const SETT=Object.assign({shuffle:true,fb:true,pool:"corso"},store.get("sett",{}));
+const SETT=Object.assign({shuffle:true,fb:true,pool:"corso",nu:false,ord:"prio"},store.get("sett",{}));
 
 /* ---------- domande ---------- */
 const SECMAP={},TOPMAP={};SECS.forEach((s,i)=>{SECMAP[s.id]=Object.assign({idx:i},s)});TOPICS.forEach(t=>TOPMAP[t.id]=t);
@@ -1085,6 +1091,22 @@ const topQs=t=>QS.filter(q=>q.top===t), secQs=s=>QS.filter(q=>q.cat===s);
 const srcQs=s=>QS.filter(q=>q.src===s), corsoTop=t=>QS.filter(q=>q.real&&q.top===t);
 const simPool=s=>secQs(s).filter(q=>!q.vf&&q.src!=="Esercizi Normale"&&(SETT.pool==="tutte"||q.real));
 const COL={prob:"var(--c-prob)",camp1:"var(--c-camp)",camp2:"var(--c-camp2)",camp:"var(--c-camp)",ic:"var(--c-ic)"};
+const WT=t=>SECMAP[TOPMAP[t].sec].n;
+const TOPS_P=TOPICS.slice().sort((a,b)=>SECMAP[b.sec].n-SECMAP[a.sec].n);
+const fl=qs=>SETT.nu?qs.filter(q=>!(q.id in LAST)):qs;
+const rank=q=>(q.id in ERR?0:!(q.id in LAST)?1:2)+Math.random()*.9;
+function pickPrio(qs,k){return qs.map(q=>[rank(q),q]).sort((a,b)=>a[0]-b[0]).slice(0,k).map(x=>x[1])}
+function qTotals(){const seen=QS.filter(q=>q.id in LAST),ok=seen.filter(q=>LAST[q.id]).length;return{n:QS.length,seen:seen.length,miss:QS.length-seen.length,ok,pct:seen.length?Math.round(ok/seen.length*100):null}}
+function startFocus(){
+  const base=fl(QS),by=f=>base.filter(f),total=18,sw=SECS.reduce((a,x)=>a+x.n,0);
+  const take=SECS.map(x=>Math.round(total*x.n/sw));
+  let ids=[];
+  SECS.forEach((x,i)=>{
+    const pool=by(q=>q.cat===x.id);
+    if(x.id==='camp'){const a=pickPrio(pool.filter(q=>q.top==='camp1'),Math.ceil(take[i]/2)),b=pickPrio(pool.filter(q=>q.top==='camp2'),Math.floor(take[i]/2));let got=a.concat(b);if(got.length<take[i])got=got.concat(pickPrio(pool.filter(q=>!got.includes(q)),take[i]-got.length));ids=ids.concat(got)}
+    else ids=ids.concat(pickPrio(pool,take[i]))});
+  startSession(shuffle(ids).map(q=>q.id),'Allenamento mirato');
+}
 const dot=t=>`<i class="dot" style="background:${COL[t]}"></i>`;
 
 /* ---------- stato ---------- */
@@ -1125,7 +1147,7 @@ function render(){
 /* ---------- PIANO ---------- */
 const EXAMDATE=new Date(2026,10,27);
 function daysLeft(){const n=new Date();const d0=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.round((EXAMDATE-d0)/864e5)}
-function nextIdx(){for(let i=0;i<PLAN.length-1;i++){if(PLAN[i].tasks.some((_,k)=>!PLANCHK[i+"."+k]))return i}return -1}
+function nextIdx(){const open=i=>PLAN[i].tasks.some((_,k)=>!PLANCHK[i+"."+k]);let best=-1,bw=0;for(let i=0;i<PLAN.length-1;i++){if(PLAN[i].tops.length&&open(i)){const w=WT(PLAN[i].tops[0]);if(w>bw){bw=w;best=i}}}if(best>=0)return best;for(let i=0;i<PLAN.length-1;i++){if(open(i))return i}return -1}
 function planStats(){let t=0,d=0;PLAN.forEach((p,i)=>p.tasks.forEach((_,k)=>{t++;if(PLANCHK[i+"."+k])d++}));return{t,d}}
 function topStat(t){const qs=topQs(t),seen=qs.filter(q=>q.id in LAST),ok=seen.filter(q=>LAST[q.id]).length;return{n:qs.length,seen:seen.length,pct:seen.length?Math.round(ok/seen.length*100):null}}
 function voto(p){return p+6}
@@ -1151,7 +1173,7 @@ function vPiano(){
       <div class="chips">${btns}</div></article>`}).join("");
   const nextBtn=ni>=0&&PLAN[ni].tops.length?`<button class="btn" data-sheet="${PLAN[ni].tops[0]}">Inizia la ${esc(PLAN[ni].d.toLowerCase())}</button>`:`<button class="btn" data-act="start-sim">Fai una simulazione</button>`;
   let nx="";if(ni>=0){const p=PLAN[ni],dn=p.tasks.filter((_,k)=>PLANCHK[ni+"."+k]).length,mins=p.tasks.reduce((a,x)=>a+(+((x.match(/\((\d+) min\)/)||[])[1]||0)),0);nx=`<div class="nx"><span>${esc(p.t)}<i>${p.tasks.length} attività · ${mins} min</i></span><span class="pill num">${dn}/${p.tasks.length}</span></div>`}
-  const prog=TOPICS.map(t=>{const s=topStat(t.id);return `<div class="pr"><span>${dot(t.id)}${esc(t.short)}</span><div class="bar"><i style="width:${s.n?s.seen/s.n*100:0}%;background:${COL[t.id]}"></i></div><em class="num">${s.pct===null?"—":s.pct+"%"}</em></div>`}).join("");
+  const prog=TOPS_P.map(t=>{const s=topStat(t.id);return `<div class="pr"><span>${dot(t.id)}${esc(t.short)}</span><div class="bar"><i style="width:${s.n?s.seen/s.n*100:0}%;background:${COL[t.id]}"></i></div><em class="num">${s.pct===null?"—":s.pct+"%"}</em></div>`}).join("");
   const info=impPanel();
   return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   <div class="stack home">${syncChip()}${info}
@@ -1252,7 +1274,10 @@ function leave(){SES=null;stopTimer();render();window.scrollTo(0,0)}
 function vQuiz(){
   if(SES)return SES.done?vResult():vSession();
   const nerr=Object.keys(ERR).filter(id=>BYID[id]).length;
-  const topics=TOPICS.map(t=>{const s=topStat(t.id);return `<button class="topic glass" data-topic="${t.id}" style="--sc:${COL[t.id]}"><span class="tn"><i class="sw"></i><span class="nm">${esc(t.name)}</span></span><span class="meta num">${s.n} domande · ${corsoTop(t.id).length} del corso${s.seen?` · ${s.seen} viste`:""}</span><span class="pc num">${s.pct===null?"":s.pct+"%"}</span></button>`}).join("");
+  const T=qTotals(),nu=SETT.nu;
+  const tlist=TOPICS.map(t=>{const s=topStat(t.id),all=topQs(t.id),left=fl(all).length;return{t,s,left,all:all.length}});
+  tlist.sort(SETT.ord==="pct"?(x,y)=>(x.s.pct===null)-(y.s.pct===null)||x.s.pct-y.s.pct:(x,y)=>WT(y.t.id)-WT(x.t.id));
+  const topics=tlist.map(({t,s,left,all})=>`<button class="topic glass" data-topic="${t.id}" style="--sc:${COL[t.id]}" ${left?"":"disabled"}><span class="tn"><i class="sw"></i><span class="nm">${esc(t.name)}</span></span><span class="meta num">${all} domande · ${s.seen} fatte · ${all-s.seen} mancano</span><span class="wt">${SECMAP[t.sec].n} su 6 in prova</span><span class="pc num">${s.pct===null?"—":s.pct+"%"}</span><span class="bar sm"><i style="width:${all?s.seen/all*100:0}%;background:${COL[t.id]}"></i></span></button>`).join("");
   const hist=HIST.length?`<section class="glass card"><div class="ch"><h2>Ultime simulazioni</h2></div><div class="hist">${HIST.slice(0,5).map(h=>{const d=new Date(h.t);return `<div class="h"><span class="small muted">${d.toLocaleDateString("it-IT",{day:"numeric",month:"short"})} · ${h.r} ✓ · ${h.w} ✕ · ${h.b} vuote</span><b class="num">${voto(h.pts)}<small> /30</small></b></div>`}).join("")}</div></section>`:"";
   return `<header class="top"><div><h1>Quiz</h1></div></header><div class="stack quizhome">
   <section class="sim">
@@ -1261,12 +1286,19 @@ function vQuiz(){
     <div class="seg dark" role="group" aria-label="Da dove pescare le domande"><button data-pool="corso" aria-pressed="${SETT.pool!=="tutte"}">Prove ed esercizi del corso</button><button data-pool="tutte" aria-pressed="${SETT.pool==="tutte"}">Tutte le ${QS.filter(q=>!q.vf).length}</button></div>
     <button class="btn white" data-act="start-sim">Inizia la simulazione</button>
   </section>
+  <section class="glass card qsum">
+    <div class="ch"><h2>Le tue domande</h2>${T.pct===null?"":`<span class="small muted num">${T.pct}% giuste</span>`}</div>
+    <div class="score3"><span class="s"><b class="num">${T.n}</b>totali</span><span class="s ok"><b class="num">${T.seen}</b>fatte</span><span class="s bl"><b class="num">${T.miss}</b>mancano</span></div>
+    <div class="bar big"><i style="width:${T.seen/T.n*100}%"></i></div>
+    <div class="seg" role="group" aria-label="Quali domande usare"><button data-nu="0" aria-pressed="${!nu}">Tutte</button><button data-nu="1" aria-pressed="${nu}">Mai fatte (${T.miss})</button></div>
+    <button class="btn" data-act="start-focus" ${fl(QS).length?"":"disabled"}>Allenamento mirato</button>
+  </section>
   ${hist}
   <h2 class="sh">Prove ed esercizi del corso</h2>
-  <div class="srcs">${SRCS.map(s=>{const qs=srcQs(s),seen=qs.filter(q=>q.id in LAST),ok=seen.filter(q=>LAST[q.id]).length;const isP=/prova|intermedia|esame/i.test(s);return `<button class="srcb glass ${isP?"p":""}" data-src="${esc(s)}"><span class="nm">${esc(s)}</span><span class="meta num">${qs.length} domande${seen.length?` · ${Math.round(ok/seen.length*100)}%`:""}</span></button>`}).join("")}</div>
-  <h2 class="sh">Allenamento per argomento</h2>
+  <div class="srcs">${SRCS.map(s=>{const qs=srcQs(s),seen=qs.filter(q=>q.id in LAST),ok=seen.filter(q=>LAST[q.id]).length,left=fl(qs).length;const isP=/prova|intermedia|esame/i.test(s);return `<button class="srcb glass ${isP?"p":""}" data-src="${esc(s)}" ${left?"":"disabled"}><span class="nm">${esc(s)}</span><span class="meta num">${nu?`${left} mai fatte`:`${qs.length} domande`}${seen.length?` · ${Math.round(ok/seen.length*100)}%`:""}</span></button>`}).join("")}</div>
+  <div class="shr"><h2 class="sh">Allenamento per argomento</h2><div class="seg sm" role="group" aria-label="Ordine"><button data-ord="prio" aria-pressed="${SETT.ord!=="pct"}">Priorità</button><button data-ord="pct" aria-pressed="${SETT.ord==="pct"}">% giuste</button></div></div>
   <div class="topics">${topics}</div>
-  <div class="row two"><button class="btn glassbtn" data-act="start-err" ${nerr?"":"disabled"}>Solo errori (${nerr})</button><button class="btn glassbtn" data-act="start-all">Tutte le ${QS.length} mescolate</button><button class="btn glassbtn" data-act="start-real">Solo quelle del corso (${QS.filter(q=>q.real).length})</button></div>
+  <div class="row two"><button class="btn glassbtn" data-act="start-err" ${nerr?"":"disabled"}>Solo errori (${nerr})</button><button class="btn glassbtn" data-act="start-all" ${fl(QS).length?"":"disabled"}>${nu?"Tutte le mai fatte":"Tutte mescolate"} (${fl(QS).length})</button><button class="btn glassbtn" data-act="start-real" ${fl(QS.filter(q=>q.real)).length?"":"disabled"}>Solo quelle del corso (${fl(QS.filter(q=>q.real)).length})</button></div>
   <section class="glass card">
     <h2>Impostazioni</h2>
     <div class="switch"><span>Mescola l’ordine delle risposte<small>Impari il contenuto, non la lettera.</small></span><button data-set="shuffle" aria-pressed="${SETT.shuffle}" aria-label="Mescola le risposte"></button></div>
@@ -1541,14 +1573,16 @@ function impPanel(){
 
 /* ---------- eventi ---------- */
 document.addEventListener("click",e=>{
-  const t=e.target.closest("[data-go],[data-act],[data-topic],[data-sheet],[data-fc],[data-set],[data-calc],[data-rev],[data-ftop],[data-trap],[data-trapt],[data-studio],[data-src],[data-corso],[data-pool]");
+  const t=e.target.closest("[data-go],[data-act],[data-topic],[data-sheet],[data-fc],[data-set],[data-calc],[data-rev],[data-ftop],[data-trap],[data-trapt],[data-studio],[data-src],[data-corso],[data-pool],[data-nu],[data-ord]");
   if(!t)return;
   const D=t.dataset;
   if(D.go){go(D.go);return}
-  if(D.src){startSession(srcQs(D.src).map(q=>q.id),D.src);return}
-  if(D.corso){startSession(corsoTop(D.corso).map(q=>q.id),"Esercizi del corso · "+TOPMAP[D.corso].short);return}
+  if(D.nu!==undefined){SETT.nu=D.nu==="1";store.set("sett",SETT);render();return}
+  if(D.ord){SETT.ord=D.ord;store.set("sett",SETT);render();return}
+  if(D.src){startSession(fl(srcQs(D.src)).map(q=>q.id),D.src);return}
+  if(D.corso){startSession(fl(corsoTop(D.corso)).map(q=>q.id),"Esercizi del corso · "+TOPMAP[D.corso].short);return}
   if(D.pool){SETT.pool=D.pool;store.set("sett",SETT);const g=t.parentElement;if(g)g.querySelectorAll("[data-pool]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.pool===D.pool||(D.pool!=="tutte"&&b.dataset.pool==="corso"))));return}
-  if(D.topic){startSession(shuffle(topQs(D.topic)).map(q=>q.id),TOPMAP[D.topic].name);return}
+  if(D.topic){startSession(shuffle(fl(topQs(D.topic))).map(q=>q.id),TOPMAP[D.topic].name);return}
   if(D.sheet){openSheet=D.sheet;studioTab="schede";go("studio");const el=document.getElementById("sheet-"+D.sheet);if(el)el.scrollIntoView({block:"start"});return}
   if(D.fc){FCS={top:D.fc,only:false,idx:0,flip:false,deck:null};go("flash");return}
   if(D.studio){studioTab=D.studio;if(view!=="studio")go("studio");else render();return}
@@ -1561,9 +1595,10 @@ document.addEventListener("click",e=>{
   switch(D.act){
     case "theme":THEME=isDark()?"light":"dark";store.set("theme",THEME);applyTheme();render();break;
     case "start-sim":revFilter="all";startSim();break;
-    case "start-real":startSession(shuffle(QS.filter(q=>q.real)).map(q=>q.id),"Prove ed esercizi del corso");break;
+    case "start-focus":startFocus();break;
+    case "start-real":startSession(shuffle(fl(QS.filter(q=>q.real))).map(q=>q.id),"Prove ed esercizi del corso");break;
     case "start-prove":startSession(["Esempio prova intermedia","Intermedia 2015","Intermedia 2016","Esame 2021"].flatMap(s=>srcQs(s).map(q=>q.id)),"Prove degli anni passati");break;
-    case "start-all":startSession(shuffle(QS).map(q=>q.id),"Tutte le domande");break;
+    case "start-all":startSession(shuffle(fl(QS)).map(q=>q.id),"Tutte le domande");break;
     case "start-err":startSession(shuffle(Object.keys(ERR).filter(id=>BYID[id])),"Solo errori");break;
     case "pick":pick(+D.d);break;
     case "next":if(SES.i<SES.ids.length-1){SES.i++;render();window.scrollTo(0,0)}break;
