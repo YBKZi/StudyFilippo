@@ -1153,7 +1153,7 @@ function vPiano(){
   let nx="";if(ni>=0){const p=PLAN[ni],dn=p.tasks.filter((_,k)=>PLANCHK[ni+"."+k]).length,mins=p.tasks.reduce((a,x)=>a+(+((x.match(/\((\d+) min\)/)||[])[1]||0)),0);nx=`<div class="nx"><span>${esc(p.t)}<i>${p.tasks.length} attività · ${mins} min</i></span><span class="pill num">${dn}/${p.tasks.length}</span></div>`}
   const prog=TOPICS.map(t=>{const s=topStat(t.id);return `<div class="pr"><span>${dot(t.id)}${esc(t.short)}</span><div class="bar"><i style="width:${s.n?s.seen/s.n*100:0}%;background:${COL[t.id]}"></i></div><em class="num">${s.pct===null?"—":s.pct+"%"}</em></div>`}).join("");
   const info=impPanel();
-  return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="impbtn" data-act="imp-toggle">Importa</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
+  return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   <div class="stack home">${syncChip()}${info}
   <section class="hero glass">
     ${cd}
