@@ -646,12 +646,12 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 .tabbar{left:0;right:0;bottom:0;padding:0 12px calc(12px + var(--safe-b));pointer-events:none}
 .tb-in{pointer-events:auto;display:flex!important;justify-content:space-between;align-items:center;gap:4px;width:var(--bw,max-content);contain:layout style;max-width:100%;margin:0 auto;padding:7px;border-radius:999px;background:rgba(255,248,251,.76);border:1px solid rgba(255,255,255,.92);-webkit-backdrop-filter:blur(26px) saturate(1.8);backdrop-filter:blur(26px) saturate(1.8);box-shadow:0 1px 0 #fff inset,0 18px 38px -12px rgba(150,25,75,.42)}
 .tab{min-height:0;padding:0}
-.tab .ic,[data-theme=dark] .tab .ic{position:relative;isolation:isolate;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;width:auto;height:48px;min-width:48px;padding:0 calc(var(--e,0)*18px) 0 0;border-radius:999px;color:var(--muted);color:color-mix(in srgb,#fff calc(var(--e,0)*100%),var(--muted));background:none;border:0;box-shadow:none;transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+.tab .ic,[data-theme=dark] .tab .ic{position:relative;isolation:isolate;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;width:auto;height:48px;min-width:48px;padding:0 calc(var(--e,0)*18px) 0 0;border-radius:999px;color:var(--muted);color:color-mix(in srgb,#fff calc(var(--e,0)*100%),var(--muted));background:none;border:0;box-shadow:none;transition:none}
 .tab .ic::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--grad);opacity:var(--e,0);box-shadow:0 8px 18px -8px rgba(194,24,91,.75)}
-.tab .pl{display:grid;place-items:center;width:calc(48px - var(--e,0)*4px);height:48px;font-style:normal}
+.tab .pl{display:grid;place-items:center;width:calc(48px - var(--e,0)*4px);height:48px;font-style:normal;transition:transform .2s cubic-bezier(.2,.8,.2,1)}
 .tab .ic span{display:block;overflow:hidden;width:calc(var(--e,0)*var(--w,0px));margin-left:calc(var(--e,0)*2px);opacity:var(--e,0);font-size:13.5px;font-weight:700;line-height:1;white-space:nowrap}
 .tab svg{width:24px;height:24px}
-.tab:active .ic{transform:scale(.94)}
+.tab:active .pl{transform:scale(.84)}
 .formule>.card:nth-child(n+3){content-visibility:auto;contain-intrinsic-size:auto 900px}
 [data-theme=dark] .tb-in{background:rgba(40,18,32,.74);border-color:var(--line);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 18px 40px -10px rgba(0,0,0,.65)}
 .wrap{padding-bottom:calc(104px + var(--safe-b))}
