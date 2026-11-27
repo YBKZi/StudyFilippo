@@ -156,7 +156,15 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 [data-theme=dark] .exr.quick input{background:rgba(255,255,255,.1);color:var(--ink);border-color:rgba(255,255,255,.16);color-scheme:dark}
 [data-theme=dark] .exr.quick .exo{background:rgba(255,255,255,.12);color:var(--ink);border-color:rgba(255,255,255,.2)}
 [data-theme=dark] .exr.quick .exo:hover{background:rgba(255,255,255,.18)}
-.delbtn{width:100%;margin-top:4px}.delbox{display:flex;flex-direction:column;gap:12px;margin-top:4px}.delbox b{font-size:15px}[data-theme=dark] .btn.danger{color:#ff7a9c}
+[data-theme=dark] .btn.danger{color:#ff7a9c}
+.delbar{box-sizing:border-box;height:52px;margin-top:4px;display:flex;align-items:center;gap:8px;border-radius:18px;overflow:hidden}
+.delmain{flex:1;height:100%;border:0;border-radius:18px;background:#d6284f;color:#fff;font:inherit;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 6px 16px rgba(214,40,79,.28)}
+.delmain svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.delbar.conf{padding:6px 6px 6px 16px;background:rgba(214,40,79,.1);border:1px solid rgba(214,40,79,.35)}
+.delq{flex:1;min-width:0;font-weight:800;font-size:14.5px;color:#b3203f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.delyes,.delno{height:100%;padding:0 18px;border-radius:13px;border:0;font:inherit;font-size:14.5px;font-weight:800}
+.delyes{background:#d6284f;color:#fff}.delno{background:rgba(255,255,255,.75);color:var(--ink)}
+[data-theme=dark] .delbar.conf{background:rgba(255,90,130,.14);border-color:rgba(255,120,150,.4)}[data-theme=dark] .delq{color:#ff9ab3}[data-theme=dark] .delno{background:rgba(255,255,255,.12);color:var(--ink)}
 .exghost .gl{flex:1;text-align:left;font-size:15px;font-weight:700;opacity:.8}.exp.ed{background:transparent;color:var(--muted);margin:-4px 0 0 0}.exp.ed svg{width:17px;height:17px;stroke-width:2.1;stroke-linejoin:round}.undo{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;z-index:60;display:flex;align-items:center;gap:14px;padding:10px 10px 10px 18px;border-radius:99px;background:#2a1520;color:#fff;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:opacity .22s,transform .22s;max-width:calc(100vw - 32px)}.undo.on{opacity:1;transform:translate(-50%,0)}.undo button{border:0;border-radius:99px;background:rgba(255,255,255,.16);color:#fff;font:inherit;font-weight:800;padding:8px 14px}.exempty{padding:24px 4px;font-weight:600}
 .exr.fatto .exe{background:rgba(52,168,110,.10);border-color:rgba(52,168,110,.28)}.exr.fatto .pill.ex-ok{background:#2f9e68;color:#fff}
 .exg.allfatto{background-image:linear-gradient(rgba(52,168,110,.12),rgba(52,168,110,.12));border-color:rgba(52,168,110,.35)}.exg.allfatto h2{color:#23784f}
@@ -1672,9 +1680,10 @@ function undoBar(msg,fn){
 function hideUndo(){clearTimeout(UNDOT);const b=document.getElementById("undo");if(b)b.classList.remove("on")}
 function exDelBox(subj){
   if(!subj)return "";
+  const ico=`<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/></svg>`;
   return EXCONF===subj
-   ?`<section class="glass card delbox"><b>Eliminare ${esc(subj)}?</b><div class="row"><button class="btn glassbtn danger" data-act="ex-delyes" data-subj="${esc(subj)}">Sì, elimina</button><button class="btn glassbtn" data-act="ex-delno">No</button></div></section>`
-   :`<button class="btn glassbtn danger delbtn" data-act="ex-delask" data-subj="${esc(subj)}">Elimina esame</button>`;
+   ?`<div class="delbar conf"><span class="delq">Eliminare ${esc(subj)}?</span><button class="delyes" data-act="ex-delyes" data-subj="${esc(subj)}">Sì</button><button class="delno" data-act="ex-delno">No</button></div>`
+   :`<div class="delbar"><button class="delmain" data-act="ex-delask" data-subj="${esc(subj)}">${ico}Elimina esame</button></div>`;
 }
 function exDelete(items,msg){
   const ids=items.map(x=>x.id);
