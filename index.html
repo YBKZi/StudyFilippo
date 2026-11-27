@@ -100,7 +100,7 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .hero::after{content:"";position:absolute;width:260px;height:260px;right:-90px;top:-110px;border-radius:50%;background:radial-gradient(circle,rgba(247,99,154,.35),transparent 65%);pointer-events:none}
 .count{display:flex;align-items:flex-end;gap:14px;position:relative}
 .count .big{font-family:var(--fd);font-weight:800;letter-spacing:-.05em;font-size:104px;line-height:.82;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;padding-right:4px}
-.count .big.sm{font-size:72px}
+.count .big.sm{font-size:72px;line-height:1.08;padding-bottom:.06em;margin-bottom:-.04em}
 .count .lbl{font-weight:700;color:var(--acc2);font-size:17px;line-height:1.2;padding-bottom:10px}
 .lead{margin-top:16px;color:var(--ink2);font-size:16px}
 .secs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:16px}
@@ -135,6 +135,16 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .day h3{font-size:18px;font-weight:700;margin-top:3px}
 .day.next{border:1.5px solid rgba(224,69,123,.55);box-shadow:0 0 0 5px rgba(224,69,123,.10),var(--sh)}
 .day.full{opacity:.72}
+.exs{display:flex;flex-direction:column;gap:6px}.exg h3{margin:14px 0 6px;font-size:16px}
+.exr{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:11px 14px;margin-top:6px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line);font:inherit;color:inherit}
+.exn{display:flex;flex-direction:column;min-width:0}.exn b{font-weight:700;font-size:15.5px}.exn i{font-style:normal;font-size:13px;color:var(--muted);font-weight:600;margin-top:2px}
+.pill.ex-ok{background:var(--grad);color:#fff}.pill.ex-wait{background:transparent;border:1px solid var(--line);color:var(--muted)}
+[data-theme=dark] .exr{background:rgba(255,255,255,.07)}
+.exform{display:flex;flex-direction:column;gap:10px;padding:12px;margin-top:6px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}
+.exform label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:700;color:var(--muted);flex:1;min-width:0}
+.exform input,.exform select{font:inherit;font-size:16px;font-weight:600;color:var(--ink);padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;min-width:0;width:100%}
+[data-theme=dark] .exform,[data-theme=dark] .exform input,[data-theme=dark] .exform select{background:rgba(255,255,255,.08)}
+.exrow{display:flex;gap:8px}.exform .row{margin-top:2px}.btn.danger{color:#c0264b}
 .pill{font-size:13px;font-weight:800;color:var(--acc2);background:var(--accs);padding:4px 10px;border-radius:99px}
 .tasks{margin:12px 0 14px;display:grid;gap:2px}
 .task{display:flex;gap:12px;align-items:flex-start;padding:7px 0;cursor:pointer;font-size:15px}
@@ -639,7 +649,8 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .home>.hero{grid-column:1;padding:22px 22px 20px;align-self:stretch}
  .home>.hero+.card{grid-column:2/4;align-self:stretch;display:flex;flex-direction:column}
  .home>.hero+.card .prs{flex:1;display:flex;flex-direction:column;justify-content:space-around;margin-top:6px}
- .home>.card:last-child{grid-column:1/-1;order:4}
+ .home>.prom{grid-column:1/-1;order:4}
+ .home>.exs{grid-column:1/-1;order:5}
  .home>.sh,.home>.sub,.home>.days{order:2}
  .home>.strat{grid-column:1/-1;order:3}
  .count .big{font-size:112px}
@@ -1079,6 +1090,16 @@ try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if
 const THEMEICO=()=>isDark()?'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></svg>':'<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
 
 const SETT=Object.assign({shuffle:true,fb:true,pool:"corso",nu:false,ord:"prio"},store.get("sett",{}));
+const EX_SEED=[
+ {id:"fond-m2",subj:"Fondamenti anatomo-fisiologici dei processi neuropsichici",kind:"Modulo",n:2,tot:3,date:"2026-11-18",grade:"26",max:"27",note:"Scritto, senza orale",u:0},
+ {id:"stat-p1",subj:"Statistica",kind:"Prova",n:1,tot:2,date:"2026-11-27",grade:"",max:"",note:"",u:0}];
+let EXMS=store.get("ex",[]);
+EX_SEED.forEach(x=>{if(!EXMS.some(y=>y.id===x.id))EXMS.push(Object.assign({},x))});
+let EXUI=null;
+const exList=()=>EXMS.filter(x=>!x.x);
+const exDate=x=>{const p=(x.date||"").split("-").map(Number);return p.length===3&&p[0]?new Date(p[0],p[1]-1,p[2]):null};
+const exFmt=x=>{const d=exDate(x);return d?d.toLocaleDateString("it-IT",{day:"numeric",month:"short",year:"numeric"}):"senza data"};
+function exSave(it){it.u=Date.now();const i=EXMS.findIndex(y=>y.id===it.id);if(i>=0)EXMS[i]=it;else EXMS.push(it);store.set("ex",EXMS);touch()}
 
 /* ---------- domande ---------- */
 const SECMAP={},TOPMAP={};SECS.forEach((s,i)=>{SECMAP[s.id]=Object.assign({idx:i},s)});TOPICS.forEach(t=>TOPMAP[t.id]=t);
@@ -1145,7 +1166,7 @@ function render(){
 }
 
 /* ---------- PIANO ---------- */
-const EXAMDATE=new Date(2026,10,27);
+const EXAMDATE=(()=>{const x=EXMS.find(y=>y.id==="stat-p1"&&!y.x),d=x&&exDate(x);return d||new Date(2026,10,27)})();
 function daysLeft(){const n=new Date();const d0=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.round((EXAMDATE-d0)/864e5)}
 function nextIdx(){const open=i=>PLAN[i].tasks.some((_,k)=>!PLANCHK[i+"."+k]);let best=-1,bw=0;for(let i=0;i<PLAN.length-1;i++){if(PLAN[i].tops.length&&open(i)){const w=WT(PLAN[i].tops[0]);if(w>bw){bw=w;best=i}}}if(best>=0)return best;for(let i=0;i<PLAN.length-1;i++){if(open(i))return i}return -1}
 function planStats(){let t=0,d=0;PLAN.forEach((p,i)=>p.tasks.forEach((_,k)=>{t++;if(PLANCHK[i+"."+k])d++}));return{t,d}}
@@ -1199,10 +1220,11 @@ function vPiano(){
     <p class="small muted">Il foglio delle regole spiega la conversione solo per l’esame completo da 12 domande, (punti + 12) / 2. Qui il voto è stimato con la stessa logica per 6 domande: punti + 6. Per il 18 servono almeno 12 punti.</p>
     <p class="small"><b>Un’eccezione.</b> Se sei sicuro di 4 risposte, rispondi a tutto: anche con 2 errori fai 20. Se ne hai solo 3 sicure e ti basta passare, ogni errore ti porta sotto il 18: rispondi solo dove riesci a escludere almeno un’opzione.</p>
   </section>
-  <section class="glass card">
+  <section class="glass card prom">
     <span class="eyebrow">Promemoria</span><h2>Il giorno della prova</h2>
     <p>Puoi consultare <b>materiale cartaceo</b>: porta stampati il formulario ufficiale del corso e le tavole (Normale e t). La scheda Formule le riassume.</p>
   </section>
+  ${exCard()}
   </div>`;
 }
 
@@ -1432,7 +1454,7 @@ async function getRemote(){const rows=await rpc("filippo_get",{});const row=(row
 function touch(){LOCALUPD=Date.now();store.set("upd",LOCALUPD);schedulePush()}
 function payload(){
   return {v:1,upd:LOCALUPD,last:LAST,plan:Object.keys(PLANCHK).filter(k=>PLANCHK[k]),hist:HIST,
-    fc:Object.keys(FCK).map(k=>[k,FCK[k]]),seen:SEEN,active:Date.now()};
+    fc:Object.keys(FCK).map(k=>[k,FCK[k]]),ex:EXMS,seen:SEEN,active:Date.now()};
 }
 function schedulePush(){if(DEAD||!SKEY)return;SYNC.pending=true;clearTimeout(pushT);pushT=setTimeout(pushNow,2500)}
 async function pushNow(){
@@ -1472,10 +1494,12 @@ function mergeRemote(r){
   const changedLocal=JSON.stringify([L,H,P,F])!==JSON.stringify([LAST,HIST,PLANCHK,FCK]);
   LAST=L;HIST=H;PLANCHK=P;FCK=F;ERR={};Object.keys(LAST).forEach(id=>{if(LAST[id]===false)ERR[id]=1});
   SEEN=Math.max(SEEN,r.seen||0);
+  const exBefore=JSON.stringify(EXMS),em={};EXMS.concat(Array.isArray(r.ex)?r.ex.filter(x=>x&&x.id):[]).forEach(x=>{const o=em[x.id];if(!o||(x.u||0)>(o.u||0))em[x.id]=x});
+  EXMS=Object.values(em);store.set("ex",EXMS);const exChanged=JSON.stringify(EXMS)!==exBefore,exNeed=JSON.stringify(EXMS.slice().sort((a,b)=>a.id<b.id?-1:1))!==JSON.stringify((Array.isArray(r.ex)?r.ex:[]).slice().sort((a,b)=>a.id<b.id?-1:1));
   store.set("last",LAST);store.set("hist",HIST);store.set("plan",PLANCHK);store.set("fc",FCK);store.set("err",ERR);store.set("seen",SEEN);
   const rp=JSON.stringify([rl,(r.hist||[]),(r.plan||[]).slice().sort(),r.fc||[]]);
   const mp=JSON.stringify([LAST,HIST,Object.keys(PLANCHK).filter(k=>PLANCHK[k]).sort(),Object.keys(FCK).map(k=>[k,FCK[k]])]);
-  return {changedLocal,needPush:rp!==mp};
+  return {changedLocal:changedLocal||exChanged,needPush:rp!==mp||exNeed};
 }
 /* progressi portati da un'altra versione dell'app: si uniscono, non si perde nulla */
 function b64dec(raw){return JSON.parse(decodeURIComponent(escape(atob(raw.replace(/-/g,"+").replace(/_/g,"/")))))}
@@ -1564,6 +1588,46 @@ function syncChip(){
   else return `<span id="syncchip"></span>`;
   return `<button id="syncchip" class="syncchip ${cls}" disabled><i></i>${esc(txt)}</button>`;
 }
+function exStatus(x){
+  if(x.grade)return {t:x.max?`${x.grade}/${x.max}`:x.grade,c:"ok"};
+  const d=exDate(x);if(!d)return {t:"da fare",c:""};
+  const n=new Date(),d0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),k=Math.round((d-d0)/864e5);
+  if(k>1)return {t:`tra ${k} giorni`,c:""};if(k===1)return {t:"domani",c:""};if(k===0)return {t:"oggi",c:""};
+  return {t:"voto da scoprire",c:"wait"};
+}
+function exForm(x){
+  const n=!x;x=x||{id:"",subj:"",kind:"Modulo",n:"",tot:"",date:"",grade:"",max:"",note:""};
+  const subs=[...new Set(exList().map(y=>y.subj))];
+  return `<div class="exform">
+    <label>Materia<input id="ex-subj" list="ex-subs" value="${esc(x.subj)}" placeholder="Nome della materia" autocomplete="off"></label>
+    <datalist id="ex-subs">${subs.map(s=>`<option value="${esc(s)}">`).join("")}</datalist>
+    <div class="exrow"><label>Tipo<select id="ex-kind"><option ${x.kind==="Modulo"?"selected":""}>Modulo</option><option ${x.kind==="Prova"?"selected":""}>Prova</option><option ${x.kind==="Esame"?"selected":""}>Esame</option></select></label>
+    <label>Numero<input id="ex-n" inputmode="numeric" value="${esc(String(x.n||""))}" placeholder="2"></label>
+    <label>Di<input id="ex-tot" inputmode="numeric" value="${esc(String(x.tot||""))}" placeholder="3"></label></div>
+    <div class="exrow"><label>Data<input id="ex-date" type="date" value="${esc(x.date||"")}"></label>
+    <label>Voto<input id="ex-grade" inputmode="decimal" value="${esc(x.grade||"")}" placeholder="26"></label>
+    <label>Su<input id="ex-max" inputmode="decimal" value="${esc(x.max||"")}" placeholder="27"></label></div>
+    <label>Nota<input id="ex-note" value="${esc(x.note||"")}" placeholder="Scritto, orale, …"></label>
+    <div class="row"><button class="btn" data-act="ex-save" data-ex="${esc(x.id)}">${n?"Aggiungi":"Salva"}</button><button class="btn glassbtn" data-act="ex-cancel">Annulla</button>${n?"":`<button class="btn glassbtn danger" data-act="ex-del" data-ex="${esc(x.id)}">Elimina</button>`}</div></div>`;
+}
+function exCard(){
+  const list=exList(),subs=[];
+  list.forEach(x=>{let g=subs.find(s=>s.n===x.subj);if(!g){g={n:x.subj,l:[]};subs.push(g)}g.l.push(x)});
+  subs.forEach(g=>g.l.sort((a,b)=>(a.kind===b.kind?(a.n||0)-(b.n||0):0)||(exDate(a)||0)-(exDate(b)||0)));
+  subs.sort((a,b)=>Math.max(...b.l.map(x=>+exDate(x)||0))-Math.max(...a.l.map(x=>+exDate(x)||0)));
+  const rows=g=>g.l.map(x=>{if(EXUI===x.id)return exForm(x);const st=exStatus(x);
+    return `<button class="exr" data-act="ex-edit" data-ex="${esc(x.id)}"><span class="exn"><b>${esc(x.kind)}${x.n?" "+esc(String(x.n))+(x.tot?" di "+esc(String(x.tot)):""):""}</b><i>${esc(exFmt(x))}${x.note?" · "+esc(x.note):""}</i></span><span class="pill ex-${st.c} num">${esc(st.t)}</span></button>`}).join("");
+  return `<section class="glass card exs"><div class="ch"><h2>Esami</h2><button class="chip" data-act="ex-new">Aggiungi</button></div>
+    ${EXUI==="new"?exForm(null):""}
+    ${subs.map(g=>`<div class="exg"><h3>${esc(g.n)}</h3>${rows(g)}</div>`).join("")}</section>`;
+}
+function exRead(id){
+  const v=i=>(document.getElementById(i)||{}).value||"";
+  const subj=v("ex-subj").trim();if(!subj){const f=document.getElementById("ex-subj");if(f)f.focus();return}
+  const old=EXMS.find(y=>y.id===id)||{};
+  exSave({id:id||("x"+Date.now().toString(36)),subj,kind:v("ex-kind")||"Modulo",n:v("ex-n").trim(),tot:v("ex-tot").trim(),date:v("ex-date"),grade:v("ex-grade").trim(),max:v("ex-max").trim(),note:v("ex-note").trim()});
+  EXUI=null;render();
+}
 function impPanel(){
   const note="";
   const msg=SYNC.impMsg?`<p class="small">${esc(SYNC.impMsg)}</p>`:"";
@@ -1576,6 +1640,13 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("[data-go],[data-act],[data-topic],[data-sheet],[data-fc],[data-set],[data-calc],[data-rev],[data-ftop],[data-trap],[data-trapt],[data-studio],[data-src],[data-corso],[data-pool],[data-nu],[data-ord]");
   if(!t)return;
   const D=t.dataset;
+  if(D.act&&D.act.startsWith("ex-")){
+    if(D.act==="ex-new"){EXUI=EXUI==="new"?null:"new"}
+    else if(D.act==="ex-edit"){EXUI=EXUI===D.ex?null:D.ex}
+    else if(D.act==="ex-cancel"){EXUI=null}
+    else if(D.act==="ex-save"){exRead(D.ex);return}
+    else if(D.act==="ex-del"){const x=EXMS.find(y=>y.id===D.ex);if(x){x.x=1;x.u=Date.now();store.set("ex",EXMS);touch()}EXUI=null}
+    render();return}
   if(D.go){go(D.go);return}
   if(D.nu!==undefined){SETT.nu=D.nu==="1";store.set("sett",SETT);render();return}
   if(D.ord){SETT.ord=D.ord;store.set("sett",SETT);render();return}
