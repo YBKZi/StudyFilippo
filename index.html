@@ -1948,6 +1948,7 @@ document.addEventListener("click",e=>{
   if(!t)return;
   const D=t.dataset;
   if(D.lock)return;
+  if(t.classList.contains("tab")&&D.go===view)return;
   if(D.act&&D.act.startsWith("ex-")){
     if(D.act==="ex-new"){EXUI="new";render();focusMdl();return}
     else if(D.act==="ex-mopen"){if(D.ex==="stat-p1"){PMOD="stat-p1";go("piano")}else{const x=EXMS.find(y=>y.id===D.ex);if(x){MODID=x.id;SUBJ=x.subj;go("materia")}}return}
