@@ -149,7 +149,6 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .exf{margin:0 0 10px}
 .exghost{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:var(--r);border:1.5px dashed var(--line);background:transparent;color:var(--acc2);font:inherit;transition:background-color .2s,transform .15s}.exghost:hover{background:rgba(255,255,255,.35)}.exghost:active{transform:scale(.985)}
 .exghost svg{flex:none;width:30px;height:30px;padding:6px;border-radius:50%;background:var(--accs);fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;box-sizing:border-box}
-.exh{align-items:center}.exopen h2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.extog{flex:none;display:flex;align-items:center;gap:8px;background:none;border:0;padding:4px 0 4px 6px;font:inherit;color:inherit}.exsum{display:flex;flex-direction:column;align-items:flex-end;gap:3px}.exsum .exd{font-size:12px}.exsum .pill.ex-ok{background:#2f9e68;color:#fff}.exsum .pill{min-height:26px;padding:0 10px;font-size:12px;pointer-events:none}.chev{flex:none;width:30px;height:30px;padding:5px;border-radius:50%;background:var(--accs);fill:none;stroke:var(--acc2);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;box-sizing:border-box;transition:transform .28s cubic-bezier(.2,.8,.2,1)}.exg.open .chev{transform:rotate(180deg)}.exbody{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .28s cubic-bezier(.2,.8,.2,1),visibility 0s .28s}.exbody>div{overflow:hidden;min-height:0}.exg.open .exbody{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .28s cubic-bezier(.2,.8,.2,1),visibility 0s}.exfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}.exmed{font-size:12.5px;font-weight:800;color:#23784f}.exfb{display:flex;gap:6px;margin-left:auto}.exfb button{display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 12px 0 9px;border-radius:99px;border:0;background:var(--accs);color:var(--acc2);font:inherit;font-size:13px;font-weight:700}.exfb svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .exghost .gl{flex:1;text-align:left;font-size:15px;font-weight:700;opacity:.8}.exp.ed{background:transparent;color:var(--muted);margin:-4px 0 0 0}.exp.ed svg{width:17px;height:17px;stroke-width:2.1;stroke-linejoin:round}.undo{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;z-index:60;display:flex;align-items:center;gap:14px;padding:10px 10px 10px 18px;border-radius:99px;background:#2a1520;color:#fff;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:opacity .22s,transform .22s;max-width:calc(100vw - 32px)}.undo.on{opacity:1;transform:translate(-50%,0)}.undo button{border:0;border-radius:99px;background:rgba(255,255,255,.16);color:#fff;font:inherit;font-weight:800;padding:8px 14px}.exempty{padding:24px 4px;font-weight:600}
 .exr.fatto .exe{background:rgba(52,168,110,.10);border-color:rgba(52,168,110,.28)}.exr.fatto .pill.ex-ok{background:#2f9e68;color:#fff}
 .exg.allfatto{background-image:linear-gradient(rgba(52,168,110,.12),rgba(52,168,110,.12));border-color:rgba(52,168,110,.35);opacity:.82}.exg.allfatto h2{color:#23784f}
@@ -1641,7 +1640,6 @@ function exFormSub(nm){
   return `<div class="exform"><label>Nome esame<input id="ex-sn" value="${esc(nm)}" autocomplete="off"></label><div class="row"><button class="btn" data-act="ex-subsave" data-subj="${esc(nm)}">Salva</button><button class="btn glassbtn" data-act="ex-cancel">Annulla</button><button class="btn glassbtn danger" data-act="ex-subdel" data-subj="${esc(nm)}">Elimina</button></div></div>`;
 }
 let UNDOT=null;
-function exOpen(n,on=true){const o=new Set(SETT.exo||[]);on?o.add(n):o.delete(n);SETT.exo=[...o];store.set("sett",SETT)}
 function undoBar(msg,fn){
   let b=document.getElementById("undo");if(!b){b=document.createElement("div");b.id="undo";b.className="undo";document.body.appendChild(b)}
   b.innerHTML=`<span></span><button>Annulla</button>`;b.firstChild.textContent=msg;
@@ -1667,17 +1665,8 @@ function exCard(){
     const st=exStatus(x);
     if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="q-save" data-ex="${esc(x.id)}">OK</button></div>`;
     return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}"><button class="exe" data-act="ex-edit" data-ex="${esc(x.id)}"><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" data-act="ex-q" data-ex="${esc(x.id)}" aria-label="Voto di ${esc(x.name)}">${esc(st.t)}</button></div>`};
-  const opened=new Set(SETT.exo||[]);
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
-    const nx=g.l.find(x=>!exDone(x)),all=g.l.length&&!nx;
-    const fresh=g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH);
-    const forms=EXUI&&(EXUI==="s:"+g.n||EXUI==="m:"+g.n||g.l.some(x=>x.id===EXUI||"q:"+x.id===EXUI));
-    const open=opened.has(g.n)||forms;
-    let dt="",pl="";
-    if(nx){const st=exStatus(nx);dt=exFmt(nx);pl=`<span class="pill ex-${st.c} num">${esc(st.t)}</span>`}
-    else if(all){dt=exFmt(g.l[g.l.length-1]);pl=av?`<span class="pill ex-ok num">${esc(av.t)}</span>`:""}
-    const sm=(dt||pl)?`<span class="exsum">${dt?`<span class="exd">${esc(dt)}</span>`:""}${pl}</span>`:"";
-    return `<section class="glass card exg ${all?"allfatto":""} ${fresh?"fresh":""} ${open?"open":""}" data-subj="${esc(g.n)}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}"><h2>${esc(g.n)}</h2></button><button class="extog" data-act="ex-tog" data-subj="${esc(g.n)}" aria-label="Apri o chiudi ${esc(g.n)}" aria-expanded="${open}">${sm}<svg class="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></div><div class="exbody"><div>${v.map(x=>row(g,x)).join("")}${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}<div class="exfoot">${av&&av.n>1?`<span class="exmed num">Media ${esc(av.t)}</span>`:""}<span class="exfb"><button data-act="ex-mod" data-subj="${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Modulo</button><button data-act="ex-sub" data-subj="${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>Modifica</button></span></div></div></div></section>`}).join("");
+    return `<section class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}"><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button><button class="exp ed" data-act="ex-sub" data-subj="${esc(g.n)}" aria-label="Modifica ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
 function vEsami(){
   const f=SETT.exf||"todo";
@@ -1693,7 +1682,7 @@ function focusMdl(){setTimeout(()=>{const i=document.querySelector(".exform inpu
 function exRead(id,subj){
   const v=i=>(document.getElementById(i)||{}).value||"";
   if(!id&&subj===""){const nm=v("ex-subj").trim();if(!nm){const f=document.getElementById("ex-subj");if(f)f.focus();return}
-    exOpen(nm);exSave({id:"x"+Date.now().toString(36),subj:nm,kind:"Materia",name:"",date:"",grade:"",max:"",note:""});EXUI=null;render();return}
+    exSave({id:"x"+Date.now().toString(36),subj:nm,kind:"Materia",name:"",date:"",grade:"",max:"",note:""});EXUI=null;render();return}
   const old=EXMS.find(y=>y.id===id)||{};
   exSave({id:id||("x"+Date.now().toString(36)),subj,kind:"Modulo",name:v("ex-name").trim()||(old.name)||(document.querySelector('[data-act="ex-save"]')||{dataset:{}}).dataset.ph||"Modulo",date:v("ex-date"),grade:id?v("ex-grade").trim():"",max:id?v("ex-max").trim():"",note:id?v("ex-note").trim():""});
   EXUI=null;render();
@@ -1720,13 +1709,12 @@ document.addEventListener("click",e=>{
     if(D.act==="ex-new"){EXUI="new";render();focusMdl();return}
     else if(D.act==="ex-edit"){EXUI=EXUI===D.ex?null:D.ex;render();return}
     else if(D.act==="ex-cancel"){EXUI=null;render();return}
-    else if(D.act==="ex-mod"){exOpen(D.subj);EXUI=EXUI==="m:"+D.subj?null:"m:"+D.subj;render();if(EXUI)focusMdl();return}
+    else if(D.act==="ex-mod"){EXUI=EXUI==="m:"+D.subj?null:"m:"+D.subj;render();if(EXUI)focusMdl();return}
     else if(D.act==="ex-save"){exRead(D.ex,D.subj);return}
     else if(D.act==="ex-q"){EXUI=EXUI==="q:"+D.ex?null:"q:"+D.ex}
     else if(D.act==="q-save"){qSave(D.ex);return}
-    else if(D.act==="ex-tog"){const sec=t.closest(".exg"),o=new Set(SETT.exo||[]);const on=!sec.classList.contains("open");sec.classList.toggle("open",on);t.setAttribute("aria-expanded",on);on?o.add(D.subj):o.delete(D.subj);SETT.exo=[...o];store.set("sett",SETT);return}
-    else if(D.act==="ex-sub"){exOpen(D.subj);EXUI=EXUI==="s:"+D.subj?null:"s:"+D.subj;render();return}
-    else if(D.act==="ex-subsave"){const nm=((document.getElementById("ex-sn")||{}).value||"").trim();if(nm&&nm!==D.subj){EXMS.filter(y=>!y.x&&y.subj===D.subj).forEach(y=>exSave(Object.assign({},y,{subj:nm})));exOpen(D.subj,false);exOpen(nm)}EXUI=null;render();return}
+    else if(D.act==="ex-sub"){EXUI=EXUI==="s:"+D.subj?null:"s:"+D.subj;render();return}
+    else if(D.act==="ex-subsave"){const nm=((document.getElementById("ex-sn")||{}).value||"").trim();if(nm&&nm!==D.subj)EXMS.filter(y=>!y.x&&y.subj===D.subj).forEach(y=>exSave(Object.assign({},y,{subj:nm})));EXUI=null;render();return}
     else if(D.act==="ex-subdel"){const it=EXMS.filter(y=>!y.x&&y.subj===D.subj);exDelete(it,`«${D.subj}» eliminato`);return}
     else if(D.act==="ex-open"){if(EXMS.some(y=>!y.x&&y.subj===D.subj&&y.id==="stat-p1")){go("piano")}else{SUBJ=D.subj;go("materia")}return}
     else if(D.act==="ex-del"){const x=EXMS.find(y=>y.id===D.ex);if(x)exDelete([x],`«${x.name||"Modulo"}» eliminato`);else{EXUI=null;render()}return}
