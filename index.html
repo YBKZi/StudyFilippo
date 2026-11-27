@@ -135,29 +135,26 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .day h3{font-size:18px;font-weight:700;margin-top:3px}
 .day.next{border:1.5px solid rgba(224,69,123,.55);box-shadow:0 0 0 5px rgba(224,69,123,.10),var(--sh)}
 .day.full{opacity:.72}
-.exh{display:flex;align-items:center;justify-content:space-between;gap:10px}.exopen{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:none;border:0;padding:0;font:inherit;color:inherit}.exav{font-size:13px;font-weight:800;color:#fff;background:#2f9e68;padding:3px 10px;border-radius:99px}
+.exh{display:flex;align-items:center;justify-content:space-between;gap:10px}.exopen{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:none;border:0;padding:0;font:inherit;color:inherit}.exav{font-size:12px;font-weight:800;color:#fff;background:#2f9e68;padding:3px 10px;border-radius:99px}
 .exadd{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 16px 0 12px;white-space:nowrap;flex:none;border-radius:99px;border:0;background:var(--accs);color:var(--acc2);font:inherit;font-size:15px;font-weight:800;transition:transform .15s ease,background-color .2s}.exadd svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}
 @media (max-width:430px){.exadd{height:40px;padding:0 13px 0 9px;font-size:14px}.top h1{min-width:0}}
 .exadd:active,.exp:active{transform:scale(.95)}
-.mdl{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(43,18,32,.26);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);animation:mdlin .24s ease both}
-.mdl.out{animation:mdlout .17s ease both}.mdl.out .msheet{animation:shout .17s ease both}
-.msheet{width:min(440px,100%);max-height:calc(100dvh - 36px);overflow:auto;background:rgba(255,255,255,.97);border-radius:26px;padding:20px;box-shadow:0 24px 70px rgba(80,20,50,.28);animation:shin .3s cubic-bezier(.2,.8,.2,1) both}
-.msheet h2{margin:0 0 14px;font-size:21px}.msheet .exform{background:none;border:0;padding:0;margin:0}
-[data-theme=dark] .msheet{background:rgba(40,20,32,.97)}[data-theme=dark] .msheet .exform input,[data-theme=dark] .msheet .exform select{background:rgba(255,255,255,.08)}
-@keyframes mdlin{from{opacity:0}to{opacity:1}}@keyframes mdlout{to{opacity:0}}
-@keyframes shin{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}@keyframes shout{to{opacity:0;transform:translateY(10px) scale(.98)}}
 @keyframes exin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .fresh{animation:exin .38s cubic-bezier(.2,.8,.2,1) both}
+.exform{animation:exin .26s cubic-bezier(.2,.8,.2,1) both}
 .exr.quick{animation:exin .22s cubic-bezier(.2,.8,.2,1) both}
 .exr.quick{align-items:center;padding:8px 10px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}.exr.quick .exn{flex:1}.exr.quick input{width:64px;font:inherit;font-size:17px;font-weight:700;text-align:center;padding:9px 6px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink)}.exr.quick .qs{color:var(--muted);font-weight:700}
-.exr>.pill{border:0;font-family:inherit;align-self:center;min-height:40px;padding:0 14px;cursor:pointer}.exr>.pill.ex-wait{border:1px dashed var(--line)}.exg h2{font-size:19px;line-height:1.25;margin:0 0 4px}
-.exp{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:var(--accs);color:var(--acc2);display:grid;place-items:center;margin:-4px -4px 0 0}.exp svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}
-.exf{margin:0 0 14px}.exempty{padding:24px 4px;font-weight:600}
+.exr>.pill{border:0;font-family:inherit;align-self:center;min-height:32px;padding:0 12px;font-size:13px;cursor:pointer}.exr>.pill.ex-wait{border:1px dashed var(--line)}.exg h2{font-size:16.5px;line-height:1.25;margin:0}
+.exp{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--accs);color:var(--acc2);display:grid;place-items:center;margin:-4px -4px 0 0}.exp svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}
+.exf{margin:0 0 10px}
+.exghost{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:var(--r);border:1.5px dashed var(--line);background:transparent;color:var(--acc2);font:inherit;transition:background-color .2s,transform .15s}.exghost:hover{background:rgba(255,255,255,.35)}.exghost:active{transform:scale(.985)}
+.exghost svg{flex:none;width:30px;height:30px;padding:6px;border-radius:50%;background:var(--accs);fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;box-sizing:border-box}
+.exghost .sk{flex:1;display:flex;flex-direction:column;gap:7px}.exghost .sk i{display:block;height:9px;border-radius:99px;background:rgba(160,90,120,.16);width:46%}.exghost .sk i+i{width:28%}.exempty{padding:24px 4px;font-weight:600}
 .exr.fatto .exe{background:rgba(52,168,110,.10);border-color:rgba(52,168,110,.28)}.exr.fatto .pill.ex-ok{background:#2f9e68;color:#fff}
 .allfatto{background-image:linear-gradient(rgba(52,168,110,.05),rgba(52,168,110,.05))}
-.exr{display:flex;align-items:stretch;gap:8px;margin-top:8px}.exe{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line);font:inherit;color:inherit}.exo{align-self:center;min-height:44px;padding:0 16px}
+.exg.card{padding:13px 14px 12px}.exr{display:flex;align-items:stretch;gap:8px;margin-top:6px}.exe{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:8px 12px;border-radius:13px;background:rgba(255,255,255,.6);border:1px solid var(--line);font:inherit;color:inherit}.exo{align-self:center;min-height:44px;padding:0 16px}
 .subjchip{display:inline-flex;align-items:center;gap:4px;height:40px;padding:0 14px 0 8px;border-radius:99px;background:var(--accs);color:var(--acc2);font:inherit;font-size:14px;font-weight:700;border:0}.subjchip svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.exn{display:flex;flex-direction:column;min-width:0}.exn b{font-weight:700;font-size:15.5px}.exn i{font-style:normal;font-size:13px;color:var(--muted);font-weight:600;margin-top:2px}
+.exn{display:flex;flex-direction:column;min-width:0}.exn b{font-weight:700;font-size:14.5px}.exn i{font-style:normal;font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
 .pill.ex-ok{background:var(--grad);color:#fff}.pill.ex-wait{background:transparent;border:1px solid var(--line);color:var(--muted)}
 [data-theme=dark] .exe{background:rgba(255,255,255,.07)}
 .exform{display:flex;flex-direction:column;gap:10px;padding:12px;margin-top:6px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}
@@ -671,7 +668,7 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .home>.hero+.card{grid-column:2/4;align-self:stretch;display:flex;flex-direction:column}
  .home>.hero+.card .prs{flex:1;display:flex;flex-direction:column;justify-content:space-around;margin-top:6px}
  .home>.prom{grid-column:1/-1;order:4}
- .exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+ .exgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}
  .home>.sh,.home>.sub,.home>.days{order:2}
  .home>.strat{grid-column:1/-1;order:3}
  .count .big{font-size:112px}
@@ -1170,7 +1167,7 @@ const ICON={
  flash:'<svg viewBox="0 0 24 24"><rect x="3" y="7" width="14" height="14" rx="3"/><path d="M7 7V6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-1"/></svg>',
  formule:'<svg viewBox="0 0 24 24"><path d="M18 5H6.5l6.5 7-6.5 7H18"/></svg>',
 };
-const TABN={esami:"Materie",piano:"Piano",studio:"Studio",quiz:"Quiz",flash:"Flash",formule:"Formule"};
+const TABN={esami:"Esami",piano:"Piano",studio:"Studio",quiz:"Quiz",flash:"Flash",formule:"Formule"};
 
 function go(v){view=v;render();window.scrollTo(0,0);try{history.replaceState(null,"","#"+v)}catch(_){}}
 function renderTabs(){
@@ -1222,7 +1219,7 @@ function vPiano(){
   let nx="";if(ni>=0){const p=PLAN[ni],dn=p.tasks.filter((_,k)=>PLANCHK[ni+"."+k]).length,mins=p.tasks.reduce((a,x)=>a+(+((x.match(/\((\d+) min\)/)||[])[1]||0)),0);nx=`<div class="nx"><span>${esc(p.t)}<i>${p.tasks.length} attività · ${mins} min</i></span><span class="pill num">${dn}/${p.tasks.length}</span></div>`}
   const prog=TOPS_P.map(t=>{const s=topStat(t.id);return `<div class="pr"><span>${dot(t.id)}${esc(t.short)}</span><div class="bar"><i style="width:${s.n?s.seen/s.n*100:0}%;background:${COL[t.id]}"></i></div><em class="num">${s.pct===null?"—":s.pct+"%"}</em></div>`}).join("");
   const info=impPanel();
-  return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="subjchip" data-go="esami" aria-label="Torna alle materie"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>Materie</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
+  return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="subjchip" data-go="esami" aria-label="Torna agli esami"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>Esami</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   <div class="stack home">${syncChip()}${info}
   <section class="hero glass">
     ${cd}
@@ -1648,32 +1645,24 @@ function exCard(){
   const shown=subs.filter(g=>f==="all"||vis(g).length||!g.l.length||g.l.some(x=>(f==="done")!==exDone(x))).sort((a,b)=>key(a)-key(b));
   if(!shown.length)return "";
   const row=(g,x)=>{
+    if(EXUI===x.id)return exFormMod(x,g.n);
     const st=exStatus(x);
     if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="q-save" data-ex="${esc(x.id)}">OK</button></div>`;
     return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}"><button class="exe" data-act="ex-edit" data-ex="${esc(x.id)}"><span class="exn"><b>${esc(x.name)}</b><i>${esc(exFmt(x))}${x.note?" · "+esc(x.note):""}</i></span></button><button class="pill ex-${st.c} num" data-act="ex-q" data-ex="${esc(x.id)}" aria-label="Voto di ${esc(x.name)}">${esc(st.t)}</button></div>`};
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
-    return `<section class="glass card exg ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}"><h2>${esc(g.n)}</h2>${av?`<span class="exav num">${g.l.filter(x=>exNum(x.grade)!==null).length>1?"Media ":""}${esc(av.t)}</span>`:""}</button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${v.map(x=>row(g,x)).join("")}</section>`}).join("");
-}
-function exModal(){
-  if(!EXUI||EXUI.startsWith("q:"))return "";
-  let t,body;
-  if(EXUI==="new"){t="Aggiungi materia";body=`<div class="exform"><label>Nome<input id="ex-subj" autocomplete="off"></label><div class="row"><button class="btn" data-act="ex-save" data-ex="" data-subj="">Aggiungi</button><button class="btn glassbtn" data-act="ex-cancel">Annulla</button></div></div>`}
-  else if(EXUI.startsWith("m:")){const sj=EXUI.slice(2);t="Nuovo modulo";body=exFormMod(null,sj)}
-  else{const x=EXMS.find(y=>y.id===EXUI&&!y.x);if(!x)return "";t=x.name;body=exFormMod(x,x.subj)}
-  return `<div class="mdl" data-act="ex-cancel"><div class="msheet" role="dialog" aria-modal="true" aria-label="${esc(t)}"><h2>${esc(t)}</h2>${body}</div></div>`;
+    return `<section class="glass card exg ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}"><h2>${esc(g.n)}</h2>${av?`<span class="exav num">${g.l.filter(x=>exNum(x.grade)!==null).length>1?"Media ":""}${esc(av.t)}</span>`:""}</button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
 function vEsami(){
   const f=SETT.exf||"todo";
-  return `<header class="top"><div><h1>Materie</h1></div><div class="hr"><button class="exadd" data-act="ex-new"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Aggiungi materia</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
-  ${EXMS.some(x=>!x.x)?`<div class="seg exf" role="group" aria-label="Filtro esami"><button data-exf="todo" aria-pressed="${f==="todo"}">Da fare</button><button data-exf="done" aria-pressed="${f==="done"}">Passati</button><button data-exf="all" aria-pressed="${f==="all"}">Tutti</button></div>`:""}
-  <div class="stack exgrid">${exCard()}</div>${exModal()}`;
+  return `<header class="top"><div><h1>Esami</h1></div><div class="hr"><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
+  ${EXMS.some(x=>!x.x)?`<div class="seg sm exf" role="group" aria-label="Filtro esami"><button data-exf="todo" aria-pressed="${f==="todo"}">Da fare</button><button data-exf="done" aria-pressed="${f==="done"}">Passati</button><button data-exf="all" aria-pressed="${f==="all"}">Tutti</button></div>`:""}
+  <div class="stack exgrid">${exCard()}${EXUI==="new"?`<section class="glass card exg fresh"><div class="exform"><label>Nuovo esame<input id="ex-subj" autocomplete="off"></label><div class="row"><button class="btn" data-act="ex-save" data-ex="" data-subj="">Aggiungi</button><button class="btn glassbtn" data-act="ex-cancel">Annulla</button></div></div></section>`:`<button class="exghost" data-act="ex-new" aria-label="Nuovo esame"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span class="sk"><i></i><i></i></span></button>`}</div>`;
 }
 function vMateria(){
-  return `<header class="top"><div><h1>${esc(SUBJ||"")}</h1></div><div class="hr"><button class="subjchip" data-go="esami"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>Materie</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
+  return `<header class="top"><div><h1>${esc(SUBJ||"")}</h1></div><div class="hr"><button class="subjchip" data-go="esami"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>Esami</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   <div class="stack"><section class="glass card"><p class="muted">Nessun materiale di studio.</p></section></div>`;
 }
-function focusMdl(){setTimeout(()=>{const i=document.querySelector(".mdl input");if(i&&!i.value)try{i.focus({preventScroll:true})}catch(_){}},60)}
-function closeMdl(fn){const m=document.querySelector(".mdl");if(m&&!m.classList.contains("out")){m.classList.add("out");setTimeout(fn,170)}else fn()}
+function focusMdl(){setTimeout(()=>{const i=document.querySelector(".exform input");if(i&&!i.value)try{i.focus({preventScroll:true})}catch(_){}},60)}
 function exRead(id,subj){
   const v=i=>(document.getElementById(i)||{}).value||"";
   if(!id&&subj===""){const nm=v("ex-subj").trim();if(!nm){const f=document.getElementById("ex-subj");if(f)f.focus();return}
@@ -1702,14 +1691,14 @@ document.addEventListener("click",e=>{
   const D=t.dataset;
   if(D.act&&D.act.startsWith("ex-")){
     if(D.act==="ex-new"){EXUI="new";render();focusMdl();return}
-    else if(D.act==="ex-edit"){EXUI=D.ex;render();return}
-    else if(D.act==="ex-cancel"){if(e.target.closest(".msheet")&&t.classList.contains("mdl"))return;closeMdl(()=>{EXUI=null;render()});return}
-    else if(D.act==="ex-mod"){EXUI="m:"+D.subj;render();focusMdl();return}
-    else if(D.act==="ex-save"){closeMdl(()=>exRead(D.ex,D.subj));return}
+    else if(D.act==="ex-edit"){EXUI=EXUI===D.ex?null:D.ex;render();return}
+    else if(D.act==="ex-cancel"){EXUI=null;render();return}
+    else if(D.act==="ex-mod"){EXUI=EXUI==="m:"+D.subj?null:"m:"+D.subj;render();if(EXUI)focusMdl();return}
+    else if(D.act==="ex-save"){exRead(D.ex,D.subj);return}
     else if(D.act==="ex-q"){EXUI=EXUI==="q:"+D.ex?null:"q:"+D.ex}
     else if(D.act==="q-save"){qSave(D.ex);return}
     else if(D.act==="ex-open"){if(D.subj==="Statistica"){go("piano")}else{SUBJ=D.subj;go("materia")}return}
-    else if(D.act==="ex-del"){const x=EXMS.find(y=>y.id===D.ex);if(x){x.x=1;x.u=Date.now();store.set("ex",EXMS);touch()}closeMdl(()=>{EXUI=null;render()});return}
+    else if(D.act==="ex-del"){const x=EXMS.find(y=>y.id===D.ex);if(x){x.x=1;x.u=Date.now();store.set("ex",EXMS);touch()}EXUI=null;render();return}
     render();return}
   if(D.exf){SETT.exf=D.exf;store.set("sett",SETT);EXUI=null;render();return}
   if(D.go){go(D.go);return}
