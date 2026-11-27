@@ -143,8 +143,8 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .fresh{animation:exin .38s cubic-bezier(.2,.8,.2,1) both}
 .exform{animation:exin .26s cubic-bezier(.2,.8,.2,1) both}
 .exr.quick{animation:exin .22s cubic-bezier(.2,.8,.2,1) both}
-.exr.quick{align-items:center;padding:8px 10px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}.exr.quick .exn{flex:1}.exr.quick input{width:64px;font:inherit;font-size:17px;font-weight:700;text-align:center;padding:9px 6px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink)}.exr.quick .qs{color:var(--muted);font-weight:700}
-.exr>.pill{border:0;font-family:inherit;align-self:center;min-height:32px;padding:0 12px;font-size:13px;cursor:pointer}.exr>.pill.ex-wait{border:1px dashed var(--line)}.exg h2{font-size:16.5px;line-height:1.25;margin:0}
+.exr.quick{align-items:center;padding:8px 10px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}.exr.quick .exn{flex:1}.exr.quick input{width:50px;font:inherit;font-size:17px;font-weight:700;text-align:center;padding:9px 6px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink)}.exr.quick .qs{color:var(--muted);font-weight:700}
+.exr>.pill{min-width:64px;box-sizing:border-box;text-align:center;border:0;font-family:inherit;align-self:center;min-height:32px;padding:0 12px;font-size:13px;cursor:pointer}.exr>.pill.ex-wait{border:1px dashed var(--line)}.exg h2{font-size:16.5px;line-height:1.25;margin:0}
 .exp{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--accs);color:var(--acc2);display:grid;place-items:center;margin:-4px -4px 0 0}.exp svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}
 .exf{margin:0 0 10px}
 .exghost{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:var(--r);border:1.5px dashed var(--line);background:transparent;color:var(--acc2);font:inherit;transition:background-color .2s,transform .15s}.exghost:hover{background:rgba(255,255,255,.35)}.exghost:active{transform:scale(.985)}
@@ -1709,7 +1709,7 @@ document.addEventListener("click",e=>{
     if(D.act==="ex-new"){EXUI="new";render();focusMdl();return}
     else if(D.act==="ex-edit"){EXUI=EXUI===D.ex?null:D.ex;render();return}
     else if(D.act==="ex-cancel"){EXUI=null;render();return}
-    else if(D.act==="ex-mod"){EXUI=EXUI==="m:"+D.subj?null:"m:"+D.subj;render();if(EXUI)focusMdl();return}
+    else if(D.act==="ex-mod"){const used=new Set(exList().filter(y=>y.subj===D.subj).map(y=>y.name)),mods=exList().filter(y=>y.subj===D.subj);let k=1;while(used.has("Modulo "+k))k++;exSave({id:"x"+Date.now().toString(36),subj:D.subj,kind:"Modulo",name:"Modulo "+k,date:"",grade:"",max:"",note:""});EXUI=null;render();return}
     else if(D.act==="ex-save"){exRead(D.ex,D.subj);return}
     else if(D.act==="ex-q"){EXUI=EXUI==="q:"+D.ex?null:"q:"+D.ex}
     else if(D.act==="q-save"){qSave(D.ex);return}
