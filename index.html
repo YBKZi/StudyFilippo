@@ -151,6 +151,11 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .exghost svg{flex:none;width:30px;height:30px;padding:6px;border-radius:50%;background:var(--accs);fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;box-sizing:border-box}
 .exopen:disabled,.exe:disabled{color:inherit;opacity:1;cursor:default}
 .exr .exe{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.exr{transition:transform .18s}.exr.drag{position:relative;z-index:5}.exr.drag .exe{box-shadow:0 12px 26px rgba(120,40,80,.28);background:#fff}
+.exr.quick input[type=date]{width:auto;flex:1;min-width:0;font-size:15px;padding:9px 8px}
+[data-theme=dark] .exr.quick{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}
+[data-theme=dark] .exr.quick input{background:rgba(255,255,255,.1);color:var(--ink);border-color:rgba(255,255,255,.16);color-scheme:dark}
+[data-theme=dark] .exr.quick .exo{background:rgba(255,255,255,.12);color:var(--ink);border-color:rgba(255,255,255,.2)}
+[data-theme=dark] .exr.quick .exo:hover{background:rgba(255,255,255,.18)}
 .exghost .gl{flex:1;text-align:left;font-size:15px;font-weight:700;opacity:.8}.exp.ed{background:transparent;color:var(--muted);margin:-4px 0 0 0}.exp.ed svg{width:17px;height:17px;stroke-width:2.1;stroke-linejoin:round}.undo{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;z-index:60;display:flex;align-items:center;gap:14px;padding:10px 10px 10px 18px;border-radius:99px;background:#2a1520;color:#fff;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:opacity .22s,transform .22s;max-width:calc(100vw - 32px)}.undo.on{opacity:1;transform:translate(-50%,0)}.undo button{border:0;border-radius:99px;background:rgba(255,255,255,.16);color:#fff;font:inherit;font-weight:800;padding:8px 14px}.exempty{padding:24px 4px;font-weight:600}
 .exr.fatto .exe{background:rgba(52,168,110,.10);border-color:rgba(52,168,110,.28)}.exr.fatto .pill.ex-ok{background:#2f9e68;color:#fff}
 .exg.allfatto{background-image:linear-gradient(rgba(52,168,110,.12),rgba(52,168,110,.12));border-color:rgba(52,168,110,.35)}.exg.allfatto h2{color:#23784f}
@@ -1629,11 +1634,11 @@ const exNum=v=>{const n=parseFloat(String(v).replace(",","."));return isFinite(n
 const exDone=x=>!!x.grade;
 const fmtN=n=>(Math.round(n*10)/10).toString().replace(".",",");
 function exStatus(x){
-  if(x.grade)return {t:x.max?`${x.grade}/${x.max}`:x.grade,c:"ok"};
-  const d=exDate(x);if(!d)return {t:"voto",c:"wait"};
+  if(x.grade)return {t:x.max?`${x.grade}/${x.max}`:x.grade,c:"ok",k:"g"};
+  const d=exDate(x);if(!d)return {t:"data",c:"wait",k:"d"};
   const n=new Date(),d0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),k=Math.round((d-d0)/864e5);
-  if(k>1)return {t:`tra ${k} giorni`,c:""};if(k===1)return {t:"domani",c:""};if(k===0)return {t:"oggi",c:""};
-  return {t:"voto",c:"wait"};
+  if(k>1)return {t:`tra ${k} giorni`,c:"",k:"d"};if(k===1)return {t:"domani",c:"",k:"d"};if(k===0)return {t:"oggi",c:"",k:"d"};
+  return {t:"voto",c:"wait",k:"g"};
 }
 function exAvg(mods){
   const g=mods.filter(x=>exNum(x.grade)!==null);if(!g.length)return null;
@@ -1676,8 +1681,9 @@ function exCard(){
   if(!shown.length)return "";
   const row=(g,x)=>{
     const st=exStatus(x);
-    if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="q-save" data-ex="${esc(x.id)}">OK</button></div>`;
-    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}" data-mid="${esc(x.id)}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id==="fond-m2"?'data-lock="1"':""}><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" data-act="ex-q" data-ex="${esc(x.id)}" aria-label="Voto di ${esc(x.name)}">${esc(st.t)}</button></div>`};
+    if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="ex-qsave" data-ex="${esc(x.id)}">OK</button></div>`;
+    if(EXUI==="d:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-d" type="date" value="${esc(x.date||"")}" aria-label="Data dell'esame"><button class="chip exo" data-act="ex-dsave" data-ex="${esc(x.id)}">OK</button></div>`;
+    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}" data-mid="${esc(x.id)}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id==="fond-m2"?'data-lock="1"':""}><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" data-act="${st.k==="g"?"ex-q":"ex-d"}" data-ex="${esc(x.id)}" aria-label="${st.k==="g"?"Voto":"Data"} di ${esc(x.name)}">${esc(st.t)}</button></div>`};
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
     return `<section data-subj="${esc(g.n)}" class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}" ${g.l.some(x=>x.id==="fond-m2")?'data-lock="1"':""}><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
@@ -1703,6 +1709,10 @@ function exRead(id,subj){
   exSave({id:id||("x"+Date.now().toString(36)),subj,kind:"Modulo",name:v("ex-name").trim()||(old.name)||(document.querySelector('[data-act="ex-save"]')||{dataset:{}}).dataset.ph||"Modulo",date:v("ex-date"),grade:id?v("ex-grade").trim():"",max:id?v("ex-max").trim():"",note:id?v("ex-note").trim():""});
   EXUI=null;render();
 }
+function dSave(id){
+  const x=EXMS.find(y=>y.id===id);if(!x)return;
+  exSave(Object.assign({},x,{date:(document.getElementById("q-d")||{}).value||""}));EXUI=null;render();
+}
 function qSave(id){
   const x=EXMS.find(y=>y.id===id);if(!x)return;
   const g=(document.getElementById("q-g")||{}).value||"",m=(document.getElementById("q-m")||{}).value||"";
@@ -1716,7 +1726,7 @@ function impPanel(){
 }
 
 /* ---------- eventi ---------- */
-document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"&&e.target.closest&&e.target.closest(".exform")){const b=e.target.closest(".exform").querySelector(".btn:not(.glassbtn)");if(b){e.preventDefault();b.click()}return}if(e.key==="Enter"&&e.target&&(e.target.id==="q-g"||e.target.id==="q-m")){const b=document.querySelector('[data-act="q-save"]');if(b)qSave(b.dataset.ex)}});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"&&e.target.closest&&e.target.closest(".exform")){const b=e.target.closest(".exform").querySelector(".btn:not(.glassbtn)");if(b){e.preventDefault();b.click()}return}if(e.key==="Enter"&&e.target&&(e.target.id==="q-g"||e.target.id==="q-m")){const b=document.querySelector('[data-act="ex-qsave"]');if(b)qSave(b.dataset.ex)}if(e.key==="Enter"&&e.target&&e.target.id==="q-d"){const b=document.querySelector('[data-act="ex-dsave"]');if(b)dSave(b.dataset.ex)}});
 let LP=null,DRAGGED=0;
 function lpStart(e,pt){
   if(LP)return;
@@ -1775,8 +1785,10 @@ document.addEventListener("click",e=>{
       const nr={id:"x"+Date.now().toString(36),subj:D.subj,kind:"Modulo",name:"Modulo "+k,date:"",grade:"",max:"",note:""},arr=cur.slice();arr.splice(at,0,nr);
       arr.forEach((y,i)=>{if(y===nr||y.o!==i)exSave(Object.assign({},y,{o:i}))});EXFRESH=nr.id;setTimeout(()=>{EXFRESH=""},900);EXUI=null;render();return}
     else if(D.act==="ex-save"){exRead(D.ex,D.subj);if(MODID){MODID=null;go("esami")}return}
-    else if(D.act==="ex-q"){EXUI=EXUI==="q:"+D.ex?null:"q:"+D.ex}
-    else if(D.act==="q-save"){qSave(D.ex);return}
+    else if(D.act==="ex-q"){EXUI=EXUI==="q:"+D.ex?null:"q:"+D.ex;render();if(EXUI)setTimeout(()=>{const i=document.getElementById("q-g");if(i)try{i.focus({preventScroll:true})}catch(_){}},60);return}
+    else if(D.act==="ex-qsave"){qSave(D.ex);return}
+    else if(D.act==="ex-d"){EXUI=EXUI==="d:"+D.ex?null:"d:"+D.ex;render();return}
+    else if(D.act==="ex-dsave"){dSave(D.ex);return}
     else if(D.act==="ex-sub"){EXUI=EXUI==="s:"+D.subj?null:"s:"+D.subj;render();return}
     else if(D.act==="ex-subsave"){const nm=((document.getElementById("ex-sn")||{}).value||"").trim();if(nm&&nm!==D.subj)EXMS.filter(y=>!y.x&&y.subj===D.subj).forEach(y=>exSave(Object.assign({},y,{subj:nm})));EXUI=null;render();return}
     else if(D.act==="ex-subdel"){const it=EXMS.filter(y=>!y.x&&y.subj===D.subj);exDelete(it,`«${D.subj}» eliminato`);return}
