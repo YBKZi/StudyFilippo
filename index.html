@@ -154,7 +154,7 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .exg.allfatto{background-image:linear-gradient(rgba(52,168,110,.12),rgba(52,168,110,.12));border-color:rgba(52,168,110,.35);opacity:.82}.exg.allfatto h2{color:#23784f}
 .exg.card{padding:13px 14px 12px}.exr{display:flex;align-items:stretch;gap:8px;margin-top:6px}.exe{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:8px 12px;border-radius:13px;background:rgba(255,255,255,.6);border:1px solid var(--line);font:inherit;color:inherit}.exo{align-self:center;min-height:44px;padding:0 16px}
 .subjchip{display:inline-flex;align-items:center;gap:4px;height:40px;padding:0 14px 0 8px;border-radius:99px;background:var(--accs);color:var(--acc2);font:inherit;font-size:14px;font-weight:700;border:0}.subjchip svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.exn{display:flex;flex-direction:column;min-width:0}.exn b{font-weight:700;font-size:14.5px}.exn i{font-style:normal;font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
+.exd{flex:none;font-size:12.5px;font-weight:600;color:var(--muted);white-space:nowrap}.exn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.exn{display:flex;flex-direction:column;min-width:0}.exn b{font-weight:700;font-size:14.5px}.exn i{font-style:normal;font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
 .pill.ex-ok{background:var(--grad);color:#fff}.pill.ex-wait{background:transparent;border:1px solid var(--line);color:var(--muted)}
 [data-theme=dark] .exe{background:rgba(255,255,255,.07)}
 .exform{display:flex;flex-direction:column;gap:10px;padding:12px;margin-top:6px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}
@@ -1117,7 +1117,7 @@ EX_SEED.forEach(x=>{if(!EXMS.some(y=>y.id===x.id))EXMS.push(Object.assign({},x))
 let EXUI=null,SUBJ=null;
 const exList=()=>EXMS.filter(x=>!x.x);
 const exDate=x=>{const p=(x.date||"").split("-").map(Number);return p.length===3&&p[0]?new Date(p[0],p[1]-1,p[2]):null};
-const exFmt=x=>{const d=exDate(x);return d?d.toLocaleDateString("it-IT",{day:"numeric",month:"short",year:"numeric"}):"senza data"};
+const exFmt=x=>{const d=exDate(x);if(!d)return "";const o={day:"numeric",month:"short"};if(d.getFullYear()!==new Date().getFullYear())o.year="numeric";return d.toLocaleDateString("it-IT",o)};
 let EXFRESH="";
 function exSave(it){EXFRESH=it.id;setTimeout(()=>{EXFRESH=""},900);it.u=Date.now();const i=EXMS.findIndex(y=>y.id===it.id);if(i>=0)EXMS[i]=it;else EXMS.push(it);store.set("ex",EXMS);touch()}
 
@@ -1664,9 +1664,9 @@ function exCard(){
     if(EXUI===x.id)return exFormMod(x,g.n);
     const st=exStatus(x);
     if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="q-save" data-ex="${esc(x.id)}">OK</button></div>`;
-    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}"><button class="exe" data-act="ex-edit" data-ex="${esc(x.id)}"><span class="exn"><b>${esc(x.name)}</b><i>${esc(exFmt(x))}${x.note?" · "+esc(x.note):""}</i></span></button><button class="pill ex-${st.c} num" data-act="ex-q" data-ex="${esc(x.id)}" aria-label="Voto di ${esc(x.name)}">${esc(st.t)}</button></div>`};
+    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}"><button class="exe" data-act="ex-edit" data-ex="${esc(x.id)}"><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" data-act="ex-q" data-ex="${esc(x.id)}" aria-label="Voto di ${esc(x.name)}">${esc(st.t)}</button></div>`};
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
-    return `<section class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}"><h2>${esc(g.n)}</h2>${av?`<span class="exav num">${g.l.filter(x=>exNum(x.grade)!==null).length>1?"Media ":""}${esc(av.t)}</span>`:""}</button><button class="exp ed" data-act="ex-sub" data-subj="${esc(g.n)}" aria-label="Modifica ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
+    return `<section class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}"><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button><button class="exp ed" data-act="ex-sub" data-subj="${esc(g.n)}" aria-label="Modifica ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
 function vEsami(){
   const f=SETT.exf||"todo";
