@@ -149,7 +149,7 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .exf{margin:0 0 10px}
 .exghost{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:var(--r);border:1.5px dashed var(--line);background:transparent;color:var(--acc2);font:inherit;transition:background-color .2s,transform .15s}.exghost:hover{background:rgba(255,255,255,.35)}.exghost:active{transform:scale(.985)}
 .exghost svg{flex:none;width:30px;height:30px;padding:6px;border-radius:50%;background:var(--accs);fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;box-sizing:border-box}
-.exghost .sk{flex:1;display:flex;flex-direction:column;gap:7px}.exghost .sk i{display:block;height:9px;border-radius:99px;background:rgba(160,90,120,.16);width:46%}.exghost .sk i+i{width:28%}.exempty{padding:24px 4px;font-weight:600}
+.exghost .gl{flex:1;text-align:left;font-size:15px;font-weight:700;opacity:.8}.exp.ed{background:transparent;color:var(--muted);margin:-4px 0 0 0}.exp.ed svg{width:17px;height:17px;stroke-width:2.1;stroke-linejoin:round}.undo{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;z-index:60;display:flex;align-items:center;gap:14px;padding:10px 10px 10px 18px;border-radius:99px;background:#2a1520;color:#fff;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:opacity .22s,transform .22s;max-width:calc(100vw - 32px)}.undo.on{opacity:1;transform:translate(-50%,0)}.undo button{border:0;border-radius:99px;background:rgba(255,255,255,.16);color:#fff;font:inherit;font-weight:800;padding:8px 14px}.exempty{padding:24px 4px;font-weight:600}
 .exr.fatto .exe{background:rgba(52,168,110,.10);border-color:rgba(52,168,110,.28)}.exr.fatto .pill.ex-ok{background:#2f9e68;color:#fff}
 .allfatto{background-image:linear-gradient(rgba(52,168,110,.05),rgba(52,168,110,.05))}
 .exg.card{padding:13px 14px 12px}.exr{display:flex;align-items:stretch;gap:8px;margin-top:6px}.exe{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:8px 12px;border-radius:13px;background:rgba(255,255,255,.6);border:1px solid var(--line);font:inherit;color:inherit}.exo{align-self:center;min-height:44px;padding:0 16px}
@@ -1636,13 +1636,29 @@ function exFormMod(x,subj){
     ${n?"":`<div class="exrow"><label>Voto<input id="ex-grade" inputmode="decimal" value="${esc(x.grade||"")}"></label><label>Su<input id="ex-max" inputmode="decimal" value="${esc(x.max||"")}"></label></div><label>Nota<input id="ex-note" value="${esc(x.note||"")}"></label>`}
     <div class="row"><button class="btn" data-act="ex-save" data-ex="${esc(x.id)}" data-subj="${esc(subj)}" data-ph="${esc(ph)}">${n?"Aggiungi":"Salva"}</button><button class="btn glassbtn" data-act="ex-cancel">Annulla</button>${n?"":`<button class="btn glassbtn danger" data-act="ex-del" data-ex="${esc(x.id)}">Elimina</button>`}</div></div>`;
 }
+function exFormSub(nm){
+  return `<div class="exform"><label>Nome esame<input id="ex-sn" value="${esc(nm)}" autocomplete="off"></label><div class="row"><button class="btn" data-act="ex-subsave" data-subj="${esc(nm)}">Salva</button><button class="btn glassbtn" data-act="ex-cancel">Annulla</button><button class="btn glassbtn danger" data-act="ex-subdel" data-subj="${esc(nm)}">Elimina</button></div></div>`;
+}
+let UNDOT=null;
+function undoBar(msg,fn){
+  let b=document.getElementById("undo");if(!b){b=document.createElement("div");b.id="undo";b.className="undo";document.body.appendChild(b)}
+  b.innerHTML=`<span></span><button>Annulla</button>`;b.firstChild.textContent=msg;
+  b.lastChild.onclick=()=>{fn();hideUndo()};
+  requestAnimationFrame(()=>b.classList.add("on"));clearTimeout(UNDOT);UNDOT=setTimeout(hideUndo,6000);
+}
+function hideUndo(){clearTimeout(UNDOT);const b=document.getElementById("undo");if(b)b.classList.remove("on")}
+function exDelete(items,msg){
+  const ids=items.map(x=>x.id);
+  items.forEach(x=>{x.x=1;x.u=Date.now()});store.set("ex",EXMS);touch();EXUI=null;render();
+  undoBar(msg,()=>{ids.forEach(id=>{const x=EXMS.find(y=>y.id===id);if(x){delete x.x;x.u=Date.now()}});store.set("ex",EXMS);touch();render()});
+}
 function exCard(){
   const f=SETT.exf||"todo",subs=[];
   exList().forEach(x=>{let g=subs.find(s=>s.n===x.subj);if(!g){g={n:x.subj,l:[],ids:[]};subs.push(g)}g.ids.push(x.id);if(x.kind!=="Materia")g.l.push(x)});
   subs.forEach(g=>g.l.sort((a,b)=>(exDate(a)||9e14)-(exDate(b)||9e14)));
   const vis=g=>g.l.filter(x=>f==="all"||(f==="done")===exDone(x));
-  const key=g=>{const up=g.l.filter(x=>!exDone(x)).map(x=>+exDate(x)||9e14);return up.length?Math.min(...up):9e15-Math.max(0,...g.l.map(x=>+exDate(x)||0))};
-  const shown=subs.filter(g=>f==="all"||vis(g).length||!g.l.length||g.l.some(x=>(f==="done")!==exDone(x))).sort((a,b)=>key(a)-key(b));
+  const key=g=>{const up=g.l.filter(x=>!exDone(x)).map(x=>+exDate(x)||9e14);if(up.length)return Math.min(...up);return g.l.length?9e15-Math.max(0,...g.l.map(x=>+exDate(x)||0)):9e14};
+  const shown=subs.filter(g=>f==="all"||vis(g).length||(!g.l.length&&f==="todo")).sort((a,b)=>key(a)-key(b));
   if(!shown.length)return "";
   const row=(g,x)=>{
     if(EXUI===x.id)return exFormMod(x,g.n);
@@ -1650,13 +1666,13 @@ function exCard(){
     if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="q-save" data-ex="${esc(x.id)}">OK</button></div>`;
     return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}"><button class="exe" data-act="ex-edit" data-ex="${esc(x.id)}"><span class="exn"><b>${esc(x.name)}</b><i>${esc(exFmt(x))}${x.note?" · "+esc(x.note):""}</i></span></button><button class="pill ex-${st.c} num" data-act="ex-q" data-ex="${esc(x.id)}" aria-label="Voto di ${esc(x.name)}">${esc(st.t)}</button></div>`};
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
-    return `<section class="glass card exg ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}"><h2>${esc(g.n)}</h2>${av?`<span class="exav num">${g.l.filter(x=>exNum(x.grade)!==null).length>1?"Media ":""}${esc(av.t)}</span>`:""}</button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
+    return `<section class="glass card exg ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}"><h2>${esc(g.n)}</h2>${av?`<span class="exav num">${g.l.filter(x=>exNum(x.grade)!==null).length>1?"Media ":""}${esc(av.t)}</span>`:""}</button><button class="exp ed" data-act="ex-sub" data-subj="${esc(g.n)}" aria-label="Modifica ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
 function vEsami(){
   const f=SETT.exf||"todo";
   return `<header class="top"><div><h1>Esami</h1></div><div class="hr"><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   ${EXMS.some(x=>!x.x)?`<div class="seg sm exf" role="group" aria-label="Filtro esami"><button data-exf="todo" aria-pressed="${f==="todo"}">Da fare</button><button data-exf="done" aria-pressed="${f==="done"}">Passati</button><button data-exf="all" aria-pressed="${f==="all"}">Tutti</button></div>`:""}
-  <div class="stack exgrid">${exCard()}${EXUI==="new"?`<section class="glass card exg fresh"><div class="exform"><label>Nuovo esame<input id="ex-subj" autocomplete="off"></label><div class="row"><button class="btn" data-act="ex-save" data-ex="" data-subj="">Aggiungi</button><button class="btn glassbtn" data-act="ex-cancel">Annulla</button></div></div></section>`:`<button class="exghost" data-act="ex-new" aria-label="Nuovo esame"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span class="sk"><i></i><i></i></span></button>`}</div>`;
+  <div class="stack exgrid">${exCard()}${EXUI==="new"?`<section class="glass card exg fresh"><div class="exform"><label>Nuovo esame<input id="ex-subj" autocomplete="off"></label><div class="row"><button class="btn" data-act="ex-save" data-ex="" data-subj="">Aggiungi</button><button class="btn glassbtn" data-act="ex-cancel">Annulla</button></div></div></section>`:`<button class="exghost" data-act="ex-new" aria-label="Nuovo esame"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span class="gl">Nuovo esame</span></button>`}</div>`;
 }
 function vMateria(){
   return `<header class="top"><div><h1>${esc(SUBJ||"")}</h1></div><div class="hr"><button class="subjchip" data-go="esami"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>Esami</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
@@ -1684,7 +1700,7 @@ function impPanel(){
 }
 
 /* ---------- eventi ---------- */
-document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&(e.target.id==="q-g"||e.target.id==="q-m")){const b=document.querySelector('[data-act="q-save"]');if(b)qSave(b.dataset.ex)}});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"&&e.target.closest&&e.target.closest(".exform")){const b=e.target.closest(".exform").querySelector(".btn:not(.glassbtn)");if(b){e.preventDefault();b.click()}return}if(e.key==="Enter"&&e.target&&(e.target.id==="q-g"||e.target.id==="q-m")){const b=document.querySelector('[data-act="q-save"]');if(b)qSave(b.dataset.ex)}});
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-go],[data-act],[data-topic],[data-sheet],[data-fc],[data-set],[data-calc],[data-rev],[data-ftop],[data-trap],[data-trapt],[data-studio],[data-src],[data-corso],[data-pool],[data-nu],[data-ord],[data-exf]");
   if(!t)return;
@@ -1697,8 +1713,11 @@ document.addEventListener("click",e=>{
     else if(D.act==="ex-save"){exRead(D.ex,D.subj);return}
     else if(D.act==="ex-q"){EXUI=EXUI==="q:"+D.ex?null:"q:"+D.ex}
     else if(D.act==="q-save"){qSave(D.ex);return}
-    else if(D.act==="ex-open"){if(D.subj==="Statistica"){go("piano")}else{SUBJ=D.subj;go("materia")}return}
-    else if(D.act==="ex-del"){const x=EXMS.find(y=>y.id===D.ex);if(x){x.x=1;x.u=Date.now();store.set("ex",EXMS);touch()}EXUI=null;render();return}
+    else if(D.act==="ex-sub"){EXUI=EXUI==="s:"+D.subj?null:"s:"+D.subj;render();return}
+    else if(D.act==="ex-subsave"){const nm=((document.getElementById("ex-sn")||{}).value||"").trim();if(nm&&nm!==D.subj)EXMS.filter(y=>!y.x&&y.subj===D.subj).forEach(y=>exSave(Object.assign({},y,{subj:nm})));EXUI=null;render();return}
+    else if(D.act==="ex-subdel"){const it=EXMS.filter(y=>!y.x&&y.subj===D.subj);exDelete(it,`«${D.subj}» eliminato`);return}
+    else if(D.act==="ex-open"){if(EXMS.some(y=>!y.x&&y.subj===D.subj&&y.id==="stat-p1")){go("piano")}else{SUBJ=D.subj;go("materia")}return}
+    else if(D.act==="ex-del"){const x=EXMS.find(y=>y.id===D.ex);if(x)exDelete([x],`«${x.name||"Modulo"}» eliminato`);else{EXUI=null;render()}return}
     render();return}
   if(D.exf){SETT.exf=D.exf;store.set("sett",SETT);EXUI=null;render();return}
   if(D.go){go(D.go);return}
