@@ -1114,7 +1114,7 @@ const EX_SEED=[
 let EXMS=store.get("ex",[]);
 EXMS.forEach(x=>{if(x.kind!=="Materia"&&!x.name){x.name=(x.kind==="Prova"&&x.n==1&&x.id==="stat-p1")?"Prima prova":((x.kind||"Modulo")+(x.n?" "+x.n:""));x.kind="Modulo"}});
 EX_SEED.forEach(x=>{if(!EXMS.some(y=>y.id===x.id))EXMS.push(Object.assign({},x))});
-let EXUI=null,SUBJ=null;
+let EXUI=null,SUBJ=null,MODID=null;
 const exList=()=>EXMS.filter(x=>!x.x);
 const exDate=x=>{const p=(x.date||"").split("-").map(Number);return p.length===3&&p[0]?new Date(p[0],p[1]-1,p[2]):null};
 const exFmt=x=>{const d=exDate(x);if(!d)return "";const o={day:"numeric",month:"short"};if(d.getFullYear()!==new Date().getFullYear())o.year="numeric";return d.toLocaleDateString("it-IT",o)};
@@ -1661,10 +1661,9 @@ function exCard(){
   const shown=subs.filter(g=>f==="all"||vis(g).length||(!g.l.length&&f==="todo")).sort((a,b)=>key(a)-key(b));
   if(!shown.length)return "";
   const row=(g,x)=>{
-    if(EXUI===x.id)return exFormMod(x,g.n);
     const st=exStatus(x);
     if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="q-save" data-ex="${esc(x.id)}">OK</button></div>`;
-    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}"><button class="exe" data-act="ex-edit" data-ex="${esc(x.id)}"><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" data-act="ex-q" data-ex="${esc(x.id)}" aria-label="Voto di ${esc(x.name)}">${esc(st.t)}</button></div>`};
+    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}"><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" data-act="ex-q" data-ex="${esc(x.id)}" aria-label="Voto di ${esc(x.name)}">${esc(st.t)}</button></div>`};
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
     return `<section class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}"><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button><button class="exp ed" data-act="ex-sub" data-subj="${esc(g.n)}" aria-label="Modifica ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
@@ -1675,6 +1674,9 @@ function vEsami(){
   <div class="stack exgrid">${EXUI==="new"?`<section class="glass card exg fresh"><div class="exform"><label>Nuovo esame<input id="ex-subj" autocomplete="off"></label><div class="row"><button class="btn" data-act="ex-save" data-ex="" data-subj="">Aggiungi</button><button class="btn glassbtn" data-act="ex-cancel">Annulla</button></div></div></section>`:`<button class="exghost" data-act="ex-new" aria-label="Nuovo esame"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span class="gl">Nuovo esame</span></button>`}${exCard()}</div>`;
 }
 function vMateria(){
+  const mx=MODID&&EXMS.find(y=>y.id===MODID&&!y.x);
+  if(mx)return `<header class="top"><div><h1>${esc(mx.name||"Modulo")}</h1></div><div class="hr"><button class="subjchip" data-act="ex-cancel"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>Esami</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
+  <div class="stack"><section class="glass card">${exFormMod(mx,mx.subj)}</section><section class="glass card"><p class="muted">Nessun materiale di studio.</p></section></div>`;
   return `<header class="top"><div><h1>${esc(SUBJ||"")}</h1></div><div class="hr"><button class="subjchip" data-go="esami"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>Esami</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   <div class="stack"><section class="glass card"><p class="muted">Nessun materiale di studio.</p></section></div>`;
 }
@@ -1707,17 +1709,17 @@ document.addEventListener("click",e=>{
   const D=t.dataset;
   if(D.act&&D.act.startsWith("ex-")){
     if(D.act==="ex-new"){EXUI="new";render();focusMdl();return}
-    else if(D.act==="ex-edit"){EXUI=EXUI===D.ex?null:D.ex;render();return}
-    else if(D.act==="ex-cancel"){EXUI=null;render();return}
+    else if(D.act==="ex-mopen"){if(D.ex==="stat-p1"){go("piano")}else{const x=EXMS.find(y=>y.id===D.ex);if(x){MODID=x.id;SUBJ=x.subj;go("materia")}}return}
+    else if(D.act==="ex-cancel"){EXUI=null;if(MODID){MODID=null;go("esami")}else render();return}
     else if(D.act==="ex-mod"){const used=new Set(exList().filter(y=>y.subj===D.subj).map(y=>y.name)),mods=exList().filter(y=>y.subj===D.subj);let k=1;while(used.has("Modulo "+k))k++;exSave({id:"x"+Date.now().toString(36),subj:D.subj,kind:"Modulo",name:"Modulo "+k,date:"",grade:"",max:"",note:""});EXUI=null;render();return}
-    else if(D.act==="ex-save"){exRead(D.ex,D.subj);return}
+    else if(D.act==="ex-save"){exRead(D.ex,D.subj);if(MODID){MODID=null;go("esami")}return}
     else if(D.act==="ex-q"){EXUI=EXUI==="q:"+D.ex?null:"q:"+D.ex}
     else if(D.act==="q-save"){qSave(D.ex);return}
     else if(D.act==="ex-sub"){EXUI=EXUI==="s:"+D.subj?null:"s:"+D.subj;render();return}
     else if(D.act==="ex-subsave"){const nm=((document.getElementById("ex-sn")||{}).value||"").trim();if(nm&&nm!==D.subj)EXMS.filter(y=>!y.x&&y.subj===D.subj).forEach(y=>exSave(Object.assign({},y,{subj:nm})));EXUI=null;render();return}
     else if(D.act==="ex-subdel"){const it=EXMS.filter(y=>!y.x&&y.subj===D.subj);exDelete(it,`«${D.subj}» eliminato`);return}
-    else if(D.act==="ex-open"){if(EXMS.some(y=>!y.x&&y.subj===D.subj&&y.id==="stat-p1")){go("piano")}else{SUBJ=D.subj;go("materia")}return}
-    else if(D.act==="ex-del"){const x=EXMS.find(y=>y.id===D.ex);if(x)exDelete([x],`«${x.name||"Modulo"}» eliminato`);else{EXUI=null;render()}return}
+    else if(D.act==="ex-open"){if(EXMS.some(y=>!y.x&&y.subj===D.subj&&y.id==="stat-p1")){go("piano")}else{MODID=null;SUBJ=D.subj;go("materia")}return}
+    else if(D.act==="ex-del"){const x=EXMS.find(y=>y.id===D.ex);if(x)exDelete([x],`«${x.name||"Modulo"}» eliminato`);else{EXUI=null;render()}if(MODID){MODID=null;go("esami")}return}
     render();return}
   if(D.exf){SETT.exf=D.exf;store.set("sett",SETT);EXUI=null;render();return}
   if(D.go){go(D.go);return}
