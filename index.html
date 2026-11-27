@@ -708,6 +708,8 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 @keyframes grow{from{transform:scaleX(0)}to{transform:none}}
 @keyframes veil{from{opacity:0}to{opacity:1}}
 .wrap.in{animation:none}
+@keyframes slr{from{opacity:0;transform:translateX(38px)}to{opacity:1;transform:none}}@keyframes sll{from{opacity:0;transform:translateX(-38px)}to{opacity:1;transform:none}}
+.wrap.in.sl-r .top,.wrap.in.sl-r .stack>*,.wrap.in.sl-r .cols2>*,.wrap.in.sl-r .q>*{animation:slr .36s cubic-bezier(.2,.8,.2,1) both}.wrap.in.sl-l .top,.wrap.in.sl-l .stack>*,.wrap.in.sl-l .cols2>*,.wrap.in.sl-l .q>*{animation:sll .36s cubic-bezier(.2,.8,.2,1) both}
 .wrap.in .top,.wrap.in .stack>*,.wrap.in .cols2>*,.wrap.in .q>*{animation:rise .34s cubic-bezier(.2,.7,.2,1) both}
 .wrap.in .stack>:nth-child(2),.wrap.in .q>.qb{animation-delay:.04s}
 .wrap.in .stack>:nth-child(3){animation-delay:.08s}
@@ -1192,14 +1194,15 @@ const ICON={
 };
 const TABN={esami:"Esami",piano:"Piano",studio:"Studio",quiz:"Quiz",flash:"Flash",formule:"Formule"};
 
-let HDEPTH=0;
+let HDEPTH=0,SLIDE=0;
+const VORD=["esami","piano","studio","quiz","flash","formule"];
 function go(v){
   EXCONF=null;
   if(v==="esami"&&view!=="esami"&&HDEPTH>0){HDEPTH=0;try{history.back();return}catch(_){}}
-  const from=view;view=v;render();window.scrollTo(0,0);
+  const from=view;view=v;{const a=VORD.indexOf(from),b=VORD.indexOf(v);SLIDE=(a>=0&&b>=0&&a!==b)?(b>a?1:-1):0}render();window.scrollTo(0,0);
   try{if(from==="esami"&&v!=="esami"){history.pushState(null,"","#"+v);HDEPTH=1}else history.replaceState(null,"","#"+v)}catch(_){}
 }
-window.addEventListener("popstate",()=>{HDEPTH=0;MODID=null;EXUI=null;if(view!=="esami"){view="esami";render();window.scrollTo(0,0)}});
+window.addEventListener("popstate",()=>{HDEPTH=0;MODID=null;EXUI=null;if(view!=="esami"){SLIDE=-1;view="esami";render();window.scrollTo(0,0)}});
 function renderTabs(){
   if(DEAD)return;
   const hide=(view==="quiz"&&SES&&!SES.done)||view==="esami"||view==="materia";
@@ -1213,7 +1216,7 @@ function render(){
   if(!VIEWS.includes(view))view="esami";
   const fn={materia:vMateria,esami:vEsami,piano:vPiano,studio:vStudio,quiz:vQuiz,flash:vFlash,formule:vFormule}[view];
   const el=$("#view");el.innerHTML=fn();
-  const vk=view+(SES?(SES.done?"r":"s"+SES.i):"");if(el.dataset.vk!==vk){el.dataset.vk=vk;el.classList.remove("in");void el.offsetWidth;el.classList.add("in");document.body.classList.add("vchg");clearTimeout(window._vt);window._vt=setTimeout(()=>{el.classList.remove("in");document.body.classList.remove("vchg")},720)}
+  const vk=view+(SES?(SES.done?"r":"s"+SES.i):"");if(el.dataset.vk!==vk){el.dataset.vk=vk;el.classList.remove("in","sl-r","sl-l");if(SLIDE)el.classList.add(SLIDE>0?"sl-r":"sl-l");void el.offsetWidth;el.classList.add("in");document.body.classList.add("vchg");clearTimeout(window._vt);window._vt=setTimeout(()=>{el.classList.remove("in");document.body.classList.remove("vchg")},720)}
   document.body.classList.toggle("nonav",view==="esami"||view==="materia");
   document.body.classList.toggle("insession",!!(view==="quiz"&&SES&&!SES.done));
 }
