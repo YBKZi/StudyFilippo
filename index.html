@@ -135,11 +135,12 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .day h3{font-size:18px;font-weight:700;margin-top:3px}
 .day.next{border:1.5px solid rgba(224,69,123,.55);box-shadow:0 0 0 5px rgba(224,69,123,.10),var(--sh)}
 .day.full{opacity:.72}
-.exs{display:flex;flex-direction:column;gap:6px}.exg h3{margin:14px 0 6px;font-size:16px}
-.exr{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:11px 14px;margin-top:6px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line);font:inherit;color:inherit}
+.exg h2{font-size:19px;line-height:1.25;margin:0 0 4px}
+.exr{display:flex;align-items:stretch;gap:8px;margin-top:8px}.exe{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line);font:inherit;color:inherit}.exo{align-self:center;min-height:44px;padding:0 16px}
+.subjchip{display:inline-flex;align-items:center;gap:4px;height:40px;padding:0 14px 0 8px;border-radius:99px;background:var(--accs);color:var(--acc2);font:inherit;font-size:14px;font-weight:700;border:0}.subjchip svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .exn{display:flex;flex-direction:column;min-width:0}.exn b{font-weight:700;font-size:15.5px}.exn i{font-style:normal;font-size:13px;color:var(--muted);font-weight:600;margin-top:2px}
 .pill.ex-ok{background:var(--grad);color:#fff}.pill.ex-wait{background:transparent;border:1px solid var(--line);color:var(--muted)}
-[data-theme=dark] .exr{background:rgba(255,255,255,.07)}
+[data-theme=dark] .exe{background:rgba(255,255,255,.07)}
 .exform{display:flex;flex-direction:column;gap:10px;padding:12px;margin-top:6px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}
 .exform label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:700;color:var(--muted);flex:1;min-width:0}
 .exform input,.exform select{font:inherit;font-size:16px;font-weight:600;color:var(--ink);padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;min-width:0;width:100%}
@@ -650,7 +651,7 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .home>.hero+.card{grid-column:2/4;align-self:stretch;display:flex;flex-direction:column}
  .home>.hero+.card .prs{flex:1;display:flex;flex-direction:column;justify-content:space-around;margin-top:6px}
  .home>.prom{grid-column:1/-1;order:4}
- .home>.exs{grid-column:1/-1;order:5}
+ .exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
  .home>.sh,.home>.sub,.home>.days{order:2}
  .home>.strat{grid-column:1/-1;order:3}
  .count .big{font-size:112px}
@@ -1131,21 +1132,22 @@ function startFocus(){
 const dot=t=>`<i class="dot" style="background:${COL[t]}"></i>`;
 
 /* ---------- stato ---------- */
-const VIEWS=["piano","studio","quiz","flash","formule"];
+const VIEWS=["esami","piano","studio","quiz","flash","formule"];
 const allViews=()=>VIEWS;
 const HASH0=location.hash.slice(1);
-let view=VIEWS.includes(HASH0)?HASH0:"piano";
+let view=VIEWS.includes(HASH0)?HASH0:"esami";
 let SES=null,tmr=null,revFilter="all",studioTab="schede",openSheet=null,calc={g:4,w:1};
 let FCS={top:"all",only:false,idx:0,flip:false,deck:null};
 
 const ICON={
+ esami:'<svg viewBox="0 0 24 24"><path d="M3 9.5 12 5l9 4.5-9 4.5z"/><path d="M7 11.8V16c0 1.4 2.2 3 5 3s5-1.6 5-3v-4.2"/></svg>',
  piano:'<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="4"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>',
  studio:'<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg>',
  quiz:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.7 2.7L16.2 9.4"/></svg>',
  flash:'<svg viewBox="0 0 24 24"><rect x="3" y="7" width="14" height="14" rx="3"/><path d="M7 7V6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-1"/></svg>',
  formule:'<svg viewBox="0 0 24 24"><path d="M18 5H6.5l6.5 7-6.5 7H18"/></svg>',
 };
-const TABN={piano:"Piano",studio:"Studio",quiz:"Quiz",flash:"Flash",formule:"Formule"};
+const TABN={esami:"Esami",piano:"Piano",studio:"Studio",quiz:"Quiz",flash:"Flash",formule:"Formule"};
 
 function go(v){view=v;render();window.scrollTo(0,0);try{history.replaceState(null,"","#"+v)}catch(_){}}
 function renderTabs(){
@@ -1158,8 +1160,8 @@ function renderTabs(){
 function render(){
   if(DEAD)return;
   renderTabs();
-  if(!allViews().includes(view))view="piano";
-  const fn={piano:vPiano,studio:vStudio,quiz:vQuiz,flash:vFlash,formule:vFormule}[view];
+  if(!allViews().includes(view))view="esami";
+  const fn={esami:vEsami,piano:vPiano,studio:vStudio,quiz:vQuiz,flash:vFlash,formule:vFormule}[view];
   const el=$("#view");el.innerHTML=fn();
   const vk=view+(SES?(SES.done?"r":"s"+SES.i):"");if(el.dataset.vk!==vk){el.dataset.vk=vk;el.classList.remove("in");void el.offsetWidth;el.classList.add("in");document.body.classList.add("vchg");clearTimeout(window._vt);window._vt=setTimeout(()=>{el.classList.remove("in");document.body.classList.remove("vchg")},720)}
   document.body.classList.toggle("insession",!!(view==="quiz"&&SES&&!SES.done));
@@ -1196,7 +1198,7 @@ function vPiano(){
   let nx="";if(ni>=0){const p=PLAN[ni],dn=p.tasks.filter((_,k)=>PLANCHK[ni+"."+k]).length,mins=p.tasks.reduce((a,x)=>a+(+((x.match(/\((\d+) min\)/)||[])[1]||0)),0);nx=`<div class="nx"><span>${esc(p.t)}<i>${p.tasks.length} attività · ${mins} min</i></span><span class="pill num">${dn}/${p.tasks.length}</span></div>`}
   const prog=TOPS_P.map(t=>{const s=topStat(t.id);return `<div class="pr"><span>${dot(t.id)}${esc(t.short)}</span><div class="bar"><i style="width:${s.n?s.seen/s.n*100:0}%;background:${COL[t.id]}"></i></div><em class="num">${s.pct===null?"—":s.pct+"%"}</em></div>`}).join("");
   const info=impPanel();
-  return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
+  return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="subjchip" data-go="esami" aria-label="Torna agli esami"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>Statistica</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   <div class="stack home">${syncChip()}${info}
   <section class="hero glass">
     ${cd}
@@ -1224,7 +1226,6 @@ function vPiano(){
     <span class="eyebrow">Promemoria</span><h2>Il giorno della prova</h2>
     <p>Puoi consultare <b>materiale cartaceo</b>: porta stampati il formulario ufficiale del corso e le tavole (Normale e t). La scheda Formule le riassume.</p>
   </section>
-  ${exCard()}
   </div>`;
 }
 
@@ -1614,12 +1615,15 @@ function exCard(){
   const list=exList(),subs=[];
   list.forEach(x=>{let g=subs.find(s=>s.n===x.subj);if(!g){g={n:x.subj,l:[]};subs.push(g)}g.l.push(x)});
   subs.forEach(g=>g.l.sort((a,b)=>(a.kind===b.kind?(a.n||0)-(b.n||0):0)||(exDate(a)||0)-(exDate(b)||0)));
-  subs.sort((a,b)=>Math.max(...b.l.map(x=>+exDate(x)||0))-Math.max(...a.l.map(x=>+exDate(x)||0)));
+  const key=g=>{const up=g.l.filter(x=>!x.grade&&exDate(x)&&exDate(x)>=new Date(new Date().setHours(0,0,0,0))).map(x=>+exDate(x));return up.length?Math.min(...up):9e15+(-Math.max(...g.l.map(x=>+exDate(x)||0)))};
+  subs.sort((a,b)=>key(a)-key(b));
   const rows=g=>g.l.map(x=>{if(EXUI===x.id)return exForm(x);const st=exStatus(x);
-    return `<button class="exr" data-act="ex-edit" data-ex="${esc(x.id)}"><span class="exn"><b>${esc(x.kind)}${x.n?" "+esc(String(x.n))+(x.tot?" di "+esc(String(x.tot)):""):""}</b><i>${esc(exFmt(x))}${x.note?" · "+esc(x.note):""}</i></span><span class="pill ex-${st.c} num">${esc(st.t)}</span></button>`}).join("");
-  return `<section class="glass card exs"><div class="ch"><h2>Esami</h2><button class="chip" data-act="ex-new">Aggiungi</button></div>
-    ${EXUI==="new"?exForm(null):""}
-    ${subs.map(g=>`<div class="exg"><h3>${esc(g.n)}</h3>${rows(g)}</div>`).join("")}</section>`;
+    return `<div class="exr"><button class="exe" data-act="ex-edit" data-ex="${esc(x.id)}"><span class="exn"><b>${esc(x.kind)}${x.n?" "+esc(String(x.n))+(x.tot?" di "+esc(String(x.tot)):""):""}</b><i>${esc(exFmt(x))}${x.note?" · "+esc(x.note):""}</i></span><span class="pill ex-${st.c} num">${esc(st.t)}</span></button>${x.id==="stat-p1"?`<button class="chip exo" data-go="piano">Apri</button>`:""}</div>`}).join("");
+  return subs.map(g=>`<section class="glass card exg"><h2>${esc(g.n)}</h2>${rows(g)}</section>`).join("");
+}
+function vEsami(){
+  return `<header class="top"><div><h1>Esami</h1></div><div class="hr"><button class="chip" data-act="ex-new">Aggiungi</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
+  <div class="stack exgrid">${EXUI==="new"?`<section class="glass card">${exForm(null)}</section>`:""}${exCard()}</div>`;
 }
 function exRead(id){
   const v=i=>(document.getElementById(i)||{}).value||"";
