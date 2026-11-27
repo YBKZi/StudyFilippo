@@ -150,6 +150,7 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .exghost{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:var(--r);border:1.5px dashed var(--line);background:transparent;color:var(--acc2);font:inherit;transition:background-color .2s,transform .15s}.exghost:hover{background:rgba(255,255,255,.35)}.exghost:active{transform:scale(.985)}
 .exghost svg{flex:none;width:30px;height:30px;padding:6px;border-radius:50%;background:var(--accs);fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;box-sizing:border-box}
 .exopen:disabled,.exe:disabled{color:inherit;opacity:1;cursor:default}
+.exr .exe{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.exr{transition:transform .18s}.exr.drag{position:relative;z-index:5}.exr.drag .exe{box-shadow:0 12px 26px rgba(120,40,80,.28);background:#fff}
 .exghost .gl{flex:1;text-align:left;font-size:15px;font-weight:700;opacity:.8}.exp.ed{background:transparent;color:var(--muted);margin:-4px 0 0 0}.exp.ed svg{width:17px;height:17px;stroke-width:2.1;stroke-linejoin:round}.undo{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;z-index:60;display:flex;align-items:center;gap:14px;padding:10px 10px 10px 18px;border-radius:99px;background:#2a1520;color:#fff;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:opacity .22s,transform .22s;max-width:calc(100vw - 32px)}.undo.on{opacity:1;transform:translate(-50%,0)}.undo button{border:0;border-radius:99px;background:rgba(255,255,255,.16);color:#fff;font:inherit;font-weight:800;padding:8px 14px}.exempty{padding:24px 4px;font-weight:600}
 .exr.fatto .exe{background:rgba(52,168,110,.10);border-color:rgba(52,168,110,.28)}.exr.fatto .pill.ex-ok{background:#2f9e68;color:#fff}
 .exg.allfatto{background-image:linear-gradient(rgba(52,168,110,.12),rgba(52,168,110,.12));border-color:rgba(52,168,110,.35)}.exg.allfatto h2{color:#23784f}
@@ -1120,6 +1121,9 @@ const exList=()=>EXMS.filter(x=>!x.x);
 const exDate=x=>{const p=(x.date||"").split("-").map(Number);return p.length===3&&p[0]?new Date(p[0],p[1]-1,p[2]):null};
 const exFmt=x=>{const d=exDate(x);if(!d)return "";const o={day:"numeric",month:"short"};if(d.getFullYear()!==new Date().getFullYear())o.year="numeric";return d.toLocaleDateString("it-IT",o)};
 let EXFRESH="";
+const exOo=x=>typeof x.o==="number"?x.o:1e9;
+const exOrd=(a,b)=>(exOo(a)-exOo(b))||((exDate(a)||9e14)-(exDate(b)||9e14));
+function exReorder(ids){ids.forEach((id,k)=>{const x=EXMS.find(y=>y.id===id);if(x&&x.o!==k)exSave(Object.assign({},x,{o:k}))});EXFRESH="";render()}
 function exSave(it){EXFRESH=it.id;setTimeout(()=>{EXFRESH=""},900);it.u=Date.now();const i=EXMS.findIndex(y=>y.id===it.id);if(i>=0)EXMS[i]=it;else EXMS.push(it);store.set("ex",EXMS);touch()}
 
 /* ---------- domande ---------- */
@@ -1157,6 +1161,7 @@ const TABS=["esami","piano","studio","quiz","flash","formule"];
 const allViews=()=>TABS;
 const HASH0=location.hash.slice(1);
 let view=VIEWS.includes(HASH0)&&HASH0!=="materia"?HASH0:"esami";
+try{if(view!=="esami"){history.replaceState(null,"","#esami");history.pushState(null,"","#"+view);}}catch(_){}
 let SES=null,tmr=null,revFilter="all",studioTab="schede",openSheet=null,calc={g:4,w:1};
 let FCS={top:"all",only:false,idx:0,flip:false,deck:null};
 
@@ -1170,7 +1175,13 @@ const ICON={
 };
 const TABN={esami:"Esami",piano:"Piano",studio:"Studio",quiz:"Quiz",flash:"Flash",formule:"Formule"};
 
-function go(v){view=v;render();window.scrollTo(0,0);try{history.replaceState(null,"","#"+v)}catch(_){}}
+let HDEPTH=0;
+function go(v){
+  if(v==="esami"&&view!=="esami"&&HDEPTH>0){HDEPTH=0;try{history.back();return}catch(_){}}
+  const from=view;view=v;render();window.scrollTo(0,0);
+  try{if(from==="esami"&&v!=="esami"){history.pushState(null,"","#"+v);HDEPTH=1}else history.replaceState(null,"","#"+v)}catch(_){}
+}
+window.addEventListener("popstate",()=>{HDEPTH=0;MODID=null;EXUI=null;if(view!=="esami"){view="esami";render();window.scrollTo(0,0)}});
 function renderTabs(){
   if(DEAD)return;
   const hide=(view==="quiz"&&SES&&!SES.done)||view==="esami"||view==="materia";
@@ -1651,12 +1662,11 @@ function hideUndo(){clearTimeout(UNDOT);const b=document.getElementById("undo");
 function exDelete(items,msg){
   const ids=items.map(x=>x.id);
   items.forEach(x=>{x.x=1;x.u=Date.now()});store.set("ex",EXMS);touch();EXUI=null;render();
-  undoBar(msg,()=>{ids.forEach(id=>{const x=EXMS.find(y=>y.id===id);if(x){delete x.x;x.u=Date.now()}});store.set("ex",EXMS);touch();render()});
 }
 function exCard(){
   const f="all",subs=[];
   exList().forEach(x=>{let g=subs.find(s=>s.n===x.subj);if(!g){g={n:x.subj,l:[],ids:[]};subs.push(g)}g.ids.push(x.id);if(x.kind!=="Materia")g.l.push(x)});
-  subs.forEach(g=>g.l.sort((a,b)=>(exDate(a)||9e14)-(exDate(b)||9e14)));
+  subs.forEach(g=>g.l.sort(exOrd));
   const vis=g=>g.l.filter(x=>f==="all"||(f==="done")===exDone(x));
   const key=g=>{const up=g.l.filter(x=>!exDone(x)).map(x=>+exDate(x)||9e14);if(up.length)return Math.min(...up);return g.l.length?9e15-Math.max(0,...g.l.map(x=>+exDate(x)||0)):9e14};
   const shown=subs.filter(g=>f==="all"||vis(g).length||(!g.l.length&&f==="todo")).sort((a,b)=>key(a)-key(b));
@@ -1664,9 +1674,9 @@ function exCard(){
   const row=(g,x)=>{
     const st=exStatus(x);
     if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="q-save" data-ex="${esc(x.id)}">OK</button></div>`;
-    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id==="fond-m2"?"disabled":""}><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" data-act="ex-q" data-ex="${esc(x.id)}" aria-label="Voto di ${esc(x.name)}">${esc(st.t)}</button></div>`};
+    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}" data-mid="${esc(x.id)}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id==="fond-m2"?'data-lock="1"':""}><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" data-act="ex-q" data-ex="${esc(x.id)}" aria-label="Voto di ${esc(x.name)}">${esc(st.t)}</button></div>`};
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
-    return `<section class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}" ${g.l.some(x=>x.id==="fond-m2")?"disabled":""}><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
+    return `<section data-subj="${esc(g.n)}" class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}" ${g.l.some(x=>x.id==="fond-m2")?'data-lock="1"':""}><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
 function vEsami(){
   const f=SETT.exf||"todo";
@@ -1704,15 +1714,63 @@ function impPanel(){
 
 /* ---------- eventi ---------- */
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"&&e.target.closest&&e.target.closest(".exform")){const b=e.target.closest(".exform").querySelector(".btn:not(.glassbtn)");if(b){e.preventDefault();b.click()}return}if(e.key==="Enter"&&e.target&&(e.target.id==="q-g"||e.target.id==="q-m")){const b=document.querySelector('[data-act="q-save"]');if(b)qSave(b.dataset.ex)}});
+let LP=null,DRAGGED=0;
+function lpStart(e,pt){
+  if(LP)return;
+  if(e.target.closest(".pill,input,.exo,.exform"))return;
+  const row=e.target.closest(".exr[data-mid]");if(!row||row.classList.contains("quick"))return;
+  const sec=row.closest(".exg");if(!sec||sec.querySelectorAll(".exr[data-mid]:not(.quick)").length<2)return;
+  LP={row,sec,x0:pt.clientX,y0:pt.clientY,on:false,t:setTimeout(lpOn,380)};
+}
+function lpOn(){
+  if(!LP)return;LP.on=true;
+  const rows=[...LP.sec.querySelectorAll(".exr[data-mid]:not(.quick)")];
+  LP.rows=rows;LP.i=rows.indexOf(LP.row);LP.j=LP.i;
+  LP.sl=rows.map(r=>{const b=r.getBoundingClientRect();return {t:b.top,h:b.height}});
+  LP.gap=LP.sl.length>1?Math.max(0,LP.sl[1].t-(LP.sl[0].t+LP.sl[0].h)):6;
+  rows.forEach(r=>{r.style.animation="none";r.style.transition="transform .18s cubic-bezier(.2,.8,.2,1)"});
+  LP.row.style.transition="none";LP.row.classList.add("drag");
+  try{navigator.vibrate&&navigator.vibrate(12)}catch(_){}
+}
+function lpMove(pt,ev){
+  if(!LP)return;
+  if(!LP.on){if(Math.hypot(pt.clientX-LP.x0,pt.clientY-LP.y0)>9){clearTimeout(LP.t);LP=null}return}
+  if(ev.cancelable)ev.preventDefault();
+  const dy=pt.clientY-LP.y0,i=LP.i,sl=LP.sl;
+  LP.row.style.transform=`translateY(${dy}px) scale(1.02)`;
+  const c=sl[i].t+sl[i].h/2+dy;
+  let j=sl.findIndex(q=>c<q.t+q.h);if(j<0)j=sl.length-1;LP.j=j;
+  const sh=sl[i].h+LP.gap;
+  LP.rows.forEach((r,k)=>{if(k===i)return;r.style.transform=(i<j&&k>i&&k<=j)?`translateY(${-sh}px)`:(j<i&&k>=j&&k<i)?`translateY(${sh}px)`:""});
+}
+function lpEnd(){
+  if(!LP)return;clearTimeout(LP.t);
+  const L=LP;LP=null;if(!L.on)return;
+  DRAGGED=Date.now();
+  if(L.j!==L.i){const ids=L.rows.map(r=>r.dataset.mid),[m]=ids.splice(L.i,1);ids.splice(L.j,0,m);exReorder(ids)}
+  else L.rows.forEach(r=>{r.style.transform="";r.style.transition="";r.classList.remove("drag")});
+}
+document.addEventListener("touchstart",e=>{if(e.touches.length===1)lpStart(e,e.touches[0])},{passive:true});
+document.addEventListener("touchmove",e=>lpMove(e.touches[0],e),{passive:false});
+document.addEventListener("touchend",lpEnd);document.addEventListener("touchcancel",lpEnd);
+document.addEventListener("mousedown",e=>{if(e.button===0)lpStart(e,e)});
+document.addEventListener("mousemove",e=>lpMove(e,e));
+document.addEventListener("mouseup",lpEnd);
+document.addEventListener("contextmenu",e=>{if(e.target.closest&&e.target.closest(".exr[data-mid]"))e.preventDefault()});
+document.addEventListener("click",e=>{if(Date.now()-DRAGGED<450){e.stopPropagation();e.preventDefault()}},true);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-go],[data-act],[data-topic],[data-sheet],[data-fc],[data-set],[data-calc],[data-rev],[data-ftop],[data-trap],[data-trapt],[data-studio],[data-src],[data-corso],[data-pool],[data-nu],[data-ord],[data-exf]");
   if(!t)return;
   const D=t.dataset;
+  if(D.lock)return;
   if(D.act&&D.act.startsWith("ex-")){
     if(D.act==="ex-new"){EXUI="new";render();focusMdl();return}
     else if(D.act==="ex-mopen"){if(D.ex==="stat-p1"){go("piano")}else{const x=EXMS.find(y=>y.id===D.ex);if(x){MODID=x.id;SUBJ=x.subj;go("materia")}}return}
     else if(D.act==="ex-cancel"){EXUI=null;if(MODID){MODID=null;go("esami")}else render();return}
-    else if(D.act==="ex-mod"){const used=new Set(exList().filter(y=>y.subj===D.subj).map(y=>y.name)),mods=exList().filter(y=>y.subj===D.subj);let k=1;while(used.has("Modulo "+k))k++;exSave({id:"x"+Date.now().toString(36),subj:D.subj,kind:"Modulo",name:"Modulo "+k,date:"",grade:"",max:"",note:""});EXUI=null;render();return}
+    else if(D.act==="ex-mod"){const cur=exList().filter(y=>y.subj===D.subj&&y.kind!=="Materia").sort(exOrd),used=new Set(cur.map(y=>y.name));let k=1;while(used.has("Modulo "+k))k++;
+      let at=cur.findIndex(y=>{const m=/^Modulo (\d+)$/.exec(y.name||"");return m&&+m[1]>k});if(at<0)at=cur.length;
+      const nr={id:"x"+Date.now().toString(36),subj:D.subj,kind:"Modulo",name:"Modulo "+k,date:"",grade:"",max:"",note:""},arr=cur.slice();arr.splice(at,0,nr);
+      arr.forEach((y,i)=>{if(y===nr||y.o!==i)exSave(Object.assign({},y,{o:i}))});EXFRESH=nr.id;setTimeout(()=>{EXFRESH=""},900);EXUI=null;render();return}
     else if(D.act==="ex-save"){exRead(D.ex,D.subj);if(MODID){MODID=null;go("esami")}return}
     else if(D.act==="ex-q"){EXUI=EXUI==="q:"+D.ex?null:"q:"+D.ex}
     else if(D.act==="q-save"){qSave(D.ex);return}
