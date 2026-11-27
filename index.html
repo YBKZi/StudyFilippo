@@ -644,7 +644,7 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 
 /* ===== barra fluttuante ===== */
 .tabbar{left:0;right:0;bottom:0;padding:0 12px calc(12px + var(--safe-b));pointer-events:none}
-.tb-in{pointer-events:auto;display:flex!important;justify-content:center;align-items:center;gap:4px;width:max-content;max-width:100%;margin:0 auto;padding:7px;border-radius:999px;background:rgba(255,248,251,.76);border:1px solid rgba(255,255,255,.92);-webkit-backdrop-filter:blur(26px) saturate(1.8);backdrop-filter:blur(26px) saturate(1.8);box-shadow:0 1px 0 #fff inset,0 18px 38px -12px rgba(150,25,75,.42)}
+.tb-in{pointer-events:auto;display:flex!important;justify-content:space-between;align-items:center;gap:4px;width:var(--bw,max-content);contain:layout style;max-width:100%;margin:0 auto;padding:7px;border-radius:999px;background:rgba(255,248,251,.76);border:1px solid rgba(255,255,255,.92);-webkit-backdrop-filter:blur(26px) saturate(1.8);backdrop-filter:blur(26px) saturate(1.8);box-shadow:0 1px 0 #fff inset,0 18px 38px -12px rgba(150,25,75,.42)}
 .tab{min-height:0;padding:0}
 .tab .ic,[data-theme=dark] .tab .ic{position:relative;isolation:isolate;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;width:auto;height:48px;min-width:48px;padding:0 calc(var(--e,0)*18px) 0 0;border-radius:999px;color:var(--muted);color:color-mix(in srgb,#fff calc(var(--e,0)*100%),var(--muted));background:none;border:0;box-shadow:none;transition:none}
 .tab .ic::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--grad);opacity:var(--e,0);box-shadow:0 8px 18px -8px rgba(194,24,91,.75)}
@@ -659,7 +659,7 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 @media (min-width:900px) and (min-aspect-ratio:1/1){
  .tabbar{right:auto;top:0;bottom:0;padding:0 0 0 18px;display:flex;align-items:center}
  .tabbar.hide{transform:translateX(-140%)}
- .tb-in{flex-direction:column;gap:8px;padding:10px;border-radius:44px}
+ .tb-in{flex-direction:column;gap:8px;padding:10px;border-radius:44px;width:auto;justify-content:center}
  .tab .ic,[data-theme=dark] .tab .ic{flex-direction:column;height:auto;width:74px;min-width:0;padding:8px 0 7px;border-radius:32px;gap:4px}
  .tab .pl{width:auto;height:30px}
  .tab svg{width:26px;height:26px}
@@ -1216,8 +1216,8 @@ function hierEnd(){
   h.ov.remove();h.ed.remove();
 }
 function hierRun(to,ms,done){
-  if(!HI)return;const x0=HI.X,t0=performance.now();cancelAnimationFrame(HIRAF);
-  const f=now=>{if(!HI)return;const k=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-k,4);hierApply(x0+(to-x0)*e);if(k<1)HIRAF=requestAnimationFrame(f);else if(done)done()};
+  if(!HI)return;const x0=HI.X;let t0=null;cancelAnimationFrame(HIRAF);
+  const f=now=>{if(!HI)return;if(t0===null)t0=now;const k=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-k,4);hierApply(x0+(to-x0)*e);if(k<1)HIRAF=requestAnimationFrame(f);else if(done)done()};
   HIRAF=requestAnimationFrame(f);
 }
 let FINGO=false,IGN=0;
@@ -1237,8 +1237,14 @@ window.addEventListener("popstate",()=>{
   if(view!=="esami"){SLIDE=0;view="esami";render();window.scrollTo(0,0)}else swReset()});
 let TABE={},TABB=false,TABH=true,TABRAF=0,TABDRAG=false;
 function tabsE(map){TABE=map;document.querySelectorAll("#tabs .tab").forEach(b=>b.style.setProperty("--e",String(+(map[b.dataset.go]||0).toFixed(3))))}
-function tabsMeasure(){document.querySelectorAll("#tabs .tab").forEach(b=>{const sp=b.querySelector("span");if(!sp)return;const c=sp.style.cssText;sp.style.cssText="width:auto;opacity:1;position:absolute;visibility:hidden;margin:0";const w=sp.getBoundingClientRect().width;sp.style.cssText=c;b.style.setProperty("--w",Math.ceil(w)+"px")})}
-function tabsAnim(target,ms){cancelAnimationFrame(TABRAF);const from=Object.assign({},TABE),t0=performance.now();const f=now=>{const k=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-k,3),m={};TABS.forEach(v=>{m[v]=(from[v]||0)+((target[v]||0)-(from[v]||0))*e});tabsE(m);if(k<1)TABRAF=requestAnimationFrame(f)};TABRAF=requestAnimationFrame(f)}
+function tabsMeasure(){
+  const bar=document.querySelector("#tabs .tb-in");if(!bar)return;
+  document.querySelectorAll("#tabs .tab").forEach(b=>{const sp=b.querySelector("span");if(!sp)return;const c=sp.style.cssText;sp.style.cssText="width:auto;opacity:1;position:absolute;visibility:hidden;margin:0";const w=sp.getBoundingClientRect().width;sp.style.cssText=c;b.style.setProperty("--w",Math.ceil(w)+"px")});
+  const prev=Object.assign({},TABE);bar.style.setProperty("--bw","max-content");let mx=0;
+  TABS.forEach(v=>{tabsE({[v]:1});mx=Math.max(mx,bar.getBoundingClientRect().width)});
+  tabsE(prev);bar.style.setProperty("--bw",Math.ceil(mx)+"px");
+}
+function tabsAnim(target,ms){cancelAnimationFrame(TABRAF);const from=Object.assign({},TABE);let t0=null;const f=now=>{if(t0===null)t0=now;const k=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-k,3),m={};TABS.forEach(v=>{m[v]=(from[v]||0)+((target[v]||0)-(from[v]||0))*e});tabsE(m);if(k<1)TABRAF=requestAnimationFrame(f)};TABRAF=requestAnimationFrame(f)}
 function renderTabs(){
   if(DEAD)return;
   const hide=(view==="quiz"&&SES&&!SES.done)||view==="esami"||view==="materia";
