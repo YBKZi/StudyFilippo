@@ -1174,7 +1174,7 @@ const dot=t=>`<i class="dot" style="background:${COL[t]}"></i>`;
 
 /* ---------- stato ---------- */
 const VIEWS=["esami","piano","studio","quiz","flash","formule","materia"];
-const TABS=["esami","piano","studio","quiz","flash","formule"];
+const TABS=["piano","studio","quiz","flash","formule"];
 const allViews=()=>TABS;
 const HASH0=location.hash.slice(1);
 let view=VIEWS.includes(HASH0)&&HASH0!=="materia"?HASH0:"esami";
@@ -1249,7 +1249,7 @@ function vPiano(){
   let nx="";if(ni>=0){const p=PLAN[ni],dn=p.tasks.filter((_,k)=>PLANCHK[ni+"."+k]).length,mins=p.tasks.reduce((a,x)=>a+(+((x.match(/\((\d+) min\)/)||[])[1]||0)),0);nx=`<div class="nx"><span>${esc(p.t)}<i>${p.tasks.length} attività · ${mins} min</i></span><span class="pill num">${dn}/${p.tasks.length}</span></div>`}
   const prog=TOPS_P.map(t=>{const s=topStat(t.id);return `<div class="pr"><span>${dot(t.id)}${esc(t.short)}</span><div class="bar"><i style="width:${s.n?s.seen/s.n*100:0}%;background:${COL[t.id]}"></i></div><em class="num">${s.pct===null?"—":s.pct+"%"}</em></div>`}).join("");
   const info=impPanel();
-  return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="subjchip" data-go="esami" aria-label="Torna agli esami"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>Esami</button><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
+  return `<header class="top"><div><h1>Piano</h1></div><div class="hr"><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div></header>
   <div class="stack home">${syncChip()}${info}
   <section class="hero glass">
     ${cd}
@@ -1784,6 +1784,20 @@ function lpEnd(){
 }
 document.addEventListener("touchstart",e=>{if(e.touches.length===1)lpStart(e,e.touches[0])},{passive:true});
 document.addEventListener("touchmove",e=>lpMove(e.touches[0],e),{passive:false});
+let SW=null;
+function swScroller(el){for(;el&&el!==document.body;el=el.parentElement){const o=getComputedStyle(el).overflowX;if((o==="auto"||o==="scroll")&&el.scrollWidth>el.clientWidth+2)return true}return false}
+document.addEventListener("touchstart",e=>{
+  SW=null;if(e.touches.length!==1||!TABS.includes(view)||document.body.classList.contains("insession"))return;
+  const t=e.touches[0],w=window.innerWidth;if(t.clientX<26||t.clientX>w-26)return;
+  if(e.target.closest&&e.target.closest("input,textarea,select,.exform"))return;if(swScroller(e.target))return;
+  SW={x:t.clientX,y:t.clientY,t:Date.now()};
+},{passive:true});
+document.addEventListener("touchend",e=>{
+  if(!SW)return;const s=SW;SW=null;const t=e.changedTouches[0],dx=t.clientX-s.x,dy=t.clientY-s.y;
+  if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.6||Date.now()-s.t>700)return;
+  const i=TABS.indexOf(view);
+  if(dx>0){go(i===0?"esami":TABS[i-1])}else if(i<TABS.length-1){go(TABS[i+1])}
+},{passive:true});
 document.addEventListener("touchend",lpEnd);document.addEventListener("touchcancel",lpEnd);
 document.addEventListener("mousedown",e=>{if(e.button===0)lpStart(e,e)});
 document.addEventListener("mousemove",e=>lpMove(e,e));
