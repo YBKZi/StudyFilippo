@@ -646,11 +646,10 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 .tabbar{left:0;right:0;bottom:0;padding:0 12px calc(12px + var(--safe-b));pointer-events:none}
 .tb-in{pointer-events:auto;display:flex!important;justify-content:space-between;align-items:center;gap:4px;width:var(--bw,max-content);contain:layout style;max-width:100%;margin:0 auto;padding:7px;border-radius:999px;background:rgba(255,248,251,.76);border:1px solid rgba(255,255,255,.92);-webkit-backdrop-filter:blur(26px) saturate(1.8);backdrop-filter:blur(26px) saturate(1.8);box-shadow:0 1px 0 #fff inset,0 18px 38px -12px rgba(150,25,75,.42)}
 .tab{min-height:0;padding:0}
-.tab .ic,[data-theme=dark] .tab .ic{position:relative;isolation:isolate;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;width:auto;height:48px;min-width:48px;padding:0 calc(var(--e,0)*18px) 0 0;border-radius:999px;color:var(--muted);color:color-mix(in srgb,#fff calc(var(--c,var(--e,0))*100%),var(--muted));background:none;border:0;box-shadow:none;transition:none}
-.tb-in{position:relative}
-.tb-in .tbpill{position:absolute;left:0;top:0;width:48px;height:48px;border-radius:999px;background:var(--grad);box-shadow:0 8px 18px -8px rgba(194,24,91,.75);opacity:0;pointer-events:none;will-change:transform,width,height}
+.tab .ic,[data-theme=dark] .tab .ic{position:relative;isolation:isolate;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;width:auto;height:48px;min-width:48px;padding:0 calc(var(--e,0)*18px) 0 0;border-radius:999px;color:var(--muted);color:color-mix(in srgb,#fff calc(var(--e,0)*100%),var(--muted));background:none;border:0;box-shadow:none;transition:none}
+.tab .ic::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--grad);opacity:var(--e,0);box-shadow:0 8px 18px -8px rgba(194,24,91,.75)}
 .tab .pl{display:grid;place-items:center;width:calc(48px - var(--e,0)*4px);height:48px;font-style:normal}
-.tab .ic span{display:block;overflow:hidden;width:calc(var(--e,0)*var(--w,0px));margin-left:calc(var(--e,0)*2px);opacity:var(--e,0);font-size:13.5px;font-weight:700;line-height:1;white-space:nowrap;color:#fff}
+.tab .ic span{display:block;overflow:hidden;width:calc(var(--e,0)*var(--w,0px));margin-left:calc(var(--e,0)*2px);opacity:var(--e,0);font-size:13.5px;font-weight:700;line-height:1;white-space:nowrap}
 .tab svg{width:24px;height:24px}
 .tab:active .ic{transform:scale(.94)}
 [data-theme=dark] .tb-in{background:rgba(40,18,32,.74);border-color:var(--line);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 18px 40px -10px rgba(0,0,0,.65)}
@@ -664,8 +663,7 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
  .tab .ic,[data-theme=dark] .tab .ic{flex-direction:column;height:auto;width:74px;min-width:0;padding:8px 0 7px;border-radius:32px;gap:4px}
  .tab .pl{width:auto;height:30px}
  .tab svg{width:26px;height:26px}
- .tab .ic span{display:block;margin:0;width:auto;opacity:1;overflow:visible;font-size:11.5px;color:inherit}
- .tb-in .tbpill{border-radius:32px}
+ .tab .ic span{display:block;margin:0;width:auto;opacity:1;overflow:visible;font-size:11.5px}
  .wrap{padding-bottom:40px}
  body.insession .wrap{padding-bottom:calc(116px + var(--safe-b))}
 }
@@ -1237,56 +1235,28 @@ window.addEventListener("popstate",()=>{
   if(IGN){IGN=0;return}
   HDEPTH=0;MODID=null;EXUI=null;if(SWPEND){SWPEND=null;swReset()}else hierEnd();
   if(view!=="esami"){SLIDE=0;view="esami";render();window.scrollTo(0,0)}else swReset()});
-let TABE={},TABB=false,TABH=true,TABRAF=0,TABDRAG=false,TABDEST=null,TABMEAS=false;
-const TABV=()=>{try{return matchMedia("(min-width:900px) and (min-aspect-ratio:1/1)").matches}catch(_){return false}};
-function tabsE(map){TABE=map;document.querySelectorAll("#tabs .tab").forEach(b=>b.style.setProperty("--e",String(+(map[b.dataset.go]||0).toFixed(3))));if(!TABMEAS)tabsPill(map)}
-/* pillola unica: si allunga verso la destinazione (bordo anteriore veloce, posteriore in ritardo) e poi si ricompatta */
-function tabsPill(map){
-  const bar=document.querySelector("#tabs .tb-in"),pl=bar&&bar.querySelector(".tbpill");if(!pl)return;
-  const tabs=[...bar.querySelectorAll(".tab")];if(!tabs.length)return;
-  const br=bar.getBoundingClientRect(),vert=TABV(),ox=br.left+bar.clientLeft,oy=br.top+bar.clientTop;
-  const R=[],es=[],cx=[];let S=0;
-  tabs.forEach(b=>{const ic=b.firstElementChild,r=ic.getBoundingClientRect(),q=ic.firstElementChild.getBoundingClientRect(),e=Math.max(0,+(map[b.dataset.go]||0));es.push(e);S+=e;
-    R.push(vert?[r.top-oy,r.bottom-oy,r.left-ox,r.right-ox]:[r.left-ox,r.right-ox,r.top-oy,r.bottom-oy]);cx.push(q.left+q.width/2-ox)});
-  if(S<.01){pl.style.opacity="0";tabs.forEach(b=>b.style.setProperty("--c","0"));return}
-  const act=[];es.forEach((e,i)=>{if(e>.004)act.push(i)});
-  let a=0,b=0,c=0,d=0,st=0;
-  if(act.length===2){
-    let j=TABDEST!=null?tabs.findIndex(t=>t.dataset.go===TABDEST):-1;if(!act.includes(j))j=act[1];
-    const i=act[0]===j?act[1]:act[0],p=es[j]/(es[i]+es[j]),lead=1-Math.pow(1-p,1.9),trail=Math.pow(p,1.9),right=j>i,ta=right?trail:lead,tb=right?lead:trail;
-    a=R[i][0]+(R[j][0]-R[i][0])*ta;b=R[i][1]+(R[j][1]-R[i][1])*tb;c=R[i][2]+(R[j][2]-R[i][2])*p;d=R[i][3]+(R[j][3]-R[i][3])*p;st=Math.abs(lead-trail);
-  }else{
-    es.forEach((e,i)=>{const w=e/S;a+=R[i][0]*w;b+=R[i][1]*w;c+=R[i][2]*w;d+=R[i][3]*w})
-  }
-  const sq=Math.min(1.8,st*5);c+=sq;d-=sq;
-  const len=Math.max(0,b-a),th=Math.max(0,d-c);
-  pl.style.opacity=String(Math.min(1,S));
-  pl.style.width=(vert?th:len)+"px";pl.style.height=(vert?len:th)+"px";
-  pl.style.transform=vert?`translate3d(${c}px,${a}px,0)`:`translate3d(${a}px,${c}px,0)`;
-  tabs.forEach((t,i)=>{let v=es[i];if(!vert){const k=Math.max(0,Math.min(1,Math.min(cx[i]-a,b-cx[i])/12+.5));v=k*k*(3-2*k)}t.style.setProperty("--c",String(+v.toFixed(3)))})
-}
+let TABE={},TABB=false,TABH=true,TABRAF=0,TABDRAG=false;
+function tabsE(map){TABE=map;document.querySelectorAll("#tabs .tab").forEach(b=>b.style.setProperty("--e",String(+(map[b.dataset.go]||0).toFixed(3))))}
 function tabsMeasure(){
-  const bar=document.querySelector("#tabs .tb-in");if(!bar)return;TABMEAS=true;
+  const bar=document.querySelector("#tabs .tb-in");if(!bar)return;
   document.querySelectorAll("#tabs .tab").forEach(b=>{const sp=b.querySelector("span");if(!sp)return;const c=sp.style.cssText;sp.style.cssText="width:auto;opacity:1;position:absolute;visibility:hidden;margin:0";const w=sp.getBoundingClientRect().width;sp.style.cssText=c;b.style.setProperty("--w",Math.ceil(w)+"px")});
   const prev=Object.assign({},TABE);bar.style.setProperty("--bw","max-content");let mx=0;
   TABS.forEach(v=>{tabsE({[v]:1});mx=Math.max(mx,bar.getBoundingClientRect().width)});
-  bar.style.setProperty("--bw",Math.ceil(mx)+"px");TABMEAS=false;tabsE(prev);
+  tabsE(prev);bar.style.setProperty("--bw",Math.ceil(mx)+"px");
 }
-function bez(x1,y1,x2,y2){const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;return t=>{if(t<=0)return 0;if(t>=1)return 1;let lo=0,hi=1,u=t;for(let i=0;i<14;i++){const x=((ax*u+bx)*u+cx)*u;if(x<t)lo=u;else hi=u;u=(lo+hi)/2}return((ay*u+by)*u+cy)*u}}
-const EIO=bez(.45,.05,.2,1),EOUT=bez(.2,.8,.2,1);
-function tabsAnim(target,ms,ease){ease=ease||EIO;cancelAnimationFrame(TABRAF);const from=Object.assign({},TABE);let el=0,last=null;const dst=TABS.find(v=>target[v]>.99);if(dst)TABDEST=dst;const f=now=>{if(last===null){last=now;TABRAF=requestAnimationFrame(f);return}el+=Math.min(now-last,22);last=now;const k=Math.min(1,el/ms),e=ease(k),m={};TABS.forEach(v=>{m[v]=(from[v]||0)+((target[v]||0)-(from[v]||0))*e});tabsE(m);if(k<1)TABRAF=requestAnimationFrame(f)};TABRAF=requestAnimationFrame(f)}
+function tabsAnim(target,ms){cancelAnimationFrame(TABRAF);const from=Object.assign({},TABE);let el=0,last=null;const f=now=>{if(last===null){last=now;TABRAF=requestAnimationFrame(f);return}el+=Math.min(now-last,22);last=now;const k=Math.min(1,el/ms),e=1-Math.pow(1-k,3),m={};TABS.forEach(v=>{m[v]=(from[v]||0)+((target[v]||0)-(from[v]||0))*e});tabsE(m);if(k<1)TABRAF=requestAnimationFrame(f)};TABRAF=requestAnimationFrame(f)}
 function renderTabs(){
   if(DEAD)return;
   const hide=(view==="quiz"&&SES&&!SES.done)||view==="esami"||view==="materia";
   const t=$("#tabs");t.classList.toggle("hide",!!hide);
   const vs=allViews();
   if(!TABB||t.querySelectorAll(".tab").length!==vs.length){
-    t.innerHTML=`<div class="tb-in"><i class="tbpill"></i>${vs.map(v=>`<button class="tab" data-go="${v}" aria-label="${TABN[v]}"><i class="ic"><i class="pl">${ICON[v]}</i><span>${TABN[v]}</span></i></button>`).join("")}</div>`;
+    t.innerHTML=`<div class="tb-in">${vs.map(v=>`<button class="tab" data-go="${v}" aria-label="${TABN[v]}"><i class="ic"><i class="pl">${ICON[v]}</i><span>${TABN[v]}</span></i></button>`).join("")}</div>`;
     TABB=true;tabsE({});tabsMeasure();try{document.fonts&&document.fonts.ready.then(tabsMeasure)}catch(_){}
   }
   const target={};vs.forEach(v=>target[v]=view===v?1:0);
   if(TABDRAG)return;
-  if(hide||TABH){cancelAnimationFrame(TABRAF);tabsE(target)}else tabsAnim(target,340);
+  if(hide||TABH){cancelAnimationFrame(TABRAF);tabsE(target)}else tabsAnim(target,300);
   TABH=!!hide;
 }
 window.addEventListener("resize",()=>{if(TABB)tabsMeasure()});
@@ -1928,13 +1898,13 @@ document.addEventListener("touchmove",e=>{
   }
   TABDRAG=true;document.body.classList.add("swiping");
   let p=0;const m={};TABS.forEach(k=>m[k]=0);
-  if(!nb||!GH){const x=off*.22;el.style.transition="none";el.style.transform=`translateX(${x}px)`;m[view]=1;TABDEST=view;tabsE(m);return}
+  if(!nb||!GH){const x=off*.22;el.style.transition="none";el.style.transform=`translateX(${x}px)`;m[view]=1;tabsE(m);return}
   if(SW.mode==="h"){const X=Math.max(0,Math.min(W,off));hierApply(X);p=X/W}
   else{
     el.style.transition="none";el.style.transform=`translateX(${off}px)`;
     GH.style.transition="none";GH.style.transform=`translateX(${off-dir*W}px)`;p=Math.min(1,Math.abs(off)/W);
   }
-  m[view]=1-p;if(TABS.includes(nb)){m[nb]=p;TABDEST=nb}else TABDEST=view;tabsE(m);
+  m[view]=1-p;if(TABS.includes(nb))m[nb]=p;tabsE(m);
 },{passive:false});
 function swEnd(cancel){
   if(!SW)return;const s=SW;SW=null;if(s.lock!==1){TABDRAG=false;return}
@@ -1947,8 +1917,8 @@ function swEnd(cancel){
   commit=!cancel&&!!s.nb&&!!GH&&commit;
   TABDRAG=false;
   const rem=commit?Math.max(0,W-A):A,ms=Math.round(Math.max(150,Math.min(290,140+170*rem/W)));
-  const dest=commit&&TABS.includes(s.nb)?s.nb:view;TABDEST=dest;
-  const tgt={};TABS.forEach(k=>tgt[k]=(dest===k&&!(commit&&s.nb==="esami"))?1:0);tabsAnim(tgt,ms,EOUT);
+  const dest=commit&&TABS.includes(s.nb)?s.nb:view;
+  const tgt={};TABS.forEach(k=>tgt[k]=(dest===k&&!(commit&&s.nb==="esami"))?1:0);tabsAnim(tgt,ms);
   let tm=0;
   const pend=(fn,t)=>{const run=()=>{if(SWPEND!==run)return;SWPEND=null;clearTimeout(tm);cancelAnimationFrame(HIRAF);fn()};run.stop=()=>{clearTimeout(tm);cancelAnimationFrame(HIRAF)};run.commit=commit;run.s={W,nb:s.nb,dir,mode:s.mode};SWPEND=run;if(t)tm=setTimeout(run,t);return run};
   const fin=()=>{FINGO=true;NOIN=true;SKIPSL=true;try{go(s.nb)}finally{FINGO=false;NOIN=false;SKIPSL=false}};
