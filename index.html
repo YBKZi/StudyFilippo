@@ -1138,6 +1138,8 @@ EXMS.forEach(x=>{if(x.kind!=="Materia"&&!x.name){x.name=(x.kind==="Prova"&&x.n==
 EX_SEED.forEach(x=>{if(!EXMS.some(y=>y.id===x.id))EXMS.push(Object.assign({},x))});
 let EXUI=null,SUBJ=null,MODID=null,EXCONF=null,PMOD=null;
 const exList=()=>EXMS.filter(x=>!x.x);
+const EXDEL=false;/* il tasto elimina è nascosto per ora */
+const EXADD=false;/* il + dei moduli è nascosto per ora */
 const fxLock=x=>/^Fondamenti/.test(x.subj||"");
 const exDate=x=>{if(fxLock(x)&&x.id!=="fond-m2")return null;const p=(x.date||"").split("-").map(Number);return p.length===3&&p[0]?new Date(p[0],p[1]-1,p[2]):null};
 const exFmt=x=>{const d=exDate(x);if(!d)return "";const o={day:"numeric",month:"short"};if(d.getFullYear()!==new Date().getFullYear())o.year="numeric";return d.toLocaleDateString("it-IT",o)};
@@ -1737,6 +1739,7 @@ function undoBar(msg,fn){
 }
 function hideUndo(){clearTimeout(UNDOT);const b=document.getElementById("undo");if(b)b.classList.remove("on")}
 function exDelBox(subj,mod){
+  if(!EXDEL)return "";
   if(!subj)return "";
   const key=mod?"m:"+mod.id:subj,nm=mod?(mod.name||"Modulo"):subj;
   const ico=`<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/></svg>`;
@@ -1754,6 +1757,7 @@ function exCard(){
   subs.forEach(g=>g.l.sort(exOrd));
   const vis=g=>g.l.filter(x=>f==="all"||(f==="done")===exDone(x));
   const key=g=>{const up=g.l.filter(x=>!exDone(x)).map(x=>+exDate(x)||9e14);if(up.length)return Math.min(...up);return g.l.length?9e15-Math.max(0,...g.l.map(x=>+exDate(x)||0)):9e14};
+  if(EXMS.some(x=>!x.x&&/^Fondamenti/.test(x.subj||"")&&x.name==="Modulo 4")){EXMS.forEach(x=>{if(!x.x&&/^Fondamenti/.test(x.subj||"")&&x.name==="Modulo 4"){x.x=1;x.u=Date.now()}});store.set("ex",EXMS);touch()}
   const shown=subs.filter(g=>f==="all"||vis(g).length||(!g.l.length&&f==="todo")).sort((a,b)=>key(a)-key(b));
   if(!shown.length)return "";
   const row=(g,x)=>{
@@ -1762,7 +1766,7 @@ function exCard(){
     if(EXUI==="d:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-d" type="date" value="${esc(x.date||"")}" aria-label="Data dell'esame"><button class="chip exo" data-act="ex-dsave" data-ex="${esc(x.id)}">OK</button></div>`;
     return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}" data-mid="${esc(x.id)}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id!=="stat-p1"?'data-lock="1"':""}><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" ${fxLock(x)?'data-lock="1"':""} data-act="${st.k==="g"?"ex-q":"ex-d"}" data-ex="${esc(x.id)}" aria-label="${st.k==="g"?"Voto":"Data"} di ${esc(x.name)}">${esc(st.t)}</button></div>`};
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
-    return `<section data-subj="${esc(g.n)}" class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}" ${g.l.some(x=>x.id==="stat-p1")?"":'data-lock="1"'}><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
+    return `<section data-subj="${esc(g.n)}" class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}" ${g.l.some(x=>x.id==="stat-p1")?"":'data-lock="1"'}><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button>${EXADD?`<button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>`:""}</div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
 function vEsami(){
   const f=SETT.exf||"todo";
