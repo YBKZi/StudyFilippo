@@ -1138,7 +1138,8 @@ EXMS.forEach(x=>{if(x.kind!=="Materia"&&!x.name){x.name=(x.kind==="Prova"&&x.n==
 EX_SEED.forEach(x=>{if(!EXMS.some(y=>y.id===x.id))EXMS.push(Object.assign({},x))});
 let EXUI=null,SUBJ=null,MODID=null,EXCONF=null,PMOD=null;
 const exList=()=>EXMS.filter(x=>!x.x);
-const exDate=x=>{const p=(x.date||"").split("-").map(Number);return p.length===3&&p[0]?new Date(p[0],p[1]-1,p[2]):null};
+const fxLock=x=>/^Fondamenti/.test(x.subj||"");
+const exDate=x=>{if(fxLock(x)&&x.id!=="fond-m2")return null;const p=(x.date||"").split("-").map(Number);return p.length===3&&p[0]?new Date(p[0],p[1]-1,p[2]):null};
 const exFmt=x=>{const d=exDate(x);if(!d)return "";const o={day:"numeric",month:"short"};if(d.getFullYear()!==new Date().getFullYear())o.year="numeric";return d.toLocaleDateString("it-IT",o)};
 let EXFRESH="";
 const exOo=x=>typeof x.o==="number"?x.o:1e9;
@@ -1759,7 +1760,7 @@ function exCard(){
     const st=exStatus(x);
     if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="ex-qsave" data-ex="${esc(x.id)}">OK</button></div>`;
     if(EXUI==="d:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-d" type="date" value="${esc(x.date||"")}" aria-label="Data dell'esame"><button class="chip exo" data-act="ex-dsave" data-ex="${esc(x.id)}">OK</button></div>`;
-    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}" data-mid="${esc(x.id)}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id!=="stat-p1"?'data-lock="1"':""}><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" data-act="${st.k==="g"?"ex-q":"ex-d"}" data-ex="${esc(x.id)}" aria-label="${st.k==="g"?"Voto":"Data"} di ${esc(x.name)}">${esc(st.t)}</button></div>`};
+    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}" data-mid="${esc(x.id)}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id!=="stat-p1"?'data-lock="1"':""}><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" ${fxLock(x)?'data-lock="1"':""} data-act="${st.k==="g"?"ex-q":"ex-d"}" data-ex="${esc(x.id)}" aria-label="${st.k==="g"?"Voto":"Data"} di ${esc(x.name)}">${esc(st.t)}</button></div>`};
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
     return `<section data-subj="${esc(g.n)}" class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}" ${g.l.some(x=>x.id==="stat-p1")?"":'data-lock="1"'}><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button><button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
