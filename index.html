@@ -197,10 +197,12 @@ body.swiping #view,body.swiping .swghost{will-change:transform}body.swiping #vie
 [data-theme=dark] .exr.fatto.drag:not(.quick){background:#1f4a37}
 .exr.n-soon:not(.quick){border-color:rgba(224,69,123,.4)}.exr.n-soon .exdt{background:var(--grad);color:#fff}
 .exr.n-hot:not(.quick){border-color:rgba(255,122,80,.6);background:#FFF1EA}.exr.n-hot .exdt{background:linear-gradient(135deg,#FFA45B,#F0507F);color:#fff}
-.exr>.pill.ex-soon{background:var(--accs);color:var(--acc2);font-weight:800}
+.exr>.pill.ex-near,.exr>.pill.ex-soon{background:var(--accs);color:var(--acc2);font-weight:800}.exr>.pill.ex-soon{box-shadow:inset 0 0 0 1.5px rgba(224,69,123,.55)}
+.exr.n-near:not(.quick){border-color:rgba(224,69,123,.25)}.exr.n-near .exdt{background:rgba(224,69,123,.2)}
 .exr>.pill.ex-hot{background:linear-gradient(135deg,#FFA45B,#F0507F);color:#fff;font-weight:800;animation:exhot 2s ease-out infinite}
 @keyframes exhot{0%{box-shadow:0 0 0 0 rgba(240,80,127,.55)}70%,100%{box-shadow:0 0 0 9px rgba(240,80,127,0)}}
 @media(prefers-reduced-motion:reduce){.exr>.pill.ex-hot{animation:none}}
+[data-theme=dark] .exr.n-near:not(.quick){border-color:rgba(255,142,186,.28)}[data-theme=dark] .exr>.pill.ex-soon{box-shadow:inset 0 0 0 1.5px rgba(255,142,186,.6)}
 [data-theme=dark] .exr.n-soon:not(.quick){border-color:rgba(255,142,186,.45)}
 [data-theme=dark] .exr.n-hot:not(.quick){border-color:rgba(255,150,100,.6);background:rgba(255,140,90,.12)}
 .exform{display:flex;flex-direction:column;gap:10px;padding:12px;margin-top:6px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}
@@ -1767,7 +1769,7 @@ function exStatus(x){
   if(x.grade)return {t:x.max?`${x.grade}/${x.max}`:x.grade,c:"ok",k:"g"};
   const d=exDate(x);if(!d)return {t:"data",c:"wait",k:"d"};
   const n=new Date(),d0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),k=Math.round((d-d0)/864e5);
-  if(k>1)return {t:`-${k}${k>99?"":" "}gg`,c:k>99?"lg":k<=3?"hot":k<=7?"soon":"",k:"d"};if(k===1)return {t:"-1 g",c:"hot",k:"d"};if(k===0)return {t:"oggi",c:"hot",k:"g"};
+  if(k>1)return {t:`-${k}${k>99?"":" "}gg`,c:k>99?"lg":k<=7?"hot":k<=14?"soon":k<=30?"near":"",k:"d"};if(k===1)return {t:"-1 g",c:"hot",k:"d"};if(k===0)return {t:"oggi",c:"hot",k:"g"};
   return {t:"voto",c:"vt",k:"g"};
 }
 function exAvg(mods){
@@ -1828,7 +1830,7 @@ function exCard(){
     const st=exStatus(x);
     if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="ex-qsave" data-ex="${esc(x.id)}">OK</button></div>`;
     if(EXUI==="d:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-d" type="date" value="${esc(x.date||"")}" aria-label="Data dell'esame"><button class="chip exo" data-act="ex-dsave" data-ex="${esc(x.id)}">OK</button></div>`;
-    return `<div class="exr ${exDone(x)?"fatto":""} ${st.c==="soon"||st.c==="hot"?"n-"+st.c:""} ${x.id===EXFRESH?"fresh":""}" data-mid="${esc(x.id)}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id!=="stat-p1"?'data-lock="1"':""}>${exTile(x)}<span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span></button><button class="pill ex-${st.c} num" data-lock="1" data-act="${st.k==="g"?"ex-q":"ex-d"}" data-ex="${esc(x.id)}" aria-label="${st.k==="g"?"Voto":"Data"} di ${esc(x.name)}">${esc(st.t)}</button></div>`};
+    return `<div class="exr ${exDone(x)?"fatto":""} ${/^(near|soon|hot)$/.test(st.c)?"n-"+st.c:""} ${x.id===EXFRESH?"fresh":""}" data-mid="${esc(x.id)}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id!=="stat-p1"?'data-lock="1"':""}>${exTile(x)}<span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span></button><button class="pill ex-${st.c} num" data-lock="1" data-act="${st.k==="g"?"ex-q":"ex-d"}" data-ex="${esc(x.id)}" aria-label="${st.k==="g"?"Voto":"Data"} di ${esc(x.name)}">${esc(st.t)}</button></div>`};
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
     return `<section data-subj="${esc(g.n)}" class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}" ${g.l.some(x=>x.id==="stat-p1")?"":'data-lock="1"'}><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button>${EXADD?`<button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>`:""}</div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
