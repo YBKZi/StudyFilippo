@@ -1868,19 +1868,20 @@ function focusMdl(){setTimeout(()=>{const i=document.querySelector(".exform inpu
 function exRead(id,subj){
   const v=i=>(document.getElementById(i)||{}).value||"";
   if(!id&&subj===""){const nm=v("ex-subj").trim();if(!nm){const f=document.getElementById("ex-subj");if(f)f.focus();return}
-    exSave({id:"x"+Date.now().toString(36),subj:nm,kind:"Materia",name:"",date:"",grade:"",max:"",note:""});EXUI=null;render();return}
+    exSave({id:"x"+Date.now().toString(36),subj:nm,kind:"Materia",name:"",date:"",grade:"",max:"",note:""});EXUI=null;exRender();return}
   const old=EXMS.find(y=>y.id===id)||{};
   exSave({id:id||("x"+Date.now().toString(36)),subj,kind:"Modulo",name:v("ex-name").trim()||(old.name)||(document.querySelector('[data-act="ex-save"]')||{dataset:{}}).dataset.ph||"Modulo",date:v("ex-date"),grade:id?v("ex-grade").trim():"",max:id?v("ex-max").trim():"",note:id?v("ex-note").trim():""});
-  EXUI=null;render();
+  EXUI=null;exRender();
 }
+function exRender(){if(EXS&&view!=="piano"&&view!=="materia")exsPaint();else render()}
 function dSave(id){
   const x=EXMS.find(y=>y.id===id);if(!x)return;
-  exSave(Object.assign({},x,{date:(document.getElementById("q-d")||{}).value||""}));EXUI=null;render();
+  exSave(Object.assign({},x,{date:(document.getElementById("q-d")||{}).value||""}));EXUI=null;exRender();
 }
 function qSave(id){
   const x=EXMS.find(y=>y.id===id);if(!x)return;
   const g=(document.getElementById("q-g")||{}).value||"",m=(document.getElementById("q-m")||{}).value||"";
-  exSave(Object.assign({},x,{grade:g.trim(),max:m.trim()}));EXUI=null;render();
+  exSave(Object.assign({},x,{grade:g.trim(),max:m.trim()}));EXUI=null;exRender();
 }
 function impPanel(){
   const note="";
@@ -2047,9 +2048,9 @@ document.addEventListener("click",e=>{
       const nr={id:"x"+Date.now().toString(36),subj:D.subj,kind:"Modulo",name:"Modulo "+k,date:"",grade:"",max:"",note:""},arr=cur.slice();arr.splice(at,0,nr);
       arr.forEach((y,i)=>{if(y===nr||y.o!==i)exSave(Object.assign({},y,{o:i}))});EXFRESH=nr.id;setTimeout(()=>{EXFRESH=""},900);EXUI=null;render();return}
     else if(D.act==="ex-save"){exRead(D.ex,D.subj);if(MODID){MODID=null;go("esami")}return}
-    else if(D.act==="ex-q"){EXUI=EXUI==="q:"+D.ex?null:"q:"+D.ex;render();if(EXUI)setTimeout(()=>{const i=document.getElementById("q-g");if(i)try{i.focus({preventScroll:true})}catch(_){}},60);return}
+    else if(D.act==="ex-q"){EXUI=EXUI==="q:"+D.ex?null:"q:"+D.ex;exRender();if(EXUI)setTimeout(()=>{const i=document.getElementById("q-g");if(i)try{i.focus({preventScroll:true})}catch(_){}},60);return}
     else if(D.act==="ex-qsave"){qSave(D.ex);return}
-    else if(D.act==="ex-d"){EXUI=EXUI==="d:"+D.ex?null:"d:"+D.ex;render();return}
+    else if(D.act==="ex-d"){EXUI=EXUI==="d:"+D.ex?null:"d:"+D.ex;exRender();return}
     else if(D.act==="ex-dsave"){dSave(D.ex);return}
     else if(D.act==="ex-delask"){EXCONF=D.subj;render();return}
     else if(D.act==="ex-delmodyes"){const x=EXMS.find(y=>y.id===D.ex);if(x){const rest=EXMS.some(y=>!y.x&&y.subj===D.subj&&y.id!==x.id);exDelete([x]);if(!rest)exSave({id:"x"+Date.now().toString(36),subj:D.subj,kind:"Materia",name:"",date:"",grade:"",max:"",note:""})}EXCONF=null;MODID=null;PMOD=null;go("esami");return}
