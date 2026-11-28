@@ -651,8 +651,8 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 .tab .pl{display:grid;place-items:center;width:calc(48px - var(--e,0)*4px);height:48px;font-style:normal;transition:transform .2s cubic-bezier(.2,.8,.2,1)}
 .tab .ic span{display:block;overflow:hidden;width:calc(var(--e,0)*var(--w,0px));margin-left:calc(var(--e,0)*2px);opacity:var(--e,0);font-size:13.5px;font-weight:700;line-height:1;white-space:nowrap}
 .tab svg{width:24px;height:24px}
-::view-transition-old(root),::view-transition-new(root){animation-duration:.55s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
-.tfade *,.tfade *::before{transition:background-color .5s ease,color .5s ease,border-color .5s ease,box-shadow .5s ease!important}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.22s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
+.tfade *,.tfade *::before{transition:background-color .22s ease,color .22s ease,border-color .22s ease,box-shadow .22s ease!important}
 .tab:active .pl{transform:scale(.84)}
 .formule>.card:nth-child(n+3){content-visibility:auto;contain-intrinsic-size:auto 900px}
 [data-theme=dark] .tb-in{background:rgba(40,18,32,.74);border-color:var(--line);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 18px 40px -10px rgba(0,0,0,.65)}
@@ -1999,7 +1999,7 @@ document.addEventListener("click",e=>{
   switch(D.act){
     case "theme":{THEME=isDark()?"light":"dark";store.set("theme",THEME);const sw=()=>{applyTheme();render()};
       if(document.startViewTransition&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.startViewTransition(sw);
-      else{const r=document.documentElement;r.classList.add("tfade");sw();setTimeout(()=>r.classList.remove("tfade"),600)}
+      else{const r=document.documentElement;r.classList.add("tfade");sw();setTimeout(()=>r.classList.remove("tfade"),300)}
       break}
     case "start-sim":revFilter="all";startSim();break;
     case "start-focus":startFocus();break;
