@@ -409,7 +409,9 @@ div.flip .face{position:static}
 .face.backf .txt{font-size:20px;font-weight:650}
 .face .hint{font-size:13px;color:var(--muted);min-height:1em}
 .fact{display:flex;gap:8px}
-.fact .btn:not(.sq){flex:1;padding:0 10px}
+.fact{align-items:center;gap:4px}.fact .btn:not(.sq){flex:1;min-width:0;padding:0 6px;white-space:nowrap;font-size:15px}
+.fact .btn.sq{width:34px;min-height:50px;background:none;border:0;box-shadow:none;color:var(--acc2)}.fact .btn.sq svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}.fact .btn.sq:active{opacity:.5;transform:scale(.9)}
+[data-theme=dark] .fact .btn.sq{background:none;border:0}
 
 /* formule */
 .fg h2{display:flex;align-items:center}
@@ -1602,7 +1604,7 @@ function vFlash(){
   <div class="fbar"><button class="chip ${FCS.only?"on":""}" data-act="fonly">Solo da rivedere · ${rev}</button><button class="chip" data-act="fshuf">Mescola</button></div>
   <div class="fcount num"><span>${d.length?FCS.idx+1:0} / ${d.length}</span><span>Le so ${known} · Da rivedere ${rev}</span></div>
   ${card}
-  ${d.length?`<div class="fact"><button class="btn line sq" data-act="fprev" aria-label="Precedente">‹</button><button class="btn glassbtn" data-act="frev">Da rivedere${FCK[fcId(c)]==="r"?" ✓":""}</button><button class="btn" data-act="fknow">Lo so${FCK[fcId(c)]==="k"?" ✓":""}</button><button class="btn line sq" data-act="fnext" aria-label="Successiva">›</button></div>`:""}
+  ${d.length?`<div class="fact"><button class="btn line sq" data-act="fprev" aria-label="Precedente"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><button class="btn glassbtn" data-act="frev">Da rivedere${FCK[fcId(c)]==="r"?" ✓":""}</button><button class="btn" data-act="fknow">Lo so${FCK[fcId(c)]==="k"?" ✓":""}</button><button class="btn line sq" data-act="fnext" aria-label="Successiva"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button></div>`:""}
   </div>`;
 }
 
