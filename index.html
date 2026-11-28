@@ -1454,7 +1454,7 @@ function vQuiz(){
   const hist=HIST.length?`<section class="glass card"><div class="ch"><h2>Ultime simulazioni</h2></div><div class="hist">${HIST.slice(0,5).map(h=>{const d=new Date(h.t);return `<div class="h"><span class="small muted">${d.toLocaleDateString("it-IT",{day:"numeric",month:"short"})} · ${h.r} ✓ · ${h.w} ✕ · ${h.b} vuote</span><b class="num">${voto(h.pts)}<small> /30</small></b></div>`}).join("")}</div></section>`:"";
   return `<header class="top"><div><h1>Quiz</h1></div><div class="hr"><button class="themebtn" data-act="exmenu" aria-label="Esami">${MENUICO}</button></div></header><div class="stack quizhome">
   <section class="sim">
-    <span class="eyebrow">Come alla prova</span><h2>Simulazione</h2>
+    <h2>Simulazione</h2>
     <div class="flow"><span>1</span><i></i><span>3</span><i></i><span>2</span></div>
     <div class="seg dark" role="group" aria-label="Da dove pescare le domande"><button data-pool="corso" aria-pressed="${SETT.pool!=="tutte"}">Prove ed esercizi del corso</button><button data-pool="tutte" aria-pressed="${SETT.pool==="tutte"}">Tutte le ${QS.filter(q=>!q.vf).length}</button></div>
     <button class="btn white" data-act="start-sim">Inizia la simulazione</button>
