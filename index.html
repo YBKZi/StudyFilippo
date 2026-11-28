@@ -180,29 +180,33 @@ body.swiping #view,body.swiping .swghost{will-change:transform}body.swiping #vie
 .pill.ex-ok{background:var(--grad);color:#fff}.pill.ex-wait{background:transparent;border:1px solid var(--line);color:var(--muted)}
 [data-theme=dark] .exr.quick{background:rgba(255,255,255,.07)}[data-theme=dark] .exr.quick input{background:rgba(255,255,255,.1);color:var(--ink)}
 /* righe esame: un'unica card compatta, data e stato come testo libero */
-.exr:not(.quick){align-items:center;gap:10px;margin-top:6px;padding:5px 14px 5px 8px;min-height:46px;border-radius:15px;background:#FFF3F8;border:1px solid rgba(224,69,123,.14);box-shadow:0 8px 16px -12px rgba(150,25,75,.4)}
+.exr:not(.quick){align-items:center;gap:10px;margin-top:6px;padding:5px 14px 5px 5px;min-height:0;border-radius:15px;background:#FFF3F8;border:1px solid rgba(224,69,123,.14);box-shadow:0 8px 16px -12px rgba(150,25,75,.4)}
 .exr:not(.quick) .exe{min-height:0;padding:0;border-radius:0;background:none!important;border:0!important;box-shadow:none!important}
-.exr:not(.quick) .exdt{flex:none;width:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1;color:var(--ink2);background:none;border:0;padding:0}
-.exdt b{font-size:17px;font-weight:800;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
-.exdt small{font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;opacity:.8;white-space:nowrap}
-.exdt.none b{font-size:16px;font-weight:700;color:var(--muted)}
+.exr:not(.quick) .exdt{flex:none;width:38px;height:38px;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;line-height:1;color:var(--acc2);background:var(--accs);border:0;padding:0}
+.exdt b{font-size:15px;font-weight:800;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
+.exdt small{font-size:8.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;opacity:.8;white-space:nowrap}
+.exdt.none{background:transparent;border:1.5px dashed var(--hair)!important;color:var(--muted)}.exdt.none b{font-size:15px;font-weight:700}
 .exr:not(.quick) .exn b{font-size:14.5px;line-height:1.2}.exr:not(.quick) .exn i{font-size:11.5px;margin-top:1px}
 .exr:not(.quick)>.pill{flex:none;min-width:50px;min-height:30px;padding:0;font-size:14px;font-weight:800;text-align:right;background:none!important;border:0!important;box-shadow:none!important;animation:none!important;border-radius:0;color:var(--ink2)}
 .exr>.pill.ex-lg{font-size:12px}
-.exr>.pill.tap{pointer-events:auto;cursor:pointer!important;color:var(--acc);text-decoration:underline dotted;text-decoration-thickness:2px;text-underline-offset:5px;-webkit-tap-highlight-color:transparent}
+.exr>.pill.tap{pointer-events:auto;cursor:pointer!important;color:var(--acc);-webkit-tap-highlight-color:transparent}
+.exr:not(.quick)>.pill.tap{background-color:transparent!important;background-image:linear-gradient(100deg,#E0457B 35%,#FFB3CF 50%,#E0457B 65%)!important;background-size:250% 100%!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent;color:transparent;font-weight:800;filter:drop-shadow(0 0 6px rgba(224,69,123,.5));animation:exshine 2.4s linear infinite!important}
+[data-theme=dark] .exr:not(.quick)>.pill.tap{background-image:linear-gradient(100deg,#FF8EBA 35%,#fff 50%,#FF8EBA 65%)!important;filter:drop-shadow(0 0 7px rgba(255,142,186,.55))}
+@keyframes exshine{from{background-position:120% 0}to{background-position:-120% 0}}
+@media(prefers-reduced-motion:reduce){.exr:not(.quick)>.pill.tap{animation:none!important}}
 .exr>.pill.tap:active{opacity:.55}
 .exr.fatto:not(.quick){background:rgba(52,168,110,.12);border-color:rgba(52,168,110,.3);box-shadow:0 8px 16px -12px rgba(30,120,80,.4)}
-.exr.fatto .exdt{color:#23784f}.exr.fatto>.pill.ex-ok{color:#23784f!important}
-.exr.n-near .exdt,.exr>.pill.ex-near{color:var(--acc2)}.exr.n-near:not(.quick){border-color:rgba(224,69,123,.25)}
-.exr.n-soon .exdt,.exr>.pill.ex-soon{color:var(--acc)}.exr.n-soon:not(.quick){border-color:rgba(224,69,123,.4)}
-.exr.n-hot .exdt,.exr>.pill.ex-hot{color:#F0507F}.exr.n-hot:not(.quick){border-color:rgba(255,122,80,.6);background:#FFF1EA}
+.exr.fatto .exdt{background:rgba(52,168,110,.18);color:#23784f}.exr.fatto>.pill.ex-ok{color:#23784f!important}
+.exr.n-near .exdt{background:rgba(224,69,123,.2)}.exr>.pill.ex-near{color:var(--acc2)}.exr.n-near:not(.quick){border-color:rgba(224,69,123,.25)}
+.exr.n-soon .exdt{background:var(--grad);color:#fff}.exr>.pill.ex-soon{color:var(--acc)}.exr.n-soon:not(.quick){border-color:rgba(224,69,123,.4)}
+.exr.n-hot .exdt{background:linear-gradient(135deg,#FFA45B,#F0507F);color:#fff}.exr>.pill.ex-hot{color:#F0507F}.exr.n-hot:not(.quick){border-color:rgba(255,122,80,.6);background:#FFF1EA}
 [data-theme=dark] .exr:not(.quick){background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12);box-shadow:none}
 [data-theme=dark] .exr.fatto:not(.quick){background:rgba(52,168,110,.14);border-color:rgba(79,214,163,.3)}
-[data-theme=dark] .exr.fatto .exdt,[data-theme=dark] .exr.fatto>.pill.ex-ok{color:#6fe0b6!important}
+[data-theme=dark] .exr.fatto .exdt{background:rgba(79,214,163,.2);color:#6fe0b6}[data-theme=dark] .exr.fatto>.pill.ex-ok{color:#6fe0b6!important}
 [data-theme=dark] .exr.n-near:not(.quick){border-color:rgba(255,142,186,.28)}
 [data-theme=dark] .exr.n-soon:not(.quick){border-color:rgba(255,142,186,.45)}
 [data-theme=dark] .exr.n-hot:not(.quick){border-color:rgba(255,150,100,.6);background:rgba(255,140,90,.12)}
-[data-theme=dark] .exr.n-hot .exdt,[data-theme=dark] .exr>.pill.ex-hot{color:#FF9A6E}
+[data-theme=dark] .exr>.pill.ex-hot{color:#FF9A6E}
 .exr.quick{gap:8px;padding:6px 6px 6px 12px;border-radius:15px;background:#FFF3F8;border:1px solid rgba(224,69,123,.14);margin-top:8px}
 .exr.quick .exn b{font-size:14.5px}.exr.quick input{width:46px;padding:8px 4px;font-size:16px;border:1.5px solid rgba(224,69,123,.3);box-sizing:border-box;outline:none}.exr.quick input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accs)}
 .exr.quick input[type=date]{width:auto}.exr.quick .exo{min-height:38px;padding:0 14px}
