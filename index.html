@@ -1706,7 +1706,7 @@ function exStatus(x){
   if(x.grade)return {t:x.max?`${x.grade}/${x.max}`:x.grade,c:"ok",k:"g"};
   const d=exDate(x);if(!d)return {t:"data",c:"wait",k:"d"};
   const n=new Date(),d0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),k=Math.round((d-d0)/864e5);
-  if(k>1)return {t:`-${k}${k>99?"":" "}GG`,c:k>99?"lg":"",k:"d"};if(k===1)return {t:"-1 G",c:"",k:"d"};if(k===0)return {t:"oggi",c:"",k:"g"};
+  if(k>1)return {t:`-${k}${k>99?"":" "}gg`,c:k>99?"lg":"",k:"d"};if(k===1)return {t:"-1 g",c:"",k:"d"};if(k===0)return {t:"oggi",c:"",k:"g"};
   return {t:"voto",c:"wait",k:"g"};
 }
 function exAvg(mods){
