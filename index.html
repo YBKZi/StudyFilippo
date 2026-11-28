@@ -1290,10 +1290,20 @@ function go(v){
   view=v;SLIDE=0;render();window.scrollTo(0,0);
   if(!was){try{history.replaceState(null,"","#"+v)}catch(_){}}
 }
-(()=>{let d=null;const g=()=>$("#exs");
-  document.addEventListener("touchstart",e=>{const t=e.target.closest&&e.target.closest(".exs-grab");if(!t||!EXS||e.touches.length!==1){d=null;return}d={y:e.touches[0].clientY,dy:0,t:Date.now()};g().classList.add("drag")},{passive:true});
-  document.addEventListener("touchmove",e=>{if(!d)return;const dy=Math.max(0,e.touches[0].clientY-d.y);d.dy=dy;const b=g();b.querySelector(".exs-panel").style.transform=`translateY(${dy}px)`;b.querySelector(".exs-bd").style.opacity=String(Math.max(0,1-dy/400));if(e.cancelable)e.preventDefault()},{passive:false});
-  document.addEventListener("touchend",()=>{if(!d)return;const x=d;d=null;const b=g();b.classList.remove("drag");if(x.dy>90||(x.dy>30&&x.dy/Math.max(1,Date.now()-x.t)>.5))exClose(false);else{b.querySelector(".exs-panel").style.transform="";b.querySelector(".exs-bd").style.opacity=""}});
+(()=>{let d=null;const g=()=>$("#exs"),pn=()=>g().querySelector(".exs-panel");
+  const reset=()=>{const b=g();b.classList.remove("drag");pn().style.transform="";b.querySelector(".exs-bd").style.opacity=""};
+  document.addEventListener("touchstart",e=>{const t=e.target.closest&&e.target.closest("#exs");if(!t||!EXS||e.touches.length!==1){d=null;return}d={x:e.touches[0].clientX,y:e.touches[0].clientY,dy:0,t:Date.now(),on:false}},{passive:true});
+  document.addEventListener("touchmove",e=>{if(!d)return;const p=e.touches[0],dy=p.clientY-d.y;
+    if(!d.on){
+      if(Math.abs(p.clientX-d.x)>Math.abs(dy)&&Math.abs(p.clientX-d.x)>8){d=null;return}
+      if(dy<-6){d=null;return}
+      if(dy<6)return;
+      if(pn().scrollTop>0){d=null;return}
+      d.on=true;d.y=p.clientY-6;d.t=Date.now();g().classList.add("drag");
+    }
+    const m=Math.max(0,p.clientY-d.y);d.dy=m;pn().style.transform=`translateY(${m}px)`;g().querySelector(".exs-bd").style.opacity=String(Math.max(0,1-m/400));if(e.cancelable)e.preventDefault()},{passive:false});
+  const end=()=>{if(!d)return;const x=d;d=null;if(!x.on)return;if(x.dy>90||(x.dy>30&&x.dy/Math.max(1,Date.now()-x.t)>.5)){g().classList.remove("drag");exClose(false)}else reset()};
+  document.addEventListener("touchend",end);document.addEventListener("touchcancel",()=>{if(d&&d.on)reset();d=null});
 })();
 window.addEventListener("popstate",()=>{
   if(EXPEND){const f=EXPEND;EXPEND=null;f();return}
@@ -1875,8 +1885,9 @@ function impPanel(){
 /* ---------- eventi ---------- */
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"&&e.target.closest&&e.target.closest(".exform")){const b=e.target.closest(".exform").querySelector(".btn:not(.glassbtn)");if(b){e.preventDefault();b.click()}return}if(e.key==="Enter"&&e.target&&(e.target.id==="q-g"||e.target.id==="q-m")){const b=document.querySelector('[data-act="ex-qsave"]');if(b)qSave(b.dataset.ex)}if(e.key==="Enter"&&e.target&&e.target.id==="q-d"){const b=document.querySelector('[data-act="ex-dsave"]');if(b)dSave(b.dataset.ex)}});
 let LP=null,DRAGGED=0;
+const LPON=false;
 function lpStart(e,pt){
-  if(LP)return;
+  if(LP||!LPON)return;
   if(e.target.closest(".pill,input,.exo,.exform"))return;
   const row=e.target.closest(".exr[data-mid]");if(!row||row.classList.contains("quick"))return;
   const sec=row.closest(".exg");if(!sec||sec.querySelectorAll(".exr[data-mid]:not(.quick)").length<2)return;
