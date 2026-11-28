@@ -146,18 +146,13 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .exr.quick{align-items:center;padding:8px 10px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}.exr.quick .exn{flex:1}.exr.quick input{width:50px;font:inherit;font-size:17px;font-weight:700;text-align:center;padding:9px 6px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink)}.exr.quick .qs{color:var(--muted);font-weight:700}
 .exr>.pill{min-width:64px;box-sizing:border-box;text-align:center;border:0;font-family:inherit;align-self:center;min-height:32px;padding:0 8px;white-space:nowrap;font-size:13px;cursor:pointer}.exr>.pill.ex-wait{border:1px dashed var(--line)}.exr>.pill.ex-vt{background:var(--grad);color:#fff;font-weight:800;box-shadow:0 6px 14px -6px rgba(194,24,91,.7)}
 .exr>.pill{cursor:default!important;pointer-events:none}
-.exr:not(.quick){align-items:center;gap:4px;padding-right:8px;border-radius:14px;background:rgba(255,255,255,.6);border:1px solid var(--line)}
-.exr:not(.quick) .exe,.exr.fatto .exe,[data-theme=dark] .exr .exe{background:none!important;border:0!important;box-shadow:none!important}
-[data-theme=dark] .exr:not(.quick){background:rgba(255,255,255,.07)}
-.exr.fatto:not(.quick){background:rgba(52,168,110,.10);border-color:rgba(52,168,110,.28)}
-.exr.drag:not(.quick){background:#fff;box-shadow:0 12px 26px rgba(120,40,80,.28)}[data-theme=dark] .exr.drag:not(.quick){background:#3d2433;border-color:rgba(255,255,255,.22);box-shadow:0 14px 30px rgba(0,0,0,.55)}
 .exr>.pill.ex-lg{font-size:11.5px;letter-spacing:-.2px}.exg h2{font-size:16.5px;line-height:1.25;margin:0}
 .exp{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--accs);color:var(--acc2);display:grid;place-items:center;margin:-4px -4px 0 0}.exp svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}
 .exf{margin:0 0 10px}
 .exghost{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:var(--r);border:1.5px dashed var(--line);background:transparent;color:var(--acc2);font:inherit;transition:background-color .2s,transform .15s}.exghost:hover{background:rgba(255,255,255,.35)}.exghost:active{transform:scale(.985)}
 .exghost svg{flex:none;width:30px;height:30px;padding:6px;border-radius:50%;background:var(--accs);fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;box-sizing:border-box}
 .exopen:disabled,.exe:disabled{color:inherit;opacity:1;cursor:default}
-.exr .exe{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.exr{transition:transform .18s}.exr.drag{position:relative;z-index:5}.exr.drag .exe{box-shadow:0 12px 26px rgba(120,40,80,.28);background:#fff}
+.exr .exe{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.exr{transition:transform .18s}.exr.drag{position:relative;z-index:5}
 .exr.quick input[type=date]{width:auto;flex:1;min-width:0;font-size:15px;padding:9px 8px}
 [data-theme=dark] .exr.quick{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}
 [data-theme=dark] .exr.quick input{background:rgba(255,255,255,.1);color:var(--ink);border-color:rgba(255,255,255,.16);color-scheme:dark}
@@ -177,16 +172,29 @@ body.swiping #view,body.swiping .swghost{will-change:transform}body.swiping #vie
 .hed{position:fixed;top:0;bottom:0;left:0;width:30px;pointer-events:none;z-index:4;background:linear-gradient(to right,rgba(40,0,20,0),rgba(40,0,20,.14));opacity:0}
 [data-theme=dark] .hed{background:linear-gradient(to right,rgba(0,0,0,0),rgba(0,0,0,.5))}
 .exghost .gl{flex:1;text-align:left;font-size:15px;font-weight:700;opacity:.8}.exp.ed{background:transparent;color:var(--muted);margin:-4px 0 0 0}.exp.ed svg{width:17px;height:17px;stroke-width:2.1;stroke-linejoin:round}.undo{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;z-index:60;display:flex;align-items:center;gap:14px;padding:10px 10px 10px 18px;border-radius:99px;background:#2a1520;color:#fff;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:opacity .22s,transform .22s;max-width:calc(100vw - 32px)}.undo.on{opacity:1;transform:translate(-50%,0)}.undo button{border:0;border-radius:99px;background:rgba(255,255,255,.16);color:#fff;font:inherit;font-weight:800;padding:8px 14px}.exempty{padding:24px 4px;font-weight:600}
-.exr.fatto .exe{background:rgba(52,168,110,.10);border-color:rgba(52,168,110,.28)}.exr.fatto .pill.ex-ok{background:#2f9e68;color:#fff}
+.exr.fatto .pill.ex-ok{background:#2f9e68;color:#fff}
 .exg.allfatto{background-image:linear-gradient(rgba(52,168,110,.12),rgba(52,168,110,.12));border-color:rgba(52,168,110,.35)}.exg.allfatto h2{color:#23784f}
-.exg.card{padding:13px 14px 12px}.exr{display:flex;align-items:stretch;gap:8px;margin-top:6px}.exe{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:8px 12px;border-radius:13px;background:rgba(255,255,255,.6);border:1px solid var(--line);font:inherit;color:inherit}.exo{align-self:center;min-height:44px;padding:0 16px}
+.exg.card{padding:13px 14px 12px}.exr{display:flex;align-items:stretch;gap:8px;margin-top:6px}.exe{flex:1;min-width:0;display:flex;align-items:center;gap:12px;text-align:left;padding:0;background:none;border:0;font:inherit;color:inherit}.exo{align-self:center;min-height:44px;padding:0 16px}
 .subjchip{display:inline-flex;align-items:center;gap:4px;height:40px;padding:0 14px 0 8px;border-radius:99px;background:var(--accs);color:var(--acc2);font:inherit;font-size:14px;font-weight:700;border:0}.subjchip svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .exd{flex:none;font-size:12.5px;font-weight:600;color:var(--muted);white-space:nowrap}.exn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.exn{display:flex;flex-direction:column;min-width:0}.exn b{font-weight:700;font-size:14.5px}.exn i{font-style:normal;font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
 .pill.ex-ok{background:var(--grad);color:#fff}.pill.ex-wait{background:transparent;border:1px solid var(--line);color:var(--muted)}
-[data-theme=dark] .exe{background:rgba(255,255,255,.07)}
-[data-theme=dark] .exr.drag .exe{background:#3d2433;border-color:rgba(255,255,255,.22);box-shadow:0 14px 30px rgba(0,0,0,.55)}
-[data-theme=dark] .exr.fatto.drag .exe{background:#1f4a37}
 [data-theme=dark] .exr.quick{background:rgba(255,255,255,.07)}[data-theme=dark] .exr.quick input{background:rgba(255,255,255,.1);color:var(--ink)}
+/* righe esame: card unica con tessera data */
+.exr:not(.quick){align-items:center;gap:10px;margin-top:8px;padding:8px 10px 8px 8px;border-radius:20px;background:#FFF3F8;border:1px solid rgba(224,69,123,.14);box-shadow:0 8px 16px -12px rgba(150,25,75,.4)}
+.exr:not(.quick) .exdt{flex:none;width:50px;height:50px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:var(--accs);color:var(--acc2);line-height:1}
+.exdt b{font-size:19px;font-weight:800;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
+.exdt small{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;opacity:.85;white-space:nowrap}
+.exdt.none{background:transparent;border:1.5px dashed var(--hair);color:var(--muted)}.exdt.none b{font-size:17px;font-weight:700}
+.exr:not(.quick) .exn b{font-size:15px;line-height:1.2}.exr:not(.quick) .exn i{font-size:12.5px}
+.exr:not(.quick)>.pill{min-width:66px;min-height:34px;padding:0 12px;font-size:13.5px}
+.exr.fatto:not(.quick){background:rgba(52,168,110,.12);border-color:rgba(52,168,110,.3);box-shadow:0 8px 18px -12px rgba(30,120,80,.4)}
+.exr.fatto .exdt{background:rgba(52,168,110,.18);color:#23784f}
+.exr.drag:not(.quick){background:#fff;box-shadow:0 14px 28px rgba(120,40,80,.3)}
+[data-theme=dark] .exr:not(.quick){background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12);box-shadow:none}
+[data-theme=dark] .exr.fatto:not(.quick){background:rgba(52,168,110,.14);border-color:rgba(79,214,163,.3)}
+[data-theme=dark] .exr.fatto .exdt{background:rgba(79,214,163,.2);color:#6fe0b6}
+[data-theme=dark] .exr.drag:not(.quick){background:#3d2433;border-color:rgba(255,255,255,.22);box-shadow:0 14px 30px rgba(0,0,0,.55)}
+[data-theme=dark] .exr.fatto.drag:not(.quick){background:#1f4a37}
 .exform{display:flex;flex-direction:column;gap:10px;padding:12px;margin-top:6px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}
 .exform label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:700;color:var(--muted);flex:1;min-width:0}
 .exform input,.exform select{font:inherit;font-size:16px;font-weight:600;color:var(--ink);padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;min-width:0;width:100%}
@@ -1794,6 +1802,11 @@ function exDelete(items,msg){
   const ids=items.map(x=>x.id);
   items.forEach(x=>{x.x=1;x.u=Date.now()});store.set("ex",EXMS);touch();EXUI=null;render();
 }
+function exTile(x){
+  const d=exDate(x);if(!d)return `<span class="exdt none" aria-hidden="true"><b>–</b></span>`;
+  const m=d.toLocaleDateString("it-IT",{month:"short"}).replace(".",""),y=d.getFullYear()!==new Date().getFullYear()?" ’"+String(d.getFullYear()).slice(2):"";
+  return `<span class="exdt" aria-label="${esc(exFmt(x))}"><b>${d.getDate()}</b><small>${esc(m)}${y}</small></span>`;
+}
 function exCard(){
   const f="all",subs=[];
   exList().forEach(x=>{let g=subs.find(s=>s.n===x.subj);if(!g){g={n:x.subj,l:[],ids:[]};subs.push(g)}g.ids.push(x.id);if(x.kind!=="Materia")g.l.push(x)});
@@ -1807,7 +1820,7 @@ function exCard(){
     const st=exStatus(x);
     if(EXUI==="q:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-g" inputmode="decimal" value="${esc(x.grade||"")}" aria-label="Voto"><span class="qs">su</span><input id="q-m" inputmode="decimal" value="${esc(x.max||(g.l.find(y=>y.max)||{}).max||"")}" aria-label="Su quanto"><button class="chip exo" data-act="ex-qsave" data-ex="${esc(x.id)}">OK</button></div>`;
     if(EXUI==="d:"+x.id)return `<div class="exr quick"><span class="exn"><b>${esc(x.name)}</b></span><input id="q-d" type="date" value="${esc(x.date||"")}" aria-label="Data dell'esame"><button class="chip exo" data-act="ex-dsave" data-ex="${esc(x.id)}">OK</button></div>`;
-    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}" data-mid="${esc(x.id)}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id!=="stat-p1"?'data-lock="1"':""}><span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span><span class="exd">${esc(exFmt(x))}</span></button><button class="pill ex-${st.c} num" data-lock="1" data-act="${st.k==="g"?"ex-q":"ex-d"}" data-ex="${esc(x.id)}" aria-label="${st.k==="g"?"Voto":"Data"} di ${esc(x.name)}">${esc(st.t)}</button></div>`};
+    return `<div class="exr ${exDone(x)?"fatto":""} ${x.id===EXFRESH?"fresh":""}" data-mid="${esc(x.id)}"><button class="exe" data-act="ex-mopen" data-ex="${esc(x.id)}" ${x.id!=="stat-p1"?'data-lock="1"':""}>${exTile(x)}<span class="exn"><b>${esc(x.name)}</b>${x.note?`<i>${esc(x.note)}</i>`:""}</span></button><button class="pill ex-${st.c} num" data-lock="1" data-act="${st.k==="g"?"ex-q":"ex-d"}" data-ex="${esc(x.id)}" aria-label="${st.k==="g"?"Voto":"Data"} di ${esc(x.name)}">${esc(st.t)}</button></div>`};
   return shown.map(g=>{const av=exAvg(g.l),v=vis(g);
     return `<section data-subj="${esc(g.n)}" class="glass card exg ${g.l.length&&g.l.every(exDone)?"allfatto":""} ${g.ids.includes(EXFRESH)&&!g.l.some(x=>x.id===EXFRESH)?"fresh":""}"><div class="exh"><button class="exopen" data-act="ex-open" data-subj="${esc(g.n)}" ${g.l.some(x=>x.id==="stat-p1")?"":'data-lock="1"'}><h2>${esc(g.n)}</h2>${av&&av.n>1?`<span class="exav num">Media ${esc(av.t)}</span>`:""}</button>${EXADD?`<button class="exp" data-act="ex-mod" data-subj="${esc(g.n)}" aria-label="Aggiungi un modulo a ${esc(g.n)}"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>`:""}</div>${EXUI==="s:"+g.n?exFormSub(g.n):""}${EXUI==="m:"+g.n?exFormMod(null,g.n):""}${v.map(x=>row(g,x)).join("")}</section>`}).join("");
 }
