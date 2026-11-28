@@ -142,7 +142,7 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 @keyframes exin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .fresh{animation:exin .38s cubic-bezier(.2,.8,.2,1) both}
 .exform{animation:exin .26s cubic-bezier(.2,.8,.2,1) both}
-.exr.quick{animation:exin .22s cubic-bezier(.2,.8,.2,1) both}
+.exr.quick,.exr.fresh{animation:none}.exr.quick>*,.exr.fresh>*{animation:exfade .22s ease-out both}@keyframes exfade{from{opacity:0}to{opacity:1}}
 .exr.quick{align-items:center;padding:8px 10px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}.exr.quick .exn{flex:1}.exr.quick input{width:50px;font:inherit;font-size:17px;font-weight:700;text-align:center;padding:9px 6px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink)}.exr.quick .qs{color:var(--muted);font-weight:700}
 .exr>.pill{min-width:64px;box-sizing:border-box;text-align:center;border:0;font-family:inherit;align-self:center;min-height:32px;padding:0 8px;white-space:nowrap;font-size:13px;cursor:pointer}.exr>.pill.ex-wait{border:1px dashed var(--line)}.exr>.pill.ex-vt{background:var(--grad);color:#fff;font-weight:800;box-shadow:0 6px 14px -6px rgba(194,24,91,.7)}
 .exr>.pill{cursor:default!important;pointer-events:none}
@@ -207,6 +207,7 @@ body.swiping #view,body.swiping .swghost{will-change:transform}body.swiping #vie
 [data-theme=dark] .exr.n-soon:not(.quick){border-color:rgba(255,142,186,.45)}
 [data-theme=dark] .exr.n-hot:not(.quick){border-color:rgba(255,150,100,.6);background:rgba(255,140,90,.12)}
 [data-theme=dark] .exr>.pill.ex-hot{color:#FF9A6E}
+.exr.fresh:not(.quick)>.pill{animation:exfade .22s ease-out both!important}
 .exr.quick{gap:8px;padding:5px 5px 5px 12px;height:50px;box-sizing:border-box;border-radius:15px;background:#FFF3F8;border:1px solid rgba(224,69,123,.14);margin-top:6px}
 .exr.quick .exn b{font-size:14.5px}.exr.quick input{width:46px;height:38px;padding:0 4px;font-size:16px;border:1.5px solid rgba(224,69,123,.3);box-sizing:border-box;outline:none}.exr.quick input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accs)}
 .exr.quick input[type=date]{width:auto}.exr.quick .exo{height:38px;min-height:0;padding:0 14px}
