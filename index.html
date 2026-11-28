@@ -144,7 +144,8 @@ body.insession .wrap{padding-bottom:calc(120px + var(--safe-b))}
 .exform{animation:exin .26s cubic-bezier(.2,.8,.2,1) both}
 .exr.quick{animation:exin .22s cubic-bezier(.2,.8,.2,1) both}
 .exr.quick{align-items:center;padding:8px 10px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid var(--line)}.exr.quick .exn{flex:1}.exr.quick input{width:50px;font:inherit;font-size:17px;font-weight:700;text-align:center;padding:9px 6px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink)}.exr.quick .qs{color:var(--muted);font-weight:700}
-.exr>.pill{min-width:64px;box-sizing:border-box;text-align:center;border:0;font-family:inherit;align-self:center;min-height:32px;padding:0 8px;white-space:nowrap;font-size:13px;cursor:pointer}.exr>.pill.ex-wait{border:1px dashed var(--line)}.exr>.pill.ex-lg{font-size:11.5px;letter-spacing:-.2px}.exg h2{font-size:16.5px;line-height:1.25;margin:0}
+.exr>.pill{min-width:64px;box-sizing:border-box;text-align:center;border:0;font-family:inherit;align-self:center;min-height:32px;padding:0 8px;white-space:nowrap;font-size:13px;cursor:pointer}.exr>.pill.ex-wait{border:1px dashed var(--line)}.exr>.pill.ex-vt{background:var(--grad);color:#fff;font-weight:800;box-shadow:0 6px 14px -6px rgba(194,24,91,.7)}
+.exr>.pill.ex-lg{font-size:11.5px;letter-spacing:-.2px}.exg h2{font-size:16.5px;line-height:1.25;margin:0}
 .exp{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--accs);color:var(--acc2);display:grid;place-items:center;margin:-4px -4px 0 0}.exp svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}
 .exf{margin:0 0 10px}
 .exghost{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:var(--r);border:1.5px dashed var(--line);background:transparent;color:var(--acc2);font:inherit;transition:background-color .2s,transform .15s}.exghost:hover{background:rgba(255,255,255,.35)}.exghost:active{transform:scale(.985)}
@@ -1711,7 +1712,7 @@ function exStatus(x){
   const d=exDate(x);if(!d)return {t:"data",c:"wait",k:"d"};
   const n=new Date(),d0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),k=Math.round((d-d0)/864e5);
   if(k>1)return {t:`-${k}${k>99?"":" "}gg`,c:k>99?"lg":"",k:"d"};if(k===1)return {t:"-1 g",c:"",k:"d"};if(k===0)return {t:"oggi",c:"",k:"g"};
-  return {t:"voto",c:"wait",k:"g"};
+  return {t:"voto",c:"vt",k:"g"};
 }
 function exAvg(mods){
   const g=mods.filter(x=>exNum(x.grade)!==null);if(!g.length)return null;
