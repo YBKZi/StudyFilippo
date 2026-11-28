@@ -667,8 +667,8 @@ input#cfgemail{flex:1 1 200px;width:auto;min-height:44px}
 .exs-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 14px}
 .exs-top h1{margin:0;font-family:var(--fd);font-size:28px;letter-spacing:-.4px;color:var(--ink)}
 .seg{display:inline-flex;background:var(--accs);border-radius:99px;padding:3px;flex:none}
-.seg button{display:flex;align-items:center;gap:6px;border:0;background:none;padding:8px 13px;border-radius:99px;font:800 13px var(--f);color:var(--acc2);cursor:pointer}
-.seg button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.seg button{display:flex;align-items:center;justify-content:center;border:0;background:none;width:44px;height:36px;padding:0;border-radius:99px;font:800 13px var(--f);color:var(--acc2);cursor:pointer}
+.seg button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .seg button.on{background:var(--grad);color:#fff;box-shadow:0 6px 14px -6px rgba(194,24,91,.7)}
 body.exs-open{overflow:hidden}
 .tab:active .pl{transform:scale(.84)}
@@ -1812,7 +1812,7 @@ function exCard(){
 }
 function vEsami(){
   const f=SETT.exf||"todo";
-  return `<div class="exs-top"><h1>Esami</h1><div class="seg"><button data-act="theme-set" data-v="light" class="${isDark()?"":"on"}">${SUNICO}Chiaro</button><button data-act="theme-set" data-v="dark" class="${isDark()?"on":""}">${MOONICO}Scuro</button></div></div>
+  return `<div class="exs-top"><h1>Esami</h1><div class="seg"><button data-act="theme-set" data-v="light" class="${isDark()?"":"on"}" aria-label="Tema chiaro">${SUNICO}</button><button data-act="theme-set" data-v="dark" class="${isDark()?"on":""}" aria-label="Tema scuro">${MOONICO}</button></div></div>
   
   <div class="stack exgrid">${exCard()}</div>`;
 }
