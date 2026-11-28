@@ -1812,7 +1812,7 @@ function exCard(){
 }
 function vEsami(){
   const f=SETT.exf||"todo";
-  return `<div class="exs-top"><h1>Esami</h1><div class="seg"><button data-act="theme-set" data-v="light" class="${isDark()?"":"on"}" aria-label="Tema chiaro">${SUNICO}</button><button data-act="theme-set" data-v="dark" class="${isDark()?"on":""}" aria-label="Tema scuro">${MOONICO}</button></div></div>
+  return `<div class="exs-top"><h1>Esami</h1><button class="themebtn" data-act="theme" aria-label="Cambia tema">${THEMEICO()}</button></div>
   
   <div class="stack exgrid">${exCard()}</div>`;
 }
